@@ -24,7 +24,9 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -92,12 +94,12 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
         });
     }
 
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username, password);
     }
     
-    @org.junit.Test
+    @Test
     public void testFind() throws Exception {
         logger.info("Create Bluepring [{}]", bluePrint.getName());
         ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);

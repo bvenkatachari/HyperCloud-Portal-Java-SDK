@@ -26,7 +26,9 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -152,12 +154,12 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         });
     }
 
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username, password);
     }
 
-    @org.junit.Test
+    @Test
     public void testCreate() throws Exception {
 		logger.info("Create Blueprint [{}] "
 				+ "having details as follows:\n [{}]\n [{}]\n [{}]\n [{}]\n [{}]\n [{}]\n [{}]", 
@@ -171,12 +173,10 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 				bluePrint.getCustomizationsMap(), 
 				bluePrint.getEntitlementType());
 	
-	  	ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
-        
+	  	ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);    
         for (Message m : response.getMessages()) {
             logger.warn("[{}]", m.getMessageText());
         }
-        
         if (response.getResults() != null) {
         	bluePrintCreated = response.getResults();
         }
@@ -189,14 +189,12 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         assertNotNull(response);
         assertNotNull(response.isErrors());
         assertEquals("Expected :\n" + errorMessage, error, response.isErrors());
-        
         if (!error) {
             assertNotNull(response.getResults());
             assertNotNull(response.getResults().getId());
             Assert.assertEquals("Empty Blueprint Name ", bluePrint.getName(), bluePrintCreated.getName());
             Assert.assertEquals("Image ", bluePrint.getImages(), bluePrintCreated.getImages());
             Assert.assertEquals("YAML Error ", bluePrint.getYml(), bluePrintCreated.getYml());
-			
             if (isNullOrEmpty(bluePrint.getTenantPk())  ) {
 				Assert.assertEquals(" Tenant ", "402881834d9ee4d1014d9ee5d73f0010", bluePrintCreated.getTenantPk());
 			} else {

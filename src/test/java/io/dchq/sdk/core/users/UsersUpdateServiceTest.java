@@ -63,12 +63,6 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 	private Users userUpdated;
 	private String modifiedFirstName, modifiedLastName;
 
-	@Before
-	public void setUp() throws Exception {
-		// TODO - use specified user permissions instead of cloud admin user
-		service = ServiceFactory.buildUserService(rootUrl, cloudadminusername, cloudadminpassword);
-	}
-
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
@@ -99,6 +93,11 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 		this.modifiedLastName = ln1;
 	}
 
+	@Before
+	public void setUp() throws Exception {
+		service = ServiceFactory.buildUserService(rootUrl, username, password);
+	}
+	
 	@Test
 	public void testUpdate() {
 		logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());

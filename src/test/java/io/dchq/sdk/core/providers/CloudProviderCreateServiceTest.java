@@ -24,7 +24,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -56,42 +58,80 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
     private String validationMssage;
 
     public CloudProviderCreateServiceTest (
-    		String name, 
-    		String testUsername,
-    		String apiKey,
+    		// below fields are for Rackspace, Amazon, Digital Ocean, Google Cloud, Aliyun
     		AccountType accountType,
-    		/*
-    		String rackspaceName, 
-    		Boolean isActive, 
-    		String Password, 
-    		String validationMssage, 
-    		*/
+    		String accountName, 
+    		String testUsername, // also corresponds to application client id on UI
+    		String apiKey, // also corresponds to password, application client secret id on UI
+    		
+    		// additional fields for Microsoft Azure
+    		String subscriptionId, // corresponds to email in API call
+    		String TenantId, // corresponds to region in API call
+    		
+    		// additional field for IBM Softlayer
+    		String domainName, // corresponds to groupName in API call
+ 
+    		// additional fields for private cloud
+    		String vmDestination, // corresponds to hardwareId in API call
+    		String template, // corresponds to imageId in API call
+    		
+    		// additional field for volume provider
+    		String opts,
+    		Integer size,
+    		
     		boolean success
     		) 
 	{
-		this.registryAccount = new RegistryAccount().withName(name).withUsername(testUsername).withPassword(apiKey).withAccountType(accountType);
+		this.registryAccount = 
+				new RegistryAccount().withName(accountName).withUsername(testUsername).withPassword(apiKey).withAccountType(accountType);
+		this.registryAccount.setRegion(TenantId);
+		this.registryAccount.setEmail(subscriptionId);
+		this.registryAccount.setGroupName(domainName);
 		this.success = success;
 	}
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                /*{"Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE, "7b1fa480664b4823b72abed54ebb9b0f", "", false},
-                {"Rackspace US 2 Empty testAccount", "", Boolean.FALSE, AccountType.RACKSPACE, "7b1fa480664b4823b72abed54ebb9b0f", "Cloud Provider is not Expected with Empty RackspaceName ", true},
-                {"", "dchqinc3", Boolean.FALSE, AccountType.RACKSPACE, "7b1fa480664b4823b72abed54ebb9b0f", "Clould provider cannot be created with  Empty Name ", true},
-                {"Rackspace US with empty password ", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE, "", "Clould provider cannot be created with  Empty API Key ", true}
-        		*/
-				{ "Rackspace US 1 testAccount", "dchqinc", "7b1fa480664b4823b72abed54ebb9b0f", AccountType.RACKSPACE,
-						false }
+        	
+				// public clouds
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,
+						null, null, null, false },
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null,
+						false },
+				{ AccountType.DIGITALOCEAN, "Digital Ociean testAccount", "dchqinc", "apiKey", null, null, null, null,
+						null, null, null, false },
+				{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null,
+						null, null, null, null, null, false },
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null, null, null,
+						false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "subscriptionId",
+						"tenantId", null, null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+
+				// private cloud
+				{ AccountType.OPENSTACK, "Openstack testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.VSPHERE, "VMware vSphere testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.HYPER_GRID, "Hypercloud testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
+
+				// volume provider
+				{ AccountType.VOLUME_PROVIDER, "VMware vSphere testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", "opts", 10, false },
         });
     }
     
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
     }
 
-    @org.junit.Test
+    @Test
     public void testCreate() throws Exception {
 		boolean tempSuccess = success;
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
@@ -119,7 +159,7 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 			// assertEquals(registryAccount.getInactive(), registryAccountCreated.getInactive());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-			// Password should always be empty
+			// password should always be empty
 			assertThat("password-hidden", is(registryAccountCreated.getPassword()));
 		} else if (!response.isErrors()) {
 			success = false;

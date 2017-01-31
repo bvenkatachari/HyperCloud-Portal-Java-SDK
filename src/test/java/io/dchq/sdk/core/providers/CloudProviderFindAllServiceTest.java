@@ -24,7 +24,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -105,12 +107,12 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
         return response.getResults().size();
     }
     
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
     }
 
-    @org.junit.Test
+    @Test
     public void testFindAll() throws Exception {
 		logger.info("Count of Cloud Provider before Create Cloudprovider with  Account with Name [{}]",
 				registryAccount.getName());

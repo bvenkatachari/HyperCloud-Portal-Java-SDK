@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,12 +82,13 @@ public class BlueprintUpdateServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
     {
-        this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version).withVisibility(visible).withUserName(username);
-        this.bluePrint.setYml(yaml);
-        this.success = success;
+		this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version)
+				.withVisibility(visible).withUserName(username);
+		this.bluePrint.setYml(yaml);
+		this.success = success;
     }
     
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username2, password2);
     }

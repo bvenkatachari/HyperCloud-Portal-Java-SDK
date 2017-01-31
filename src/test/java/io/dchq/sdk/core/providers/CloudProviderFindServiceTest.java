@@ -24,7 +24,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -83,12 +85,12 @@ public class CloudProviderFindServiceTest extends AbstractServiceTest {
 		this.success = success;
 	}
 
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
     }
     
-    @org.junit.Test
+    @Test
     public void testFind() throws Exception {
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
     	logger.info("Create Registry Account with Name [{}]", registryAccount.getName());

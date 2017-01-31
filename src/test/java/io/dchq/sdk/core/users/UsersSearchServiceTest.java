@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,12 +63,6 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
     private Users userCreated;
     private String errorMessage;
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-    	// TODO - use specified user permissions instead of cloud admin user
-        service = ServiceFactory.buildUserService(rootUrl, cloudadminusername, cloudadminpassword);
-    }
-
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
@@ -98,6 +93,11 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
         this.errorMessage = errorMessage;
     }
 
+    @Before
+    public void setUp() throws Exception {
+        service = ServiceFactory.buildUserService(rootUrl, username, password);
+    }
+    
     @Test
     public void testSearch() {
         logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());
