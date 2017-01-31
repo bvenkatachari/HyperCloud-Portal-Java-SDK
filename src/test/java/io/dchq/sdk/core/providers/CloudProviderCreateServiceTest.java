@@ -39,10 +39,6 @@ import io.dchq.sdk.core.RegistryAccountService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * Created by Abedeen on 04/05/16.
- */
-
-/**
  * Abstracts class for holding test credentials.
  *
  * @author Abedeen.
@@ -73,7 +69,7 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
 	{
-		this.registryAccount = new RegistryAccount().withName(name).withUsername(testUsername).withAccountType(accountType);
+		this.registryAccount = new RegistryAccount().withName(name).withUsername(testUsername).withPassword(apiKey).withAccountType(accountType);
 		this.success = success;
 	}
 
