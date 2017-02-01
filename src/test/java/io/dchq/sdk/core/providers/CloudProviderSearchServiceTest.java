@@ -40,8 +40,6 @@ import io.dchq.sdk.core.RegistryAccountService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * Abstracts class for holding test credentials.
- *
  * @author Abedeen.
  * @updater Jagdeep Jain
  * @since 1.0

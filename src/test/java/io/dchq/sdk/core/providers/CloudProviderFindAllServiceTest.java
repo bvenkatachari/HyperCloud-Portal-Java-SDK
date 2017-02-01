@@ -16,7 +16,6 @@
 package io.dchq.sdk.core.providers;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -40,10 +39,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.RegistryAccountService;
 import io.dchq.sdk.core.ServiceFactory;
 
-
 /**
- * Abstracts class for holding test credentials.
- *
  * @author Abedeen.
  * @updater Jagdeep Jain
  * @since 1.0

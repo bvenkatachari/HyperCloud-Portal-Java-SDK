@@ -11,7 +11,6 @@ import io.dchq.sdk.core.plugins.PluginCreateServiceTest;
 import io.dchq.sdk.core.plugins.PluginUpdateServiceTest;
 import io.dchq.sdk.core.providers.CloudProviderCreateServiceTest;
 import io.dchq.sdk.core.providers.CloudProviderUpdateServiceTest;
-import io.dchq.sdk.core.providers.RegistryAccountServiceTest;
 import io.dchq.sdk.core.users.UsersCreateServiceTest;
 import io.dchq.sdk.core.users.UsersUpdateServiceTest;
 
