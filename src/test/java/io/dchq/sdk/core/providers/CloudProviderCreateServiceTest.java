@@ -82,30 +82,34 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
 	{
-		this.registryAccount = 
-				new RegistryAccount().withName(accountName).withUsername(testUsername).withPassword(apiKey).withAccountType(accountType);
+		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
+				.withPassword(apiKey).withAccountType(accountType);
 		this.registryAccount.setRegion(TenantId);
 		this.registryAccount.setEmail(subscriptionId);
 		this.registryAccount.setGroupName(domainName);
+		this.registryAccount.setHardwareId(vmDestination);
+		this.registryAccount.setImageId(template);
+		this.registryAccount.setOpts(opts);
+		this.registryAccount.setSizeLimit(size);
 		this.success = success;
 	}
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	
+
 				// public clouds
 				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,
 						null, null, null, false },
-				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null,
-						false },
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null,
+						null, null, false },
 				{ AccountType.DIGITALOCEAN, "Digital Ociean testAccount", "dchqinc", "apiKey", null, null, null, null,
 						null, null, null, false },
 				{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null,
 						null, null, null, null, null, false },
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null, null, null,
-						false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "subscriptionId",
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
+						null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",
 						"tenantId", null, null, null, null, null, false },
 				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", null, null, null, null, false },
@@ -115,13 +119,25 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 						"http://dchq.co.in", null, null, null, null, false },
 				{ AccountType.VSPHERE, "VMware vSphere testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", null, null, null, null, false },
-				{ AccountType.HYPER_GRID, "Hypercloud testAccount", "dchqinc", "password", null, null,
+				{ AccountType.HYPER_GRID, "Hypergrid Cloud testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
 				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
 
+				// Docker Registry
+				{ AccountType.DOCKER_REGISTRY, "Docker Registry testAccount", "dchqinc", "password", "user@dchq.io", null,
+						"http://dchq.co.in", null, null, null, null, false },
+
+				// Jenkins/Hudson
+				{ AccountType.JENKINS, "Jenkins testAccount", "dchqinc", "password", null, null, "http://dchq.co.in",
+						null, null, null, null, false },
+
+				// Credentials
+				{ AccountType.CREDENTIALS, "Credentials testAccount", "dchqinc", "password", null, null, null, null,
+						null, null, null, false },
+
 				// volume provider
-				{ AccountType.VOLUME_PROVIDER, "VMware vSphere testAccount", "dchqinc", "password", null, null,
+				{ AccountType.VOLUME_PROVIDER, "Volume Provider testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", "hardwareId", "templateId", "opts", 10, false },
         });
     }
@@ -155,16 +171,19 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 					registryAccountCreated.getId());
 			assertNotNull(response.getResults());
 			assertNotNull(response.getResults().getId());
+			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
+			assertEquals(registryAccount.getName(), registryAccountCreated.getName());
 			assertEquals(registryAccount.getUsername(), registryAccountCreated.getUsername());
-			// assertEquals(registryAccount.getInactive(), registryAccountCreated.getInactive());
-			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
 			// password should always be empty
 			assertThat("password-hidden", is(registryAccountCreated.getPassword()));
-		} else if (!response.isErrors()) {
-			success = false;
-			this.registryAccountCreated = response.getResults();
-		}
+			assertEquals(registryAccount.getEmail(), registryAccountCreated.getEmail());
+			assertEquals(registryAccount.getRegion(), registryAccountCreated.getRegion());
+			assertEquals(registryAccount.getGroupName(), registryAccountCreated.getGroupName());
+			assertEquals(registryAccount.getHardwareId(), registryAccountCreated.getHardwareId());
+			assertEquals(registryAccount.getImageId(), registryAccountCreated.getImageId());
+			assertEquals(registryAccount.getOpts(), registryAccountCreated.getOpts());
+			assertEquals(registryAccount.getSizeLimit(), registryAccountCreated.getSizeLimit());
+		} 
     }
 
     @After

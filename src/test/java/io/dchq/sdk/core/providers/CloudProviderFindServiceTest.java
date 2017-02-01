@@ -58,32 +58,91 @@ public class CloudProviderFindServiceTest extends AbstractServiceTest {
     private RegistryAccount registryAccountCreated;
     private RegistryAccount registryAccountUpdated;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-				{ "Rackspace US 1 testAccount", "dchqinc", "7b1fa480664b4823b72abed54ebb9b0f", AccountType.RACKSPACE,
-						false }
-        });
-    }
-
     public CloudProviderFindServiceTest (
-    		String name, 
-    		String testUsername,
-    		String apiKey,
+    		// below fields are for Rackspace, Amazon, Digital Ocean, Google Cloud, Aliyun
     		AccountType accountType,
-    		/*
-    		String rackspaceName, 
-    		Boolean isActive, 
-    		String Password, 
-    		String validationMssage, 
-    		*/
+    		String accountName, 
+    		String testUsername, // also corresponds to application client id on UI
+    		String apiKey, // also corresponds to password, application client secret id on UI
+    		
+    		// additional fields for Microsoft Azure
+    		String subscriptionId, // corresponds to email in API call
+    		String TenantId, // corresponds to region in API call
+    		
+    		// additional field for IBM Softlayer
+    		String domainName, // corresponds to groupName in API call
+ 
+    		// additional fields for private cloud
+    		String vmDestination, // corresponds to hardwareId in API call
+    		String template, // corresponds to imageId in API call
+    		
+    		// additional field for volume provider
+    		String opts,
+    		Integer size,
+    		
     		boolean success
     		) 
 	{
-		this.registryAccount = new RegistryAccount().withName(name).withUsername(testUsername).withPassword(apiKey)
-				.withAccountType(accountType);
+		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
+				.withPassword(apiKey).withAccountType(accountType);
+		this.registryAccount.setRegion(TenantId);
+		this.registryAccount.setEmail(subscriptionId);
+		this.registryAccount.setGroupName(domainName);
+		this.registryAccount.setHardwareId(vmDestination);
+		this.registryAccount.setImageId(template);
+		this.registryAccount.setOpts(opts);
+		this.registryAccount.setSizeLimit(size);
 		this.success = success;
 	}
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+
+				// public clouds
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,
+						null, null, null, false },
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null,
+						null, null, false },
+				{ AccountType.DIGITALOCEAN, "Digital Ociean testAccount", "dchqinc", "apiKey", null, null, null, null,
+						null, null, null, false },
+				{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null,
+						null, null, null, null, null, false },
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
+						null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",
+						"tenantId", null, null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+
+				// private cloud
+				{ AccountType.OPENSTACK, "Openstack testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.VSPHERE, "VMware vSphere testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.HYPER_GRID, "Hypergrid Cloud testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", null, null, false },
+
+				// Docker Registry
+				{ AccountType.DOCKER_REGISTRY, "Docker Registry testAccount", "dchqinc", "password", "user@dchq.io", null,
+						"http://dchq.co.in", null, null, null, null, false },
+
+				// Jenkins/Hudson
+				{ AccountType.JENKINS, "Jenkins testAccount", "dchqinc", "password", null, null, "http://dchq.co.in",
+						null, null, null, null, false },
+
+				// Credentials
+				{ AccountType.CREDENTIALS, "Credentials testAccount", "dchqinc", "password", null, null, null, null,
+						null, null, null, false },
+
+				// volume provider
+				{ AccountType.VOLUME_PROVIDER, "Volume Provider testAccount", "dchqinc", "password", null, null,
+						"http://dchq.co.in", "hardwareId", "templateId", "opts", 10, false },
+        });
+    }
+
 
     @Before
     public void setUp() throws Exception {
