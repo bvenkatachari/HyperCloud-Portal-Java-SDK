@@ -16,6 +16,7 @@
 package io.dchq.sdk.core.providers;
 
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -60,48 +61,26 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
     private RegistryAccount registryAccount;
     private boolean createError;
     private RegistryAccount registryAccountCreated;
-    private String validationMssage;
+    private String validationMessage;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-        	
-				{ "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE,
-						"7b1fa480664b4823b72abed54ebb9b0f", EntitlementType.CUSTOM, true, userId2, "General Input",
-						false },
-				{ "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE,
-						"7b1fa480664b4823b72abed54ebb9b0f", EntitlementType.CUSTOM, false, USER_GROUP, "General Input",
-						false },
-				{ "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE,
-						"7b1fa480664b4823b72abed54ebb9b0f", EntitlementType.OWNER, false, null, "General Input",
-						false },
-				{ "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, AccountType.RACKSPACE,
-						"7b1fa480664b4823b72abed54ebb9b0f", EntitlementType.OWNER, false, "", "General Input",
-						false }     
-						
-        });
-    }
+	public CloudProviderFindAllEntitledServiceTest (
+    		AccountType accountType,
+    		String accountName,
+    		String testUsername,
+    		Boolean isActive,
+    		String password,
+    	
+    		EntitlementType blueprintType, 
+    		boolean isEntitlementTypeUser, 
+    		String entitledUserId, 
+    		String validationMessage, 
+    		boolean success
+    		) 
+    {
+		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
+				.withPassword(password).withAccountType(accountType).withInactive(isActive);
+		this.registryAccount.setEntitlementType(blueprintType);
 
-	public CloudProviderFindAllEntitledServiceTest(
-			String name, 
-			String rackspaceName, 
-			Boolean isActive,
-			AccountType rackspaceType, 
-			String Password, 
-			EntitlementType blueprintType, 
-			boolean isEntitlementTypeUser,
-			String entitledUserId, 
-			String validationMessage, 
-			boolean success
-			) 
-	{
-		this.registryAccount = new RegistryAccount()
-				.withName(name)
-				.withUsername(rackspaceName)
-				.withInactive(isActive)
-				.withAccountType(rackspaceType)
-				.withPassword(Password);
-		
 		if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
 			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
 			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
@@ -114,9 +93,26 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
 			this.registryAccount.setEntitledUserGroups(entiledUsers);
 		}
 		
-		this.createError = success;
-		this.validationMssage = validationMssage;
-	}
+        this.createError = success;
+        this.validationMessage = validationMessage;
+    }
+    
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+        	
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
+						EntitlementType.CUSTOM, true, userId2, "General Input", false },
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
+						EntitlementType.CUSTOM, false, USER_GROUP, "General Input", false },
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
+						EntitlementType.OWNER, false, null, "General Input", false },
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
+						EntitlementType.OWNER, false, "", "General Input", false }
+
+        });
+    }
+
     
     @Before
     public void setUp() throws Exception {
@@ -126,8 +122,9 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
 
     @Test
     public void testFindAllEntitled() throws Exception {
-        logger.info("Create Registry Account with Name [{}]", registryAccount.getName());
-        if (createError) {
+		logger.info("Create Registry Account with Name [{}] and entitlement type as [{}]", registryAccount.getName(),
+				registryAccount.getEntitlementType());
+		if (createError) {
             logger.info("Expecting Error while Create Registry Account with Name [{}]", registryAccount.getName());
         }
         ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
@@ -139,48 +136,53 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
         }
         assertNotNull(response);
         assertNotNull(response.isErrors());
-        assertEquals(validationMssage, ((Boolean) createError).toString(), ((Boolean) response.isErrors()).toString());
-        if (!createError) {
-            this.registryAccountCreated = response.getResults();
-            logger.info(" Registry Account Created with Name [{}] and ID [{}]", registryAccountCreated.getName(), registryAccountCreated.getId());
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            assertEquals(registryAccount.getUsername(), registryAccountCreated.getUsername());
-            assertEquals(registryAccount.getInactive(), registryAccountCreated.getInactive());
-            assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-            assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-            // Password should always be empty
-            assertThat("password-hidden", is(registryAccountCreated.getPassword()));
-            logger.info("  Search Object  entitled in FindAll {}  ", registryAccountCreated.getId());
-            ResponseEntity<List<RegistryAccount>> entitledResponse = registryAccountService2.findAll();
-            String errors = "";
-            for (Message message : response.getMessages()) {
-                errors += ("Error while Find All request  " + message.getMessageText() + "\n");
-            }
-            assertNotNull(entitledResponse);
-            assertNotNull(entitledResponse.isErrors());
-            assertThat(false, is(equals(entitledResponse.isErrors())));
-            int position = 0;
-            for (RegistryAccount obj : entitledResponse.getResults()) {
-                position++;
-                if (obj.getId().equals(registryAccountCreated.getId())) {
-                    logger.info("  Object Matched in FindAll {}  at Position : {}", registryAccountCreated.getId(), position);
-                    assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-                }
-            }
+        assertEquals(validationMessage, ((Boolean) createError).toString(), ((Boolean) response.isErrors()).toString());
+		if (!createError) {
+			this.registryAccountCreated = response.getResults();
+			logger.info(" Registry Account Created with Name [{}] and ID [{}]", registryAccountCreated.getName(),
+					registryAccountCreated.getId());
+			assertNotNull(response.getResults());
+			assertNotNull(response.getResults().getId());
+			assertEquals(registryAccount.getUsername(), registryAccountCreated.getUsername());
+			assertEquals(registryAccount.getInactive(), registryAccountCreated.getInactive());
+			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
+			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
+			// Password should always be empty
+			assertThat("password-hidden", is(registryAccountCreated.getPassword()));
+			
+			logger.info("  Search Object  entitled in FindAll {}  ", registryAccountCreated.getId());
+			ResponseEntity<List<RegistryAccount>> entitledResponse = registryAccountService2.findAll(0, 500);
+
+			for (Message message : response.getMessages()) {
+				logger.warn("Error [{}] " + message.getMessageText());
+			}
+			assertNotNull(entitledResponse);
+			assertNotNull(entitledResponse.isErrors());
+			assertThat(false, is(equals(entitledResponse.isErrors())));
+			int position = 0;
+			for (RegistryAccount obj : entitledResponse.getResults()) {
+				position++;
+				if (obj.getId().equals(registryAccountCreated.getId())) {
+					logger.info("  Object Matched in FindAll {}  at Position : {}", registryAccountCreated.getId(),
+							position);
+					assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
+				}
+			}
             logger.info(" Total Number of Objects :{}", entitledResponse.getResults().size());
             // valid User2 can access plugins
-            /*  
-            if (registryAccount.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
-                assertNotNull(entitledResponse.getResults());
-                junit.framework.Assert.assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().getId());
-            } else if (registryAccount.getEntitlementType() == EntitlementType.OWNER) {
-                ResponseEntity<RegistryAccount> entitledResponse = registryAccountService2.findById(registryAccountCreated.getId());
-                assertNotNull(entitledResponse);
-                assertNotNull(entitledResponse.isErrors());
-                //Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
-                assertNull(entitledResponse.getResults());
-            }*/
+            
+			if (registryAccount.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
+				
+				assertNotNull(entitledResponse.getResults());
+				assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().get(0).getId());
+				
+			} else if (registryAccount.getEntitlementType() == EntitlementType.OWNER) {
+		
+				assertNotNull(entitledResponse);
+				assertNotNull(entitledResponse.isErrors());
+				// Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
+				assertNull(entitledResponse.getResults());
+			}
         }
     }
 

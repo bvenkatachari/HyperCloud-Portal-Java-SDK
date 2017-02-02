@@ -61,23 +61,33 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
     		// below fields are for Rackspace, Amazon, Digital Ocean, Google Cloud, Aliyun
     		AccountType accountType,
     		String accountName, 
-    		String testUsername, // also corresponds to application client id on UI
-    		String apiKey, // also corresponds to password, application client secret id on UI
+    		String testUsername, // application client id on UI
+    		String apiKey, // password, application client secret id on UI
     		
     		// additional fields for Microsoft Azure
-    		String subscriptionId, // corresponds to email in API call
-    		String TenantId, // corresponds to region in API call
+    		String subscriptionId, // email
+    		String TenantId, // region
     		
     		// additional field for IBM Softlayer
-    		String domainName, // corresponds to groupName in API call
+    		String domainName, // groupName
  
     		// additional fields for private cloud
-    		String vmDestination, // corresponds to hardwareId in API call
-    		String template, // corresponds to imageId in API call
+    		String vmDestination, // hardwareId
+    		String template, // imageId
     		
     		// additional field for volume provider
     		String opts,
     		Integer size,
+    		
+    		// advanced fields
+    		/*
+    		String groupName, // securityGroupId
+    		String vmQuota, // vmQuota
+    		String leaseTime, // 
+    		Boolean freeFormEntitlement, // freeFormEntitlement
+    		Boolean approvalEnforced, 
+    		EntitlementType blueprintEntitlementType // blueprintEntitlementType
+    		*/
     		
     		boolean success
     		) 
