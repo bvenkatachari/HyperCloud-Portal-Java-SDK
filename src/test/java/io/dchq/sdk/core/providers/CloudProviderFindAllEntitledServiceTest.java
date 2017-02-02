@@ -70,7 +70,7 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
     		Boolean isActive,
     		String password,
     	
-    		EntitlementType blueprintType, 
+    		EntitlementType entitlementType, 
     		boolean isEntitlementTypeUser, 
     		String entitledUserId, 
     		String validationMessage, 
@@ -79,7 +79,7 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
     {
 		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
 				.withPassword(password).withAccountType(accountType).withInactive(isActive);
-		this.registryAccount.setEntitlementType(blueprintType);
+		this.registryAccount.setEntitlementType(entitlementType);
 
 		if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
 			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
@@ -109,7 +109,6 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
 						EntitlementType.OWNER, false, null, "General Input", false },
 				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
 						EntitlementType.OWNER, false, "", "General Input", false }
-
         });
     }
 
@@ -147,7 +146,7 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
 			assertEquals(registryAccount.getInactive(), registryAccountCreated.getInactive());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-			// Password should always be empty
+			// password should always be empty
 			assertThat("password-hidden", is(registryAccountCreated.getPassword()));
 			
 			logger.info("  Search Object  entitled in FindAll {}  ", registryAccountCreated.getId());
@@ -169,29 +168,27 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
 				}
 			}
             logger.info(" Total Number of Objects :{}", entitledResponse.getResults().size());
-            // valid User2 can access plugins
             
+			// valid User2 can access plugins
 			if (registryAccount.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
-				
 				assertNotNull(entitledResponse.getResults());
 				assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().get(0).getId());
-				
+
 			} else if (registryAccount.getEntitlementType() == EntitlementType.OWNER) {
-		
-				assertNotNull(entitledResponse);
-				assertNotNull(entitledResponse.isErrors());
-				// Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
-				assertNull(entitledResponse.getResults());
+				assertNotNull(entitledResponse.getResults());
+				assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().get(0).getId());
 			}
         }
     }
 
     @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (registryAccountCreated != null) {
-            registryAccountService.delete(registryAccountCreated.getId());
-        }
-    }
+	public void cleanUp() {
+		if (registryAccountCreated != null) {
+			logger.info("cleaning up...");
+			ResponseEntity<?> response = registryAccountService.delete(registryAccountCreated.getId());
+			for (Message message : response.getMessages()) {
+				logger.warn("Error user deletion: [{}] ", message.getMessageText());
+			}
+		}
+	}
 }

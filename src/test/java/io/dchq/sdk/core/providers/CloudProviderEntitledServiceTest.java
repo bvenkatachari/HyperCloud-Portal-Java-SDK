@@ -72,7 +72,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     		Boolean isActive,
     		String password,
     	
-    		EntitlementType blueprintType, 
+    		EntitlementType entitlementType, 
     		boolean isEntitlementTypeUser, 
     		String entitledUserId, 
     		String validationMessage, 
@@ -81,7 +81,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     {
 		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
 				.withPassword(password).withAccountType(accountType).withInactive(isActive);
-		this.registryAccount.setEntitlementType(blueprintType);
+		this.registryAccount.setEntitlementType(entitlementType);
 
 		if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
 			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
@@ -111,7 +111,6 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 						EntitlementType.OWNER, false, null, "General Input", false },
 				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
 						EntitlementType.OWNER, false, "", "General Input", false }
-
         });
     }
 
@@ -149,25 +148,20 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
             assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
             // password should always be empty
             assertThat("password-hidden", is(registryAccountCreated.getPassword()));
-            // valid User2 can access plugins
+            
+            ResponseEntity<RegistryAccount> entitledResponse = registryAccountService2
+					.findById(registryAccountCreated.getId());
+           
+            // valid UserId2 can access plugins
 			if (registryAccount.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
-				
-				ResponseEntity<RegistryAccount> entitledResponse = registryAccountService2
-						.findById(registryAccountCreated.getId());
-				assertNotNull(entitledResponse);
-				assertNotNull(entitledResponse.isErrors());
-				Assert.assertThat(false, is(equals(entitledResponse.isErrors())));
-				// assertNotNull(entitledResponse.getResults());
-				// assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().getId());
+				logger.info("Response [{}]", entitledResponse.getResults());
+				assertNotNull(entitledResponse.getResults());
+				assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().getId());
 				
 			} else if (registryAccount.getEntitlementType() == EntitlementType.OWNER) {
-				
-				ResponseEntity<RegistryAccount> entitledResponse = registryAccountService2
-						.findById(registryAccountCreated.getId());
-				assertNotNull(entitledResponse);
-				assertNotNull(entitledResponse.isErrors());
-				// Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
-				assertNull(entitledResponse.getResults());
+				logger.info("Response [{}]", entitledResponse.getResults());
+				assertNotNull(entitledResponse.getResults());
+				assertEquals(registryAccountCreated.getId(), entitledResponse.getResults().getId());
 			}
         }
     }
