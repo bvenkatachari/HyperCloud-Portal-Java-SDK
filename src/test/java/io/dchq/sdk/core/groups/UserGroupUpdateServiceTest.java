@@ -82,6 +82,9 @@ public class UserGroupUpdateServiceTest extends AbstractServiceTest {
         // random group Name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         gname = prefix + gname;
+        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+        updatedGourpName = prefix + updatedGourpName;
+        updatedGourpName = org.apache.commons.lang3.StringUtils.lowerCase(updatedGourpName);
 
         this.userGroup = new UserGroup().withName(gname);
         this.updatedGroupName = updatedGourpName;

@@ -78,6 +78,7 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
         // random group Name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         gname = prefix + gname;
+        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
 
         this.userGroup = new UserGroup().withName(gname);
         this.error = error;
@@ -152,14 +153,14 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
         logger.info("cleaning up...");
 
         if (userGroupCreated != null) {
-            ResponseEntity<UserGroup> deleteResponse =    service.delete(userGroupCreated.getId());
-            logger.info("Find All Users After Delete  User by Id {}",userGroupCreated.getId());
-            // countAfterDelete=testGroupPosition(null);
-            for (Message m : deleteResponse.getMessages()){
-                logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();}
-             Assert.assertFalse(messageText , deleteResponse.isErrors());
-             assertEquals("Count of FInd all user between before and after delete are not same for UserId :"+userGroupCreated.getId(),countBeforeCreate, countAfterDelete);
+            ResponseEntity<UserGroup> deleteResponse  =  service.delete(userGroupCreated.getId());
+            if (deleteResponse.getResults() != null)
+                //     userGroupDeleted = deleteResponse.getResults();
+                for (Message m : deleteResponse.getMessages()){
+                    logger.warn("[{}]", m.getMessageText());
+                    messageText = m.getMessageText();}
+            Assert.assertFalse(messageText ,deleteResponse.isErrors());
+            //        Assert.assertEquals(messageText ,error, deleteResponse.isErrors());
         }
     }
 

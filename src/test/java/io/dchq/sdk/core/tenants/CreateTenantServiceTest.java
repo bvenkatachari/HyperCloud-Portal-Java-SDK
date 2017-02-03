@@ -54,6 +54,7 @@ public class CreateTenantServiceTest extends AbstractServiceTest{
         // random tenantName
         String prefix = RandomStringUtils.randomAlphabetic(3);
         tenantname = prefix + tenantname;
+        tenantname = org.apache.commons.lang3.StringUtils.lowerCase(tenantname);
 
         this.tenant = new Tenant().withName(tenantname);
         this.error = error;
@@ -66,7 +67,7 @@ public class CreateTenantServiceTest extends AbstractServiceTest{
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"Tenant", false},
+                {"tenant12", false},
                 // Passing Empty string as tenant Name
           //      {"", false}
         });

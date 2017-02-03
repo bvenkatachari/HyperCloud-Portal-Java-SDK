@@ -83,6 +83,7 @@ public class PluginFindAllServiceTest extends AbstractServiceTest {
         // random pluginname
         String prefix = RandomStringUtils.randomAlphabetic(3);
         pluginName = prefix + "-" + pluginName;
+        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
 
         this.plugin = new Plugin();
         this.plugin.setName(pluginName);

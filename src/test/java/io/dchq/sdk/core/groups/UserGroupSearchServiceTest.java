@@ -74,6 +74,7 @@ public class UserGroupSearchServiceTest extends AbstractServiceTest {
         gname = prefix + gname;
 // lowercase
         gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+
         this.userGroup = new UserGroup().withName(gname);
         this.errors = errors;
     }
@@ -124,17 +125,18 @@ public class UserGroupSearchServiceTest extends AbstractServiceTest {
     public void cleanUp() {
         logger.info("cleaning up...");
 
-        if (!errors) {
-            userGroupService.delete(userGroupCreated.getId());
-            if (userGroupCreated != null) {
-                ResponseEntity<UserGroup> deleteResponse = userGroupService.delete(userGroupCreated.getId());
-                for (Message m : deleteResponse.getMessages()){
-                    logger.warn("[{}]", m.getMessageText());
-                    messageText = m.getMessageText();}
-                    Assert.assertFalse(messageText , deleteResponse.isErrors());
-            }
+        if (userGroupCreated != null) {
+            ResponseEntity<UserGroup> deleteResponse  =  userGroupService.delete(userGroupCreated.getId());
+            if (deleteResponse.getResults() != null)
+           //     userGroupDeleted = deleteResponse.getResults();
+            for (Message m : deleteResponse.getMessages()){
+                logger.warn("[{}]", m.getMessageText());
+                messageText = m.getMessageText();}
+            Assert.assertFalse(messageText ,deleteResponse.isErrors());
+            //        Assert.assertEquals(messageText ,error, deleteResponse.isErrors());
         }
-    }}
+        }
+}
 
 
 

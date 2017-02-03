@@ -57,7 +57,7 @@ public class TenantFindServiceTest extends AbstractServiceTest {
         // random tenantName
         String prefix = RandomStringUtils.randomAlphabetic(3);
         tenantname = prefix + tenantname;
-
+        tenantname = org.apache.commons.lang3.StringUtils.lowerCase(tenantname);
         this.tenant = new Tenant().withName(tenantname);
         this.error = error;
     }
@@ -129,7 +129,7 @@ public class TenantFindServiceTest extends AbstractServiceTest {
     }
 
     //Clean-Up script will Delete the above created tenant
-    @After
+  @After
     public void cleanUp() {
         logger.info("cleaning up...");
 

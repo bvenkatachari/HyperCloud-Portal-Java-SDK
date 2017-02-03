@@ -55,6 +55,7 @@ public class UpdateTenantServiceTest extends AbstractServiceTest {
         // random tenantName
         String prefix = RandomStringUtils.randomAlphabetic(3);
         tenantname = prefix + tenantname;
+        tenantname = org.apache.commons.lang3.StringUtils.lowerCase(tenantname);
 
         this.tenant = new Tenant().withName(tenantname);
         this.updatedTenantName = updatedTenantName;
