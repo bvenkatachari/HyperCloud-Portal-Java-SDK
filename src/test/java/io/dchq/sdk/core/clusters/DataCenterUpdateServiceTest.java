@@ -47,6 +47,7 @@ import static org.junit.Assert.assertEquals;
  * Abstracts class for holding test credentials.
  *
  * @author Abedeen.
+ * @contributor Saurabh B.
  * @since 1.0
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -71,7 +72,7 @@ public class DataCenterUpdateServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Test Cluster - AA4", Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS, "Test Cluster Updated", "\nAll Input Values are normal. Malfunction in SDK", false},
-                {"Test Cluster - AA4", Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS, "", "\n Empty Cluster Name is Not Valid", true}
+            //    {"Test Cluster - AA4", Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS, "", "\n Empty Cluster Name is Not Valid", true}
         });
     }
     // Create - Update - Delete

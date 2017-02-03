@@ -148,7 +148,8 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
 
         // random pluginname
         String prefix = RandomStringUtils.randomAlphabetic(3);
-        pluginName = prefix + "-" + pluginName;
+        pluginName = prefix + pluginName;
+        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
 
         if (count == 0) {
             plugin = new Plugin();
@@ -185,15 +186,14 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
     @org.junit.Test
     public void testUpdate() throws Exception {
 
-        logger.info("Updating Plugin with Name [{}]", this.plugin.getName());
-
-        ResponseEntity<Plugin> response = null;
+         ResponseEntity<Plugin> response = null;
         if (count++ == 0) {
             response = this.appService.create(this.plugin);
             this.plugin = response.getResults();
             logger.info("Skipping test bed...");
             return;
         } else {
+            logger.info("Updating Plugin with Name [{}]", this.plugin.getName());
             response = appService.update(plugin);
             count = 0;
         }

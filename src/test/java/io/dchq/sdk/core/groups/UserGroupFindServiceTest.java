@@ -72,6 +72,7 @@ public class UserGroupFindServiceTest extends AbstractServiceTest {
         // random group Name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         gname = prefix + gname;
+        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
 
         this.userGroup = new UserGroup().withName(gname);
         this.error = error;

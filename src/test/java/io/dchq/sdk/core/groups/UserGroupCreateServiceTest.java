@@ -54,7 +54,7 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
     @org.junit.Before
     public void setUp() throws Exception {
         // TODO - use TENANT_ADMIN USERS
-        userGroupService = ServiceFactory.builduserGroupService(rootUrl, cloudadminusername, cloudadminpassword);
+        userGroupService = ServiceFactory.builduserGroupService(rootUrl, username, password);
     }
 
     /*
@@ -94,6 +94,7 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
         // random group Name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         gname = prefix + gname;
+        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
 
         this.userGroup = new UserGroup().withName(gname).withInactive(isInActive);
         this.error = success;

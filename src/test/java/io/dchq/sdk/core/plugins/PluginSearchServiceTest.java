@@ -80,6 +80,7 @@ public class PluginSearchServiceTest extends AbstractServiceTest {
         // random pluginname
         String prefix = RandomStringUtils.randomAlphabetic(3);
         pluginName = prefix + pluginName;
+        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
 
         this.plugin = new Plugin();
         this.plugin.setName(pluginName);
@@ -135,6 +136,7 @@ public class PluginSearchServiceTest extends AbstractServiceTest {
 
             ResponseEntity<List<Plugin>> pluginSearchResponseEntity = appService.search(pluginCreated.getName(), 0, 1);
              errorMessage="";
+
             for (Message message : pluginSearchResponseEntity.getMessages()) {
                 logger.warn("Error while Create request  [{}] ", message.getMessageText());
                 errorMessage+=message.getMessageText()+"\n";
