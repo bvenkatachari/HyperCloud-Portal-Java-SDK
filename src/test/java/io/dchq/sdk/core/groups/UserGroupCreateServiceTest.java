@@ -64,6 +64,7 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
+                {"TEST@123 Group", false, false},
                 {"TestGr1112", false, false},
                 // Passing " as group Name
                 {"1\"My Group21\"", true, false},
