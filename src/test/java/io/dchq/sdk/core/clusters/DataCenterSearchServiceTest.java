@@ -1,18 +1,3 @@
-/*
- * Copyright 2015-2016 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.dchq.sdk.core.clusters;
 
 import com.dchq.schema.beans.base.Message;
@@ -35,26 +20,39 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
 
-/**
- * Created by Abedeen on 04/05/16.
+
+/** Abstracts class for holding test credentials.
+ *
+ * @author Abedeen.
+ * @contributor Saurabh B.
+ * @since 1.0
  */
 
 /**
- * Abstracts class for holding test credentials.
- *
- * @author Abedeen.
- * @Contributor Saurabh B.
- * @since 1.0
- */
+ * clusterName   -> Name of Cluster
+ * networkType   -> Cluster N/W Type
+ * description   -> Short Description
+ * EntitlementType blueprintType  -> Trusted Blueprints
+ * EntitlementType plugins        -> Trusted Plugins
+ * capAdd  -> Cap-Add Policy "Approval" / "None"
+ * networkPass  -> N/W Isolation Policy "Advanced", "Basic" / "None"
+ * cpuShares    -> Max Shares, use Integer value
+ * memoryLimit  -> Max memory policy
+ * terminationProtection   -> VM Termination Protection accept boolean
+ * approvalEnforced        -> Approval Policy accept boolean
+ * maxContainerLimit       -> Max. container policy, use Integer
+ **/
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class DataCenterFindServiceTest extends AbstractServiceTest {
+public class DataCenterSearchServiceTest extends AbstractServiceTest {
 
     private DataCenterService dataCenterService;
 
@@ -76,7 +74,7 @@ public class DataCenterFindServiceTest extends AbstractServiceTest {
         });
     }
 
-    public DataCenterFindServiceTest(String clusterName, String networkType, String description,
+    public DataCenterSearchServiceTest(String clusterName, String networkType, String description,
                                        EntitlementType blueprintType, EntitlementType plugins, String capAdd,
                                        String networkPass, int cpuShares, String memoryLimit,
                                        boolean terminationProtection, boolean approvalEnforced,
@@ -105,9 +103,8 @@ public class DataCenterFindServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testFind() throws Exception {
+    public void testSearch() throws Exception {
 
-        // Create Cluster
         logger.info("Create Cluster with Name [{}]", dataCenter.getName());
         ResponseEntity<DataCenter> response = dataCenterService.create(dataCenter);
 
@@ -137,17 +134,27 @@ public class DataCenterFindServiceTest extends AbstractServiceTest {
 
             logger.warn("Search Object wth Cluster Name  [{}] ", dataCenterCreated.getName());
 
-            //Find Cluster by ID
-            logger.info("Find Cluster with ClusterID [{}]", dataCenterCreated.getId());
-            response = dataCenterService.findById(dataCenterCreated.getId());
+            //Search Cluster by Name
+            ResponseEntity<List<DataCenter>> dataCenterResponseEntity = dataCenterService.search(dataCenterCreated.getName(), 0, 1);
 
-            for (Message message : response.getMessages()) {
+            for (Message message : dataCenterResponseEntity.getMessages()) {
                 logger.warn("Error while Create request  [{}] ", message.getMessageText());
                 validationMessage += message.getMessageText() + "\n";
             }
 
-            assertEquals(validationMessage, ((Boolean) error).toString(), ((Boolean) response.isErrors()).toString());
+            assertNotNull(dataCenterResponseEntity);
+            assertNotNull(dataCenterResponseEntity.isErrors());
+            assertFalse(validationMessage, dataCenterResponseEntity.isErrors());
+
+            assertNotNull(dataCenterResponseEntity.getResults());
+
+            Assert.assertEquals(1, dataCenterResponseEntity.getResults().size());
+
+            DataCenter searchedEntity = dataCenterResponseEntity.getResults().get(0);
+            Assert.assertEquals(dataCenterCreated.getId(), searchedEntity.getId());
+
         }
+
     }
 
     @After

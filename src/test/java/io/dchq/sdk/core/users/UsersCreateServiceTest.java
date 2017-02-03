@@ -45,7 +45,6 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.ProfileSearchServiceTest;
 import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.UserService;
-import io.dchq.sdk.core.clusters.DataCenterSearchServiceTest;
 
 /**
  * <code>UsersService</code> Integration Tests.
@@ -69,12 +68,6 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     private boolean success;
     private Users userCreated;
     private String errorMessage;
-
-    public static PkEntityBase searchDataCenter(String term) throws Exception {
-        DataCenterSearchServiceTest dsst = new DataCenterSearchServiceTest();
-        PkEntityBase pkeb = dsst.searchDataCenter(term);
-        return pkeb;
-    }
 
     public static Profile getProfile(String name) {
         try {

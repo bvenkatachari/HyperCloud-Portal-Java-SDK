@@ -75,7 +75,6 @@ public class DataCenterEntitledServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Test Cluster - AA4",Boolean.FALSE,EntitlementType.CUSTOM, true, userId2,"\nAll Input Values are normal. Malfunction in SDK",false},
-                {"Test Cluster - AA40",Boolean.FALSE,EntitlementType.CUSTOM, false, USER_GROUP,"\n Auto Flag is set to true ,\n Next required value :Machine Compose id cannot be empty", false},
                 {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, null,"\n Empty Cluster Name is Not Valid", false},
                 {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, "", "\n Empty Cluster Name is Not Valid", false}
            /*     {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, "General Input", false},
