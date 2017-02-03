@@ -69,8 +69,8 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
                 // Passing " as group Name
                 {"1\"My Group21\"", true, false},
                 {" TestGroup   9", false, false},
-                {"444", false, false}
-
+                {"444", false, false},
+                {"–—¡¿\\\"“”'‘’\\\"", false, false},
                 // Group Names with  Max Short Text :255 Charcters Passed
            /*     {"FwqkRRVOH2tuh8iigqZWTngTgLYzpcaqVahyLQqAXvzUhPpbN4qFz2TeeZASJUtC4x1nsFzP9cOkNAcFuHEGysRR6VafWArGW1jkWiWXD6CUfpkhwPoGNhIkcWLOqRrO7aqDifoZ8EGWKNHY49vTCKZ1jOI2JbZVToQeQGAERFJSlby4o2vc131o2wTFqMnp4KIwhjVQ97PBFjOxJhfnd9a5PAxNHLYBvnzTcCK45uGBiZhu3ubWOr6yM1s28pY", false, false},
                 {"  TestGroup   1", false, false},
