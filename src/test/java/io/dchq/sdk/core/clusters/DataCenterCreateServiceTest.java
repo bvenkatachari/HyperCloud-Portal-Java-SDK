@@ -81,7 +81,7 @@ public class DataCenterCreateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-               {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g",false,false, 4,"\nAll Input Values are normal. Malfunction in SDK",false},
+               {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g",false,true, 4,"\nAll Input Values are normal. Malfunction in SDK",false},
 
         });
     }
@@ -140,9 +140,15 @@ public class DataCenterCreateServiceTest extends AbstractServiceTest {
 
             assertEquals(dataCenter.getName(), dataCenterCreated.getName());
             assertEquals(dataCenter.getEntitledBlueprint(), dataCenterCreated.getEntitledBlueprint());
+            assertEquals(dataCenter.getEntitledPlugin(), dataCenterCreated.getEntitledPlugin());
+            assertEquals(dataCenter.getApprovalEnforced(), dataCenterCreated.getApprovalEnforced());
+      //      assertEquals(dataCenter.getCapAdd(), dataCenterCreated.getCapAdd());
+     //       assertEquals(dataCenter.getCpuShares(), dataCenterCreated.getCpuShares());
+     //      assertEquals(dataCenter.getMemLimit(), dataCenterCreated.getMemLimit());
 
            }
     }
+
     @After
     public void cleanUp() {
         logger.info("cleaning up...");

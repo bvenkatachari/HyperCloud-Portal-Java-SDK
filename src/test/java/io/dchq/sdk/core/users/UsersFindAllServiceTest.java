@@ -64,13 +64,6 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
 	private Users userCreated;
 	private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"fn", "ln", "user", "user" + "@dchq.io", "pass1234",false},
-        });
-    }
-
     public UsersFindAllServiceTest(
     		String fn, 
     		String ln, 
@@ -80,16 +73,21 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
     {	
-        // random username
+        // random user name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         username = prefix + "-" + username;
         email = prefix + "-" + email;
-        // lowercase
+        // lower case
         username = org.apache.commons.lang3.StringUtils.lowerCase(username);
         email = org.apache.commons.lang3.StringUtils.lowerCase(email);
         this.users = new Users().withFirstname(fn).withLastname(ln).withUsername(username).withEmail(email).withPassword(pass);
         this.success = success;
     }
+    
+    @Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false }, });
+	}
 
 	public int testGetUserFromFindAll(String id) {
 		ResponseEntity<List<Users>> response = service.findAll(0, 5000);
