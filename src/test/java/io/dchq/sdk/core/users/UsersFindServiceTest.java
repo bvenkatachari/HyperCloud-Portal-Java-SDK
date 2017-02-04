@@ -62,13 +62,6 @@ public class UsersFindServiceTest extends AbstractServiceTest {
     private Users userCreated;
     private Users userFind;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false},
-        });
-    }
-
     public UsersFindServiceTest(
     		String fn, 
     		String ln, 
@@ -78,16 +71,22 @@ public class UsersFindServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
     {
-        // random username
+        // random user name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         username = prefix + "-" + username;
         email = prefix + "-" + email;
-        // lowercase
+        // lower case
         username = org.apache.commons.lang3.StringUtils.lowerCase(username);
         email = org.apache.commons.lang3.StringUtils.lowerCase(email);
         this.users = new Users().withFirstname(fn).withLastname(ln).withUsername(username).withEmail(email).withPassword(pass);
         this.success = success;
     }
+    
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(
+				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false }, });
+	}
 
     @Before
     public void setUp() throws Exception {

@@ -36,7 +36,6 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.security.Organization;
 import com.dchq.schema.beans.one.security.Profile;
 import com.dchq.schema.beans.one.security.Users;
@@ -60,7 +59,6 @@ import io.dchq.sdk.core.UserService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-
 public class UsersCreateServiceTest extends AbstractServiceTest {
 
     private UserService service;
@@ -69,49 +67,27 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     private Users userCreated;
     private String errorMessage;
 
-    public static Profile getProfile(String name) {
-        try {
-            ProfileSearchServiceTest tempProf = new ProfileSearchServiceTest();
-            return tempProf.searchProfile(name);
-        } catch (Exception e) {
-            System.out.println("ERROR :" + e.getMessage());
-        }
-        return null;
-    }
-
-    public static Organization getOrganization(String name, Boolean inActive, Boolean deleted) {
-        return new Organization().withName(name).withInactive(inActive).withDeleted(deleted);
-    }
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() throws Exception {
-        return Arrays.asList(new Object[][]{
-				// TODO: add more test data for all sorts of validations
-				{ "fname", "lname", "user", "user" + "@dchq.io", "pass1234", "ABC", "Engg", "123-1231-121", null, false,
-						null, true, "comments", false } });
-	   }
-
-    public UsersCreateServiceTest(
+    public UsersCreateServiceTest (
             String fn,
             String ln,
             String username,
             String email,
-            String pass,
             String company,
             String title,
             String phoneNumber,
             String tenant,
             boolean inactive,
             List<String> authorities,
+            String pass,
             Boolean isActive,
             String message,
             boolean success
     ) {
-        // random username
+        // random user name
         String prefix = RandomStringUtils.randomAlphabetic(3);
         username = prefix + "-" + username;
         email = prefix + "-" + email;
-        // lowercase
+        // lower case
         username = org.apache.commons.lang3.StringUtils.lowerCase(username);
         email = org.apache.commons.lang3.StringUtils.lowerCase(email);
         this.users = new Users().withFirstname(fn).withLastname(ln).withUsername(username).withEmail(email).withPassword(pass);
@@ -125,6 +101,14 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
         this.errorMessage = message;
         this.success = success;
     }
+    
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() throws Exception {
+		return Arrays.asList(new Object[][] {
+				// TODO: add more test data for all sorts of validations
+				{ "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, null,
+						"pass1234", true, "comments", false } });
+	}
     
     @Before
     public void setUp() throws Exception {
@@ -182,6 +166,20 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
                 logger.warn("Error user deletion: [{}] ", message.getMessageText());
             }
         }
+    }
+    
+    public static Profile getProfile(String name) {
+        try {
+            ProfileSearchServiceTest tempProf = new ProfileSearchServiceTest();
+            return tempProf.searchProfile(name);
+        } catch (Exception e) {
+            System.out.println("ERROR :" + e.getMessage());
+        }
+        return null;
+    }
+
+    public static Organization getOrganization(String name, Boolean inActive, Boolean deleted) {
+        return new Organization().withName(name).withInactive(inActive).withDeleted(deleted);
     }
 
 }

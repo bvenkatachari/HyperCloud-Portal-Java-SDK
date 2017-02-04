@@ -62,7 +62,6 @@ public abstract class AbstractServiceTest {
             if (str == null || str.isEmpty()) return true;
             else return false;
         } else if (inObj != null) return false;
-
         return false;
     }
 
