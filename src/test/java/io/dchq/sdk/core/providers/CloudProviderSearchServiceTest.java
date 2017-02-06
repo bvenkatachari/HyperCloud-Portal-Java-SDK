@@ -45,6 +45,11 @@ import io.dchq.sdk.core.ServiceFactory;
  * @since 1.0
  */
 
+/**
+ * Cloud Providers: Search
+ *
+ */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class CloudProviderSearchServiceTest extends AbstractServiceTest {
@@ -168,7 +173,7 @@ public class CloudProviderSearchServiceTest extends AbstractServiceTest {
 			assertNotNull(response.getResults().getId());
 			assertEquals(registryAccount.getUsername(), registryAccountCreated.getUsername());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-			// Password should always be empty
+			// password should always be empty
 			assertEquals("password-hidden", registryAccountCreated.getPassword());
 		}
 		ResponseEntity<List<RegistryAccount>> registryAccountResponseEntity = registryAccountService
