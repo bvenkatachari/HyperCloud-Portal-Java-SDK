@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -120,6 +121,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         registryAccountService2 = ServiceFactory.buildRegistryAccountService(rootUrl, username2, password2);
     }
     
+    @Ignore
     @Test
     public void testEntitled() throws Exception {
 		logger.info("Create Registry Account with Name [{}], entitlement Type [{}]", registryAccount.getName(),

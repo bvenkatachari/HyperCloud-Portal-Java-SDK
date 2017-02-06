@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -119,6 +120,7 @@ public class CloudProviderFindAllEntitledServiceTest extends AbstractServiceTest
         registryAccountService2 = ServiceFactory.buildRegistryAccountService(rootUrl, username2, password2);
     }
 
+    @Ignore
     @Test
     public void testFindAllEntitled() throws Exception {
 		logger.info("Create Registry Account with Name [{}] and entitlement type as [{}]", registryAccount.getName(),
