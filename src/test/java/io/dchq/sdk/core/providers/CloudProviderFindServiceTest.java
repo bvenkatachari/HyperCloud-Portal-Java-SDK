@@ -172,7 +172,7 @@ public class CloudProviderFindServiceTest extends AbstractServiceTest {
 			assertEquals("UserName is invalid, when compared with input UserName @ Creation Time ",
 					registryAccount.getUsername(), registryAccountCreated.getUsername());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-			// Password should always be empty
+			// password should always be empty
 			assertThat("Password is not Expected in Response. ", "password-hidden",
 					is(registryAccountCreated.getPassword()));
 			logger.info("Find by Id for Registry Account with Id [{}]", registryAccountCreated.getId());
