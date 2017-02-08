@@ -7,6 +7,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerServerService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class DockerServerServiceTest extends AbstractServiceTest {
         dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, username, password);
     }
 
-
+    @Ignore
     @org.junit.Test
     public void testFindAll() throws Exception {
         ResponseEntity<List<DockerServer>> responseEntity = dockerServerService.findAll();
@@ -31,14 +32,14 @@ public class DockerServerServiceTest extends AbstractServiceTest {
             logger.info("DockerServer name [{}] author [{}]", bl.getName(), bl.getCreatedBy());
         }
     }
-
+    @Ignore
     @org.junit.Test
     public void testFindById() throws Exception {
         ResponseEntity<DockerServer> responseEntity = dockerServerService.findById("2c91808651a95c4d0151c416b1491a33");
         Assert.assertNotNull(responseEntity.getResults());
         Assert.assertNotNull(responseEntity.getResults().getId());
     }
-
+    @Ignore
     @org.junit.Test
     public void testGetManaged() throws Exception {
         ResponseEntity<List<DockerServer>> responseEntity = dockerServerService.findAllManaged();
@@ -47,7 +48,7 @@ public class DockerServerServiceTest extends AbstractServiceTest {
             logger.info("Managed DockerServer datacenter [{}] name [{}] author [{}]", bl.getDataCenter(), bl.getName(), bl.getCreatedBy());
         }
     }
-
+    @Ignore
     @org.junit.Test
     public void testFindStatusById() throws Exception {
         ResponseEntity<DockerServer> responseEntity = dockerServerService.findStatusById("2c91808651a95c4d0151c416b1491a33");
@@ -77,6 +78,7 @@ public class DockerServerServiceTest extends AbstractServiceTest {
 //    }
 
     // Create - Update - Delete
+    @Ignore
     @org.junit.Test
     public void testCreate() throws Exception {
 

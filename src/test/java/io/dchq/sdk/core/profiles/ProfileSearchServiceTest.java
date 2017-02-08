@@ -1,8 +1,13 @@
-package io.dchq.sdk.core;
+package io.dchq.sdk.core.profiles;
 
         import com.dchq.schema.beans.base.ResponseEntity;
         import com.dchq.schema.beans.one.security.Profile;
-        import org.junit.Assert;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ProfileService;
+import io.dchq.sdk.core.ServiceFactory;
+
+import org.junit.Assert;
 
         import java.util.List;
 
@@ -15,7 +20,8 @@ package io.dchq.sdk.core;
         import org.junit.After;
 
         import org.junit.FixMethodOrder;
-        import org.junit.runner.RunWith;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
         import org.junit.runners.MethodSorters;
         import org.junit.runners.Parameterized;
 
@@ -60,8 +66,7 @@ public class ProfileSearchServiceTest extends AbstractServiceTest {
     private Profile profile;
     private boolean success;
     private Profile profileCreated;
-
-    public ProfileSearchServiceTest(){}
+    
     public Profile searchProfile(String term) throws Exception{
         setUp();
         ResponseEntity<List<Profile>> response = profileService.findAll();
@@ -83,6 +88,8 @@ return profileCreated;
         this.success = success;
 
     }
+    
+
     @org.junit.Test
     public void testCreate() throws Exception {
 

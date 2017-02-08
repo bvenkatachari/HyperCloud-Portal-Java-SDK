@@ -1,11 +1,18 @@
-package io.dchq.sdk.core;
+package io.dchq.skd.core.applications;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provision.App;
 import com.dchq.schema.beans.one.provision.ProvisionState;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.AppService;
+import io.dchq.sdk.core.BlueprintService;
+import io.dchq.sdk.core.ServiceFactory;
+
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -38,6 +45,7 @@ public class AppServiceTest extends AbstractServiceTest {
 //    }
 
 
+    @Ignore
     @org.junit.Test
     public void testFindById() throws Exception {
         ResponseEntity<App> responseEntity = appService.findById("2c91808651a95c4d0151d8f0a1116edb");
@@ -72,24 +80,28 @@ public class AppServiceTest extends AbstractServiceTest {
 //        Assert.assertNotNull(responseEntity.getResults());
 //    }
 
+    @Ignore
     @org.junit.Test
     public void testFindPluginById() throws Exception {
         ResponseEntity<App> responseEntity = appService.findPluginById("2c91808651a95c4d0151d8f0a1116edb");
         Assert.assertNotNull(responseEntity.getResults());
     }
 
+    @Ignore
     @org.junit.Test
     public void testFindRolledback() throws Exception {
         ResponseEntity<App> responseEntity = appService.findRolledback("2c91808651a95c4d0151d8f0a1116edb");
         Assert.assertNotNull(responseEntity.getResults());
     }
 
+    @Ignore
     @org.junit.Test
     public void testFindScaleOutCreate() throws Exception {
         ResponseEntity<App> responseEntity = appService.findScaleOutCreate("2c91808651a95c4d0151d8f0a1116edb");
         Assert.assertNotNull(responseEntity.getResults());
     }
 
+    @Ignore
     @org.junit.Test
     public void testFindScaleIn() throws Exception {
         ResponseEntity<App> responseEntity = appService.findScaleIn("2c91808651a95c4d0151d8f0a1116edb");
@@ -103,6 +115,7 @@ public class AppServiceTest extends AbstractServiceTest {
 //        Assert.assertNotNull(responseEntity.getResults());
 //    }
 
+    @Ignore
     @Test
     public void testDeploy() {
         // run blueprint post build/push

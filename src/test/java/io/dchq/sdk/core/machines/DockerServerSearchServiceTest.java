@@ -23,6 +23,7 @@ import io.dchq.sdk.core.ServiceFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -79,6 +80,7 @@ public class DockerServerSearchServiceTest extends DockerServerTest {
     }
 
 
+    @Ignore
     @org.junit.Test
     public void testSearch() throws Exception {
         logger.info("Create Machine with Name [{}]", dockerServer.getName());

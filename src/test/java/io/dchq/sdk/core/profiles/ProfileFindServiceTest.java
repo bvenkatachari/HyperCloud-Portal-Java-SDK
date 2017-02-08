@@ -1,8 +1,13 @@
-package io.dchq.sdk.core;
+package io.dchq.sdk.core.profiles;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.security.Profile;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ProfileService;
+import io.dchq.sdk.core.ServiceFactory;
+
 import org.junit.Assert;
 
 import java.util.List;
@@ -24,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -39,7 +45,7 @@ import static org.hamcrest.core.Is.is;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class ProfileUpdateServiceTest extends AbstractServiceTest {
+public class ProfileFindServiceTest extends AbstractServiceTest {
 
 
     private ProfileService profileService;
@@ -51,61 +57,53 @@ public class ProfileUpdateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"Profile 6",true,20,2,2000,5000,"Profile 6 Updated", false,false},
-                {"Profile 6",false,20,2,2000,5000,"Profile 6 Updated",  false,false},
+                {"My Profile",true,20,2,2000,5000,false}
                 // checking Empty Profiles
-                {"Profile 6 Update with Null",true,20,2,2000,5000,"",  false,true}
+
 
         });
     }
 
-    private Profile profile,profileUpdated;
+    private Profile profile,profileFind;
     private boolean createError,updateError;
     private Profile profileCreated;
     private String profileNameUpdated;
 
 
-    public ProfileUpdateServiceTest(String profilename, boolean boolProfile, int containerCapacity, int cpuCapacity, int memoryCapacity, int storageCapacity, String profileNameUpdated,boolean success,boolean updateError) {
+    public ProfileFindServiceTest(String profilename, boolean boolProfile, int containerCapacity, int cpuCapacity, int memoryCapacity, int storageCapacity,boolean success) {
         this.profile = new Profile().withName(profilename).withDefaultProfile(boolProfile).withContainerCap(containerCapacity).withCpuCap(cpuCapacity).withMemoryCap(memoryCapacity).withStorageCap(storageCapacity);
-        this.profileNameUpdated=profileNameUpdated;
         this.createError = success;
-        this.updateError=updateError;
+
 
     }
     @org.junit.Test
-    public void testUpdate() throws Exception {
+    public void testFind() throws Exception {
 
-
+        logger.info("Create Profile with Name [{}]", profile.getName());
         ResponseEntity<Profile> response = profileService.create(profile);
-
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        assertThat("Test case CREATE Response is not as Expected ",createError, is(equals(response.isErrors())));
 
         for (Message message : response.getMessages())
             logger.warn("Error while Create request  [{}] ", message.getMessageText());
 
-
         if(!response.isErrors() && response.getResults()!=null)
             profileCreated = response.getResults();
 
-
-
-
-
+        assertNotNull(response);
+        assertNotNull(response.isErrors());
+        assertEquals("Test case CREATE Response is not as Expected ",createError, response.isErrors());
 
         if (!response.isErrors()) {
             assertNotNull(response.getResults());
             assertNotNull(response.getResults().getId());
             Assert.assertNotNull(profile.getName(), profileCreated.getName());
 
-            // Updating the Created Profile.
-            profileCreated.setName(profileNameUpdated);
-            response = profileService.update(profileCreated);
+            // Find the Created Profile.
+
+            response = profileService.findById(profileCreated.getId());
 
             // Checking for errors.
             for (Message message : response.getMessages())
-                logger.warn("Error while Create request  [{}] ", message.getMessageText());
+                logger.warn("Error while Find request  [{}] ", message.getMessageText());
 
             // Validating the response
             assertNotNull(response);
@@ -114,10 +112,11 @@ public class ProfileUpdateServiceTest extends AbstractServiceTest {
 
             if(!response.isErrors() && response.getResults()!=null)
             {
-                profileUpdated = response.getResults();
+                profileFind = response.getResults();
                 assertNotNull(response.getResults());
                 assertNotNull(response.getResults().getId());
-                Assert.assertNotNull(profileCreated.getName(), profileUpdated.getName());
+                Assert.assertNotNull(profileCreated.getName(), profileFind.getName());
+                logger.info("Profile Find Request returend Result as expected. [{}]", profileFind.getName());
 
             }
         }

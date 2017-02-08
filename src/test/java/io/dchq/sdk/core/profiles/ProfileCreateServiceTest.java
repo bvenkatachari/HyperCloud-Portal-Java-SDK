@@ -1,7 +1,12 @@
-package io.dchq.sdk.core;
+package io.dchq.sdk.core.profiles;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.security.Profile;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ProfileService;
+import io.dchq.sdk.core.ServiceFactory;
+
 import org.junit.Assert;
 
 import java.util.List;

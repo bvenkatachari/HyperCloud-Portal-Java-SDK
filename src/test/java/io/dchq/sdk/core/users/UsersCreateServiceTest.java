@@ -41,9 +41,9 @@ import com.dchq.schema.beans.one.security.Profile;
 import com.dchq.schema.beans.one.security.Users;
 
 import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ProfileSearchServiceTest;
 import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.UserService;
+import io.dchq.sdk.core.profiles.ProfileSearchServiceTest;
 
 /**
  * <code>UsersService</code> Integration Tests.
