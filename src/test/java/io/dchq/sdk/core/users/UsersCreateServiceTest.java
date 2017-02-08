@@ -168,15 +168,6 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
         }
     }
     
-    public static Profile getProfile(String name) {
-        try {
-            ProfileSearchServiceTest tempProf = new ProfileSearchServiceTest();
-            return tempProf.searchProfile(name);
-        } catch (Exception e) {
-            System.out.println("ERROR :" + e.getMessage());
-        }
-        return null;
-    }
 
     public static Organization getOrganization(String name, Boolean inActive, Boolean deleted) {
         return new Organization().withName(name).withInactive(inActive).withDeleted(deleted);
