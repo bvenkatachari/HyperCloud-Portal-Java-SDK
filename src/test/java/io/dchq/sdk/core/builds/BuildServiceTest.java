@@ -12,6 +12,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.BuildService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class BuildServiceTest extends AbstractServiceTest {
 //        Assert.assertNotNull(responseEntity.getResults().getId());
 //    }
 
-    @org.junit.Test
+ //   @org.junit.Test
     public void testCreate() throws Exception {
         Build build = new Build()
                 .withDockerScript("this is a docker script")
@@ -123,6 +124,7 @@ public class BuildServiceTest extends AbstractServiceTest {
 
     }
 
+    @Ignore
     @Test
     public void testBuildNowWithCustomizations() {
         String buildId = "2c9180875379854401537b8aa9175fd7";
