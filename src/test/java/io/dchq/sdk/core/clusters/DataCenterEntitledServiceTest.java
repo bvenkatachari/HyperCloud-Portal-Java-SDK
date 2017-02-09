@@ -77,15 +77,17 @@ public class DataCenterEntitledServiceTest extends AbstractServiceTest {
                 {"Test Cluster - AA4",Boolean.FALSE,EntitlementType.CUSTOM, true, userId2,"\nAll Input Values are normal. Malfunction in SDK",false},
                 {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, null,"\n Empty Cluster Name is Not Valid", false},
                 {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, "", "\n Empty Cluster Name is Not Valid", false}
-           /*     {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, "General Input", false},
+           /*   {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, "General Input", false},
                 {"TestPlugin11111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, "General Input", false},
                 {"TestPlugin2", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, null, "General Input", false},
                 {"TestPlugin3", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, "", "General Input", false}*/
+
+
         });
     }
     // Create - Update - Delete
 
-    public DataCenterEntitledServiceTest(String clusterName,Boolean autoScaleFlag,EntitlementType blueprintType, boolean isEntitlementTypeUser, String entitledUserId ,String validationMessage,boolean success) {
+    public DataCenterEntitledServiceTest(String clusterName,Boolean autoScaleFlag,EntitlementType blueprintType, boolean isEntitlementTypeUser, String entitledUserId,String validationMessage,boolean success) {
         this.dataCenter = new DataCenter().withName(clusterName).withAutoScale(autoScaleFlag).withBlueprintEntitlementType(blueprintType);
         if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
             UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);

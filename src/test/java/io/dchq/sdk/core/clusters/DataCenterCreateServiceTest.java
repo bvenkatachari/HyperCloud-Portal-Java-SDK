@@ -81,8 +81,24 @@ public class DataCenterCreateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-               {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g",false,true, 4,"\nAll Input Values are normal. Malfunction in SDK",false},
-
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g",false,true, 4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, null, "Approval", "Advanced", 5, "1g",false,true, 20,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced",5,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {" ","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4",null,"Short Description",null, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, null,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","12345",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"None","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","None", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 20,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"4g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true, 20,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,null,false},
+                {"Cluster AA4","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"ValidMessage",false},
+                {"1234","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"@@@@@@","Weave","Short Description",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","Short Description",null, EntitlementType.ALL_PLUGINS,"Approval","Advanced", 10,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave","ABC",EntitlementType.ALL_BLUEPRINTS, null,"Approval","Advanced",5,"1g",false,true,4,"\nAll Input Values are normal. Malfunction in SDK",false},
         });
     }
 

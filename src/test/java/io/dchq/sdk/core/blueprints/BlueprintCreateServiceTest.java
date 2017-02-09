@@ -149,53 +149,63 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 						"long description", Visibility.EDITABLE, "Long Description", false, null, null, null,
 						"http://wwww.dchq.io", null, "Description", null, null, true, false },
               */
-                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                //{"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
 
+                //{"Blueprint", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "0000000000", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprint", BlueprintType.DOCKER_COMPOSE, "1.0", "description", "https://dchq.io", null, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints", BlueprintType.DOCKER_COMPOSE, "AB", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"324135", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"####&&&&", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints_Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "  ", null, EntitlementType.CUSTOM, false},
+
+                //{"Blueprints-Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, null, null, EntitlementType.NONE, false},
+
+                //{"abcABC", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "7396325",Visibility.EDITABLE, "###", null, EntitlementType.NONE, false},
+
+                //{"  ", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "  ",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false},
+
+                //{null, BlueprintType.DOCKER_COMPOSE, "5.0", "description", null,Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"_Blueprints", "  ", "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"_Blueprints", null, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints", null, "A.B", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints", BlueprintType.DOCKER_COMPOSE, "  ", null, "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints", BlueprintType.DOCKER_COMPOSE, null, null, "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprints", BlueprintType.DOCKER_COMPOSE, "5.0", "  ", "https://dchq.io", "  ", "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false},
+
+                //{"BlueprintNew", BlueprintType.DOCKER_COMPOSE, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"BlueprintNew", null, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"BlueprintNew", BlueprintType.DOCKER_COMPOSE, "A.B", "Description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"12345", BlueprintType.DOCKER_COMPOSE, "5.0", "  ", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+
+                //{"Blueprint_New", BlueprintType.DOCKER_COMPOSE, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, null, null, EntitlementType.NONE, false},
+
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
                 {"Blueprint", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "0000000000", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprint", BlueprintType.DOCKER_COMPOSE, "1.0", "description", "https://dchq.io", null, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints", BlueprintType.DOCKER_COMPOSE, "AB", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"324135", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
                 {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"####&&&&", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints_Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "  ", null, EntitlementType.CUSTOM, false},
-
-                {"Blueprints-Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, null, null, EntitlementType.NONE, false},
-
-                {"abcABC", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "7396325",Visibility.EDITABLE, "###", null, EntitlementType.NONE, false},
-
-                {"  ", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "  ",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false},
-
-                {null, BlueprintType.DOCKER_COMPOSE, "5.0", "description", null,Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"_Blueprints", "  ", "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"_Blueprints", null, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints", null, "A.B", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints", BlueprintType.DOCKER_COMPOSE, "  ", null, "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints", BlueprintType.DOCKER_COMPOSE, null, null, "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprints", BlueprintType.DOCKER_COMPOSE, "5.0", "  ", "https://dchq.io", "  ", "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false},
-
-                {"BlueprintNew", BlueprintType.DOCKER_COMPOSE, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"BlueprintNew", null, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"BlueprintNew", BlueprintType.DOCKER_COMPOSE, "A.B", "Description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"12345", BlueprintType.DOCKER_COMPOSE, "5.0", "  ", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
-
-                {"Blueprint_New", BlueprintType.DOCKER_COMPOSE, "5.0", "Description", "https://dchq.io",Visibility.EDITABLE, null, null, EntitlementType.NONE, false},
+                {"Blueprint", BlueprintType.DOCKER_COMPOSE, "1.0", "description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "AB", "description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+                {"App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
 
         });
     }

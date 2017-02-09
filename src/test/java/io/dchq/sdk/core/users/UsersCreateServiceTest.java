@@ -67,7 +67,7 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     private Users userCreated;
     private String errorMessage;
 
-    public UsersCreateServiceTest (
+    public UsersCreateServiceTest(
             String fn,
             String ln,
             String username,
@@ -101,15 +101,32 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
         this.errorMessage = message;
         this.success = success;
     }
-    
-	@Parameterized.Parameters
-	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] {
-				// TODO: add more test data for all sorts of validations
-				{ "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, null,
-						"pass1234", true, "comments", false } });
-	}
-    
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() throws Exception {
+        return Arrays.asList(new Object[][]{
+                // TODO: add more test data for all sorts of validations
+                {"fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, null,
+                        "pass1234", true, "comments", false},
+                {"Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"  ", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"1234", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {null, "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"Rahul", "  ", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"Rahul", "Khanna", "   ", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"Rahul", "Khanna", "RahulKhanna", null, "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"Rahul", "Khanna", "RahulKhanna", "1234@123.com", "BMW", "ENGG", "9848098480", null, false, null, "pass", true, "NoComments", false},
+                {"Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "FINANCE", "asdfgh", null, false, null, "pass", true, "NoComments", false},
+                {"Raj", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null, "1234", true, "NoComments", false},
+                {"Raj", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, false, null, "fail", true, "  ", false},
+                {"@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, true, null, "pass", true, "Comments", false},
+                {"@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, true, null, "pass", false, "Comments", false},
+                {"@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, true, null, "pass", true, "Comments", false},
+                {"@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, false, null, "fail", true, "Comments", true},
+
+        });
+        }
+
     @Before
     public void setUp() throws Exception {
         service = ServiceFactory.buildUserService(rootUrl, username, password);

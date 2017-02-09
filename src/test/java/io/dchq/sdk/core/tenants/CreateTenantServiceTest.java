@@ -68,6 +68,14 @@ public class CreateTenantServiceTest extends AbstractServiceTest{
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"tenant12", false},
+                {"  ", false},
+                {"123", true},
+                {"123", false},
+                {"@@@", true},
+                {"@@@", false},
+                {null, null},
+                {null, true},
+                {null, false},
                 // Passing Empty string as tenant Name
           //      {"", false}
         });
