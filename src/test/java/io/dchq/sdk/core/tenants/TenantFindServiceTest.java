@@ -15,6 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -69,13 +70,14 @@ public class TenantFindServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TenantFindService", false},
+               {"TenantFindService", false},
                 // Passing Empty string as tenant Name
                 //      {"", false}
         });
     }
 
     //Main test, create tenant and fetch the Tenant ID.
+    @Ignore
     @org.junit.Test
     public void testFind() throws Exception {
 

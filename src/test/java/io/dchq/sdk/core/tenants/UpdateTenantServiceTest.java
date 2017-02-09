@@ -14,6 +14,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -69,7 +70,7 @@ public class UpdateTenantServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 //positive case
-                {"TenantCreation", "Update", false},
+               {"TenantCreation", "Update", false},
                // Updating with Empty group names
              //    {"Test for Updating with Empty", "", false}
 
@@ -77,6 +78,7 @@ public class UpdateTenantServiceTest extends AbstractServiceTest {
     }
 
     //Main test, create tenant, update and fetch the results.
+    @Ignore
     @org.junit.Test
     public void testUpdate() throws Exception {
 

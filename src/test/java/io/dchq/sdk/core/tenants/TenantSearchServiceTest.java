@@ -7,10 +7,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.TenantService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -77,6 +74,7 @@ public class TenantSearchServiceTest extends AbstractServiceTest {
     }
 
     //Main test, create tenant and search by name.
+    @Ignore
     @Test
     public void testSearch() throws Exception {
 

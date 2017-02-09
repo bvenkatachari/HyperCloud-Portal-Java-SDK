@@ -24,6 +24,7 @@ import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -108,6 +109,7 @@ public class DockerServerFindAllServiceTest extends DockerServerTest {
 
     DockerServer dockerServerFindById;
 
+    @Ignore
     @org.junit.Test
     public void testFindAll() throws Exception {
         logger.info("Create Machine with Name [{}]", dockerServer.getName());
