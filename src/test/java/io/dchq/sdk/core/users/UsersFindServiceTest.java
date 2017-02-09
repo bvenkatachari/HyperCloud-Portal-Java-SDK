@@ -82,14 +82,14 @@ public class UsersFindServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
-				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false }, });
+				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false }, });
 	}
 
     @Before
     public void setUp() throws Exception {
         service = ServiceFactory.buildUserService(rootUrl, username, password);
     }
-    @Ignore
+
     @Test
     public void testFind() {
         logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());
@@ -121,9 +121,8 @@ public class UsersFindServiceTest extends AbstractServiceTest {
             logger.info("Find User by Id [{}]", userCreated.getId());
             // find by #id
             response = service.findById(userCreated.getId());
-            String errors = "";
             for (Message message : response.getMessages()) {
-                errors += ("Error while Find request  " + message.getMessageText() + "\n");
+                logger.info("Error [{}]", message.getMessageText());
             }
             assertNotNull(response);
             assertNotNull(response.isErrors());
