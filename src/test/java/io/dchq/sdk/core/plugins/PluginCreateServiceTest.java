@@ -98,8 +98,8 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 // Positive Test-Cases
                 // Script-Lang
 
-                {"TestPlugin001", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
-                {"TestPlugin001", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
+                {"TestPlugin", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin001", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin002", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "POWERSHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
@@ -173,9 +173,16 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                                    String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
 
         // random pluginname
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        pluginName = prefix + pluginName;
-        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        if (pluginName == null){
+            throw new IllegalArgumentException("PluginName==null");
+        }
+
+        if (!pluginName.isEmpty()) {
+
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            pluginName = prefix + pluginName;
+            pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        }
 
         this.plugin = new Plugin();
         this.plugin.setName(pluginName);
@@ -201,8 +208,6 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
 
         this.plugin.setInactive(inactive);
         this.errors = errors;
-
-
 
     }
 

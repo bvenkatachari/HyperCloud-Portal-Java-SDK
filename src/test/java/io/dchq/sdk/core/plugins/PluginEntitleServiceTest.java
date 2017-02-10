@@ -80,9 +80,16 @@ public class PluginEntitleServiceTest extends AbstractServiceTest {
                                     EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId, boolean errors) {
 
         // random pluginname
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        pluginName = prefix + "-" + pluginName;
-        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        if (pluginName == null){
+            throw new IllegalArgumentException("PluginName==null");
+        }
+
+        if (!pluginName.isEmpty()) {
+
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            pluginName = prefix + pluginName;
+            pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        }
 
         this.plugin = new Plugin();
         this.plugin.setName(pluginName);

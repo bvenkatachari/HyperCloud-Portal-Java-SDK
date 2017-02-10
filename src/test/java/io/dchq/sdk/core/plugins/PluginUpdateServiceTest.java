@@ -148,9 +148,16 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
                                    String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
 
         // random pluginname
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        pluginName = prefix + pluginName;
-        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        if (pluginName == null){
+            throw new IllegalArgumentException("PluginName==null");
+        }
+
+        if (!pluginName.isEmpty()) {
+
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            pluginName = prefix + pluginName;
+            pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        }
 
         if (count == 0) {
             plugin = new Plugin();
