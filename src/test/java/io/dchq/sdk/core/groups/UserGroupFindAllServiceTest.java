@@ -75,10 +75,17 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
 
 
     public UserGroupFindAllServiceTest(String gname, boolean error) {
+
         // random group Name
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        gname = prefix + gname;
-        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+        if (gname == null){
+            throw new IllegalArgumentException("Group Name==null");
+        }
+
+        if (!gname.isEmpty()) {
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            gname = prefix + gname;
+            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+        }
 
         this.userGroup = new UserGroup().withName(gname);
         this.error = error;

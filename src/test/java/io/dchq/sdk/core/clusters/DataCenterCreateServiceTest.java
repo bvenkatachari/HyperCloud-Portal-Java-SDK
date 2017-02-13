@@ -110,9 +110,17 @@ public class DataCenterCreateServiceTest extends AbstractServiceTest {
 
     {
         // random clustername
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        clusterName = prefix + clusterName;
-        clusterName = org.apache.commons.lang3.StringUtils.lowerCase(clusterName);
+        if (clusterName == null){
+            throw new IllegalArgumentException("ClusterName==null");
+        }
+
+        if (!clusterName.isEmpty()) {
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            clusterName = prefix + clusterName;
+            clusterName = org.apache.commons.lang3.StringUtils.lowerCase(clusterName);
+        }
+
+
 
         this.dataCenter = new DataCenter().withName(clusterName).withNetwork(networkType).withBlueprintEntitlementType(blueprintType).withPluginEntitlementType(plugins);
         this.dataCenter.setDescription(description);

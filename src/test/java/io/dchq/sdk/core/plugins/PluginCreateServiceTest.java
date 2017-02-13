@@ -130,10 +130,17 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 // Positive Test-Cases
                 // Script-Lang
 
+<<<<<<< HEAD
 
 
                 {"TestPlugin11", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+=======
+                {"Test", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
+                {"TestPlugin", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin001", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin002", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+>>>>>>> 48144376bd3abf6f0bdb8f102a60b2cd60a10a08
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "POWERSHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "RUBY", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
@@ -206,9 +213,53 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
         });
     }
 
+<<<<<<< HEAD
     @org.junit.Before
     public void setUp() throws Exception {
         appService = ServiceFactory.buildPluginService(rootUrl, username, password);
+=======
+    public PluginCreateServiceTest(String pluginName, String version, String description, String pluginScript, String scriptType, String license,
+                                   Integer timeout, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId,
+                                   String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
+
+        // random pluginname
+        if (pluginName == null){
+            throw new IllegalArgumentException("PluginName==null");
+        }
+
+        if (!pluginName.isEmpty()) {
+
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            pluginName = prefix + pluginName;
+            pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+        }
+
+        this.plugin = new Plugin();
+        this.plugin.setName(pluginName);
+        this.plugin.setVersion(version);
+        this.plugin.setDescription(description);
+
+        this.plugin.setBaseScript(pluginScript);
+        this.plugin.setScriptLang(scriptType);
+
+        this.plugin.setLicense(license);
+        this.plugin.setTimeout(timeout);
+
+        this.plugin.setEnvs(envs);
+        this.plugin.setScriptArgs(scriptArgs);
+
+        this.isEntitlementTypeUser = isEntitlementTypeUser;
+        this.plugin.setEntitlementType(entitlementType);
+        if (EntitlementType.CUSTOM == entitlementType && isEntitlementTypeUser) {
+            this.plugin.setEntitledUsers(new ArrayList<UsernameEntityBase>(Arrays.asList(new UsernameEntityBase().withId(entitledUserId))));
+        } else if (EntitlementType.CUSTOM == entitlementType && !isEntitlementTypeUser) {
+            this.plugin.setEntitledUserGroups(new ArrayList<NameEntityBase>(Arrays.asList(new NameEntityBase().withId(entitledUserId))));
+        }
+
+        this.plugin.setInactive(inactive);
+        this.errors = errors;
+
+>>>>>>> 48144376bd3abf6f0bdb8f102a60b2cd60a10a08
     }
 
     @org.junit.Test

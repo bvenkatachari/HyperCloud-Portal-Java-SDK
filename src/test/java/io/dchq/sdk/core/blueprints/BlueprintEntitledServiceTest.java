@@ -16,12 +16,12 @@
 
 package io.dchq.sdk.core.blueprints;
 
-
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,23 +53,22 @@ import io.dchq.sdk.core.ServiceFactory;
  */
 
 /**
- * Blueprint: Search
+ * Blueprint: Create
  * App & Machine Blueprint
  *
  */
 
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BlueprintSearchServiceTest extends AbstractServiceTest {
+public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 
-    private BlueprintService blueprintService;
+    private BlueprintService blueprintService, blueprintService2;
     private Blueprint bluePrint;
     private boolean error;
     private Blueprint bluePrintCreated;
     private String errorMessage;
-
-    public BlueprintSearchServiceTest (
+    
+    public  BlueprintEntitledServiceTest (
     		String blueprintName, 
     		BlueprintType blueprintType,
     		String version, 
@@ -79,33 +78,58 @@ public class BlueprintSearchServiceTest extends AbstractServiceTest {
     		String yaml, 
 			Map<String, String> customMap,
     		EntitlementType entitlementType,
+    		Boolean isInactive, 
+    		/*
+    		String errorMessage,                          
+    		
+    		String username, 
+    		String customText,
+            String leaseTime, 
+            String shortDescription, 
+            String tags,
+            Boolean editable,
+            */
     		boolean success
             )
     {
-        this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version).withDescription(description).withVisibility(visible).withUserName(username);
-        this.bluePrint.setYml(yaml);
-        this.bluePrint.setEntitlementType(entitlementType);
-        this.bluePrint.setExternalLink(externalLink);
-        this.bluePrint.setCustomizationsMap(customMap);
+		this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version)
+				.withDescription(description).withVisibility(visible).withUserName(username);
+		this.bluePrint.setYml(yaml);
+		this.bluePrint.setEntitlementType(entitlementType);
+		this.bluePrint.setExternalLink(externalLink);
+		this.bluePrint.setCustomizationsMap(customMap);
+        /*
+        this.bluePrint.setInactive(isInactive);
+        this.errorMessage = errorMessage;
+        this.bluePrint.setCustomizationsText(customText);
+        this.bluePrint.setLeaseTime(leaseTime);
+        this.bluePrint.setShortDescription(shortDescription);
+        this.bluePrint.setTags(tags);
+        this.bluePrint.setEditable(editable);
+        */
         this.error = success;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{      
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
+        
+        return Arrays.asList(new Object[][]{
+
+				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null,
-						EntitlementType.NONE, false},
+						EntitlementType.OWNER, false, false }
+
         });
     }
-    
+
     @Before
     public void setUp() throws Exception {
         blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username, password);
+        blueprintService2 = ServiceFactory.buildBlueprintService(rootUrl, username2, password2);
     }
-    
+
     @Test
-    public void testSearch() throws Exception {
+    public void testEntitledUserOwnerSearch() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
         ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
         for (Message m : response.getMessages()) {
@@ -124,27 +148,59 @@ public class BlueprintSearchServiceTest extends AbstractServiceTest {
             Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
             Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
             Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
-            ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService.search(bluePrintCreated.getName(), 0, 1);
+            
+            ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.search(bluePrint.getName(), 0, 1);
             for (Message message : blueprintSearchResponseEntity.getMessages()) {
                 logger.warn("Error while Search request  [{}] ", message.getMessageText());
 				//errorMessage += message.getMessageText() + "\n";
             }
+            
             assertNotNull(blueprintSearchResponseEntity);
             assertNotNull(blueprintSearchResponseEntity.isErrors());
             // TODO: add tests for testing error message
             // assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
             assertNotNull(blueprintSearchResponseEntity.getResults());
-            assertEquals(1, blueprintSearchResponseEntity.getResults().size());
-            Blueprint searchedEntity = blueprintSearchResponseEntity.getResults().get(0);
-            logger.warn("Searching blueprint by name  [{}] ", searchedEntity.getName());
-            assertEquals(bluePrintCreated.getId(), searchedEntity.getId());
-            assertEquals(bluePrintCreated.getName(), searchedEntity.getName());
+            assertEquals(0, blueprintSearchResponseEntity.getResults().size());
+        }
+    }
+    
+    @Test
+    public void testEntitledUserOwnerFindById() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        assertNotNull(response);
+        assertNotNull(response.isErrors());
+        
+        if (!error) {
+            assertNotNull(response.getResults());
+            assertNotNull(response.getResults().getId());
+            Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
+            Assert.assertNotNull(bluePrint.getBlueprintType().toString(), bluePrintCreated.getBlueprintType().toString());
+            Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
+            Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
+            Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
+            
+            ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+            for (Message message : findbyIdResponse.getMessages()) {
+                logger.warn("Error while Find request  [{}] ", message.getMessageText());
+            }
+            
+			Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+			assertNotNull(findbyIdResponse);
+			assertNotNull(findbyIdResponse.isErrors());
+			assertEquals(findbyIdResponse.getResults(), null);
         }
     }
 
     @After
     public void cleanUp() {
-    	if (bluePrintCreated != null) {
+        if (bluePrintCreated != null) {
             logger.info("cleaning up...");
             ResponseEntity<?> response = blueprintService.delete(bluePrintCreated.getId());
             for (Message message : response.getMessages()) {

@@ -79,12 +79,20 @@ public class UserGroupUpdateServiceTest extends AbstractServiceTest {
     private String messageText;
 
     public UserGroupUpdateServiceTest(String gname, String updatedGourpName, boolean error) {
+
         // random group Name
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        gname = prefix + gname;
-        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
-        updatedGourpName = prefix + updatedGourpName;
-        updatedGourpName = org.apache.commons.lang3.StringUtils.lowerCase(updatedGourpName);
+        if (gname == null){
+            throw new IllegalArgumentException("Group Name==null");
+        }
+
+        if (!gname.isEmpty()) {
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            gname = prefix + gname;
+            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+            updatedGourpName = prefix + updatedGourpName;
+            updatedGourpName = org.apache.commons.lang3.StringUtils.lowerCase(updatedGourpName);
+        }
+
 
         this.userGroup = new UserGroup().withName(gname);
         this.updatedGroupName = updatedGourpName;

@@ -95,10 +95,17 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
 
     public UserGroupCreateServiceTest(String gname, boolean isInActive, boolean success) {
 
+
         // random group Name
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        gname = prefix + gname;
-        gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+        if (gname == null){
+            throw new IllegalArgumentException("Group Name==null");
+        }
+
+        if (!gname.isEmpty()) {
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            gname = prefix + gname;
+            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
+        }
 
         this.userGroup = new UserGroup().withName(gname).withInactive(isInActive);
         this.error = success;
