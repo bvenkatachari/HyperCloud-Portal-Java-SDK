@@ -88,7 +88,7 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{      
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description",
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null,
 						EntitlementType.NONE, false},
         });
