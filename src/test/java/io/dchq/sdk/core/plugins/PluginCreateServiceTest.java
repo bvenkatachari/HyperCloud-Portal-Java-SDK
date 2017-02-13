@@ -53,18 +53,50 @@ import static junit.framework.TestCase.assertNotNull;
 public class PluginCreateServiceTest extends AbstractServiceTest {
 
     private PluginService appService;
-
-    @org.junit.Before
-    public void setUp() throws Exception {
-        appService = ServiceFactory.buildPluginService(rootUrl, username, password);
-    }
-
     private Plugin plugin;
     private boolean errors;
     private Plugin pluginCreated;
     private String messageText;
     private Boolean isEntitlementTypeUser;
+    public PluginCreateServiceTest(String pluginName, String version, String description, String pluginScript, String scriptType, String license,
+                                   Integer timeout, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId,
+                                   String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
 
+        // random pluginname
+
+
+        String prefix = RandomStringUtils.randomAlphabetic(3);
+        pluginName = prefix + pluginName;
+        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
+
+
+        this.plugin = new Plugin();
+        this.plugin.setName(pluginName);
+        this.plugin.setVersion(version);
+        this.plugin.setDescription(description);
+
+        this.plugin.setBaseScript(pluginScript);
+        this.plugin.setScriptLang(scriptType);
+
+        this.plugin.setLicense(license);
+        this.plugin.setTimeout(timeout);
+
+        this.plugin.setEnvs(envs);
+        this.plugin.setScriptArgs(scriptArgs);
+
+        this.isEntitlementTypeUser = isEntitlementTypeUser;
+        this.plugin.setEntitlementType(entitlementType);
+        if (EntitlementType.CUSTOM == entitlementType && isEntitlementTypeUser) {
+            this.plugin.setEntitledUsers(new ArrayList<UsernameEntityBase>(Arrays.asList(new UsernameEntityBase().withId(entitledUserId))));
+        } else if (EntitlementType.CUSTOM == entitlementType && !isEntitlementTypeUser) {
+            this.plugin.setEntitledUserGroups(new ArrayList<NameEntityBase>(Arrays.asList(new NameEntityBase().withId(entitledUserId))));
+        }
+
+        this.plugin.setInactive(inactive);
+        this.errors = errors;
+
+
+    }
 
     /**
      * Name: Not-Empty, Max_Length:Short-Text, Unique with Version per owner
@@ -98,41 +130,44 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 // Positive Test-Cases
                 // Script-Lang
 
-                {"TestPlugin001", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
-                {"TestPlugin001", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin001", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin002", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+
+
+                {"TestPlugin11", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "POWERSHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "RUBY", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin003", "1.3", "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", "1.3", "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
 
-                /*{"TestPlugin11", "", "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin11", null, "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},*//*
-                *//*{"TestPlugin11", null, "", "Dummy Script", "", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", "1.2", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TESTPLUGIN011",  "1.2", "", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin[1]", "1.2", "", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin@1$", "1.2", "", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+
+                {"TestPlugin11", "", "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", null, "", "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", null, "", "Dummy Script", "", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", null, "", "Dummy Script", null, "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", null, "", "Dummy Script", null, "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", null, "", "Dummy Script", null, null, 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", null, "", "Dummy Script", null, null, 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
-                {"TestPlugin11", null, "", "Dummy Script", null, null, 30, EntitlementType.OWNER, true, userId2, null, null, true,  false},*//*
-*/
-                //Creating a Plugin with minimum Inputs
+                {"TestPlugin11", null, "", "Dummy Script", null, null, 30, EntitlementType.OWNER, true, userId2, null, null, true,  false},
 
-               /*
-                {"TestPlugin11", null, null, "script", null, "", null, null, true, userId2, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & EntitledUserId
-                 {"TestPlugin11", null, null, "script", null, "", 30, null, true, null, null, null, null, false}, //Creating a Plugin by providing Name & Script*
-                {"TestPlugin11", null, null, "script", "SHELL", "", null, null, true, userId2, null, null, true, null, false}, //Creating a Plugin by providing Name,Script& ScriptType
-                {"TestPlugin11", null, null, "script", null, "", null, null, true, userId2, null, null, true,  false},
-                {"TestPlugin11", null, null, "script", null, "", 30, null, true, null, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & Timeout
-                {"TestPlugin11", null, null, "Script", null, "", null, EntitlementType.OWNER, true, null, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & EntitlementType
-                {"TestPlugin11", null, null, "Script", null, "", null, EntitlementType.OWNER, false, null, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & EntitlementType
-                {"TestPlugin11", null, null, "Script", null, "", null, EntitlementType.PUBLIC, true, null, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & EntitlementType
-                //{"TestPlugin11", null, null, "Script", "SHELL", "", null, EntitlementType.PUBLIC, false, null, null, null, null, null, false},
-                {"TestPlugin11", null, null, "Script", null, "", null, EntitlementType.CUSTOM, true, userId2, null, null, null, null, false}, //Creating a Plugin by providing Name, Script & EntitlementType,EntitledUserId
+               /* //Creating a Plugin with minimum Inputs
+                {"TestPlugin999", null, null, "script", null, "", 30, null, false, null, null, null, true, false},
+                {"TestPlugin11", null, null, "script", null, "", 30, null, true, userId2, null, null, false, false}, //Creating a Plugin by providing Name, Script & EntitledUserId
+                {"TestPlugin11", null, null, "script", "SHELL", "", 30, null, true, userId2, null, null, true, false}, //Creating a Plugin by providing Name,Script& ScriptType
+                {"TestPlugin11", null, null, "script", null, "", 30, null, true, userId2, null, null, true, false},
+                {"TestPlugin11", null, null, "script", null, "", 30, null, true, null, null, null, false, false}, //Creating a Plugin by providing Name, Script & Timeout
+                {"TestPlugin11", null, null, "Script", null, "", 30, EntitlementType.OWNER, true, null, null, null, true, false}, //Creating a Plugin by providing Name, Script & EntitlementType
+                {"TestPlugin11", null, null, "Script", null, "", 30, EntitlementType.OWNER, false, null, null, null, false, false}, //Creating a Plugin by providing Name, Script & EntitlementType
+                {"TestPlugin11", null, null, "Script", null, "", 30, EntitlementType.PUBLIC, true, null, null, null, false, false}, //Creating a Plugin by providing Name, Script & EntitlementType
+                {"TestPlugin11", null, null, "Script", null, "", 30, EntitlementType.CUSTOM, true, userId2, null, null, false, false}, //Creating a Plugin by providing Name, Script & EntitlementType,EntitledUserId
+                {"TestPlugin11", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true, false},
 
-                {"TestPlugin11", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-
-                //Name with Uppercase letters[A-Z],special characters[!,@,#,$,....] ,
+                 //Name with Uppercase letters[A-Z],special characters[!,@,#,$,....] ,
                 {"TESTPLUGIN",  "1.0", "Description", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin[1]", "1.0", "Description", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin@1$", null, "", "Description", "Dummy Script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
@@ -148,10 +183,11 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", null, 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
 
 
-                // Negative Test-Cases
-                // name
+               // Negative Test-Cases
+
                 {"", "1.2", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
                 {null, "1.2", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
+
                 // script-lang
                 {"TestPlugin11", "1.2", "Description", "Dummy Script", "invalid", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
                 {"TestPlugin11", "1.2", "Description", "Dummy Script", "shell", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
@@ -164,46 +200,16 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 {"TestPlugin11", "1.2", "Description", "", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
                 {"TestPlugin11", "1.2", "Description", null, "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  true},
 
-                **/
+
+                {"TestPlugin999", 5.0, "description", "Pscript", "shell", "", 30, null, true, userId2, null, null, null, false},
+                {"TPlugin", "", "", "Dummy Script", "", "", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},*/
+
         });
     }
 
-    public PluginCreateServiceTest(String pluginName, String version, String description, String pluginScript, String scriptType, String license,
-                                   Integer timeout, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId,
-                                   String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
-
-        // random pluginname
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        pluginName = prefix + pluginName;
-        pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
-
-        this.plugin = new Plugin();
-        this.plugin.setName(pluginName);
-        this.plugin.setVersion(version);
-        this.plugin.setDescription(description);
-
-        this.plugin.setBaseScript(pluginScript);
-        this.plugin.setScriptLang(scriptType);
-
-        this.plugin.setLicense(license);
-        this.plugin.setTimeout(timeout);
-
-        this.plugin.setEnvs(envs);
-        this.plugin.setScriptArgs(scriptArgs);
-
-        this.isEntitlementTypeUser = isEntitlementTypeUser;
-        this.plugin.setEntitlementType(entitlementType);
-        if (EntitlementType.CUSTOM == entitlementType && isEntitlementTypeUser) {
-            this.plugin.setEntitledUsers(new ArrayList<UsernameEntityBase>(Arrays.asList(new UsernameEntityBase().withId(entitledUserId))));
-        } else if (EntitlementType.CUSTOM == entitlementType && !isEntitlementTypeUser) {
-            this.plugin.setEntitledUserGroups(new ArrayList<NameEntityBase>(Arrays.asList(new NameEntityBase().withId(entitledUserId))));
-        }
-
-        this.plugin.setInactive(inactive);
-        this.errors = errors;
-
-
-
+    @org.junit.Before
+    public void setUp() throws Exception {
+        appService = ServiceFactory.buildPluginService(rootUrl, username, password);
     }
 
     @org.junit.Test
@@ -219,7 +225,7 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
 
             }
             //check for errors
-            Assert.assertEquals(messageText ,errors, response.isErrors());
+            Assert.assertEquals(messageText, errors, response.isErrors());
         }
 
         assertNotNull(response);
@@ -289,14 +295,15 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
         logger.info("cleaning up...");
 
         if (pluginCreated != null) {
-            ResponseEntity<Plugin> deleteResponse  =   appService.delete(pluginCreated.getId());
+            ResponseEntity<Plugin> deleteResponse = appService.delete(pluginCreated.getId());
 
-            for (Message m : deleteResponse.getMessages()){
+            for (Message m : deleteResponse.getMessages()) {
                 logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();}
+                messageText = m.getMessageText();
+            }
 
             //check for errors
-            Assert.assertFalse(messageText ,deleteResponse.isErrors());
+            Assert.assertFalse(messageText, deleteResponse.isErrors());
         }
     }
 }
