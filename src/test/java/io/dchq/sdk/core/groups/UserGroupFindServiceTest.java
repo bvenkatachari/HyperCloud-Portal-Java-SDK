@@ -64,7 +64,7 @@ public class UserGroupFindServiceTest extends AbstractServiceTest {
         return Arrays.asList(new Object[][]{
                 {"Find Group", false},
                 //check with Empty Group Name
-                {"", false}
+                {"test", false}
         });
     }
 

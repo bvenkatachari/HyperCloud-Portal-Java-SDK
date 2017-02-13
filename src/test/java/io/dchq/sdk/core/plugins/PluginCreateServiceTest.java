@@ -98,7 +98,7 @@ public class PluginCreateServiceTest extends AbstractServiceTest {
                 // Positive Test-Cases
                 // Script-Lang
 
-                {"", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
+                {"Test", null, null, "script", "SHELL", "", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
                 {"TestPlugin", "1.3", null, "Dummy Script", "PYTHON", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin001", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin002", "1.3", "Description", "Dummy Script", "PERL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
