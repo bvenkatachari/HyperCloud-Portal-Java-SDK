@@ -114,7 +114,7 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         
         return Arrays.asList(new Object[][]{
 
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description",
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, null, "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
 				{ "Blueprint", BlueprintType.DOCKER_COMPOSE, "5.0", "description", "https://dchq.io",
@@ -139,6 +139,10 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "5.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
+				/*
+				{ "Blueprint-version", BlueprintType.DOCKER_COMPOSE, null, "description",
+						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
+						false },*/
 
         });
     }
