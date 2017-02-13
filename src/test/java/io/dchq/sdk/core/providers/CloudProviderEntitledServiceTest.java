@@ -104,8 +104,8 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
         	
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.CUSTOM, true, userId2, "General Input", false },
+			//	{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
+			//			EntitlementType.CUSTOM, true, userId2, "General Input", false },
 				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
 						EntitlementType.CUSTOM, false, USER_GROUP, "General Input", false },
 				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
