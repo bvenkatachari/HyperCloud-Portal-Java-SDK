@@ -53,7 +53,7 @@ import io.dchq.sdk.core.ServiceFactory;
  */
 
 /**
- * Blueprint: Create
+ * Blueprint: Entitlement
  * App & Machine Blueprint
  *
  */
