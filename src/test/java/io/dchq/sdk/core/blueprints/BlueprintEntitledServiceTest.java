@@ -61,7 +61,7 @@ import io.dchq.sdk.core.ServiceFactory;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class BlueprintEntitledServiceTest extends AbstractServiceTest {
-
+			 
     private BlueprintService blueprintService, blueprintService2;
     private Blueprint bluePrint;
     private boolean error;
