@@ -18,7 +18,9 @@ package io.dchq.sdk.core.blueprints;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,13 +31,17 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
+import org.springframework.util.StringUtils;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.base.NameEntityBase;
+import com.dchq.schema.beans.one.base.UsernameEntityBase;
 import com.dchq.schema.beans.one.base.Visibility;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.blueprint.BlueprintType;
@@ -62,7 +68,7 @@ import io.dchq.sdk.core.ServiceFactory;
 @RunWith(Parameterized.class)
 public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			 
-    private BlueprintService blueprintService, blueprintService2;
+    private BlueprintService blueprintService, blueprintService2, blueprintService3;
     private Blueprint bluePrint;
     private boolean error;
     private Blueprint bluePrintCreated;
@@ -79,10 +85,11 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			Map<String, String> customMap,
     		EntitlementType entitlementType,
     		Boolean isInactive, 
+    		
+    		String entitledUserId,
+    		boolean isEntitlementTypeUser,
     		/*
     		String errorMessage,                          
-    		
-    		String username, 
     		String customText,
             String leaseTime, 
             String shortDescription, 
@@ -108,24 +115,47 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         this.bluePrint.setEditable(editable);
         */
         this.error = success;
+        
+		if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
+			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
+			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+			entiledUsers.add(entitledUser);
+			this.bluePrint.setEntitledUsers(entiledUsers);
+		} else if (!StringUtils.isEmpty(entitledUserId)) { // assume user-group
+			NameEntityBase entitledUser = new NameEntityBase().withId(entitledUserId);
+			List<NameEntityBase> entiledUsers = new ArrayList<>();
+			entiledUsers.add(entitledUser);
+			this.bluePrint.setEntitledUserGroups(entiledUsers);
+		}
     }
 
     @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        
-        return Arrays.asList(new Object[][]{
+	public static Collection<Object[]> data() {
 
-				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
-						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null,
-						EntitlementType.OWNER, false, false }
+		return Arrays.asList(new Object[][] {
 
-        });
-    }
+				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.OWNER, false, null,
+						false, false },
+
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.PUBLIC, false, null,
+						false, false },
+
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false, userId2,
+						true, false },
+
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false,
+						USER_GROUP, false, false }, });
+	}
 
     @Before
     public void setUp() throws Exception {
         blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username, password);
         blueprintService2 = ServiceFactory.buildBlueprintService(rootUrl, username2, password2);
+        blueprintService3 = ServiceFactory.buildBlueprintService(rootUrl, username3, password3);
     }
 
     @Test
@@ -138,32 +168,23 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         if(response.getResults() != null){
             bluePrintCreated = response.getResults();
         }
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
         if (!error) {
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
-            Assert.assertNotNull(bluePrint.getBlueprintType().toString(), bluePrintCreated.getBlueprintType().toString());
-            Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
-            Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
-            Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
-            
-            ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.search(bluePrint.getName(), 0, 1);
-            for (Message message : blueprintSearchResponseEntity.getMessages()) {
-                logger.warn("Error while Search request  [{}] ", message.getMessageText());
-				//errorMessage += message.getMessageText() + "\n";
+            if (bluePrintCreated.getEntitlementType().equals(EntitlementType.OWNER) ) {
+            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity1 = blueprintService2.search(bluePrint.getName(), 0, 1);
+            	  for (Message message : blueprintSearchResponseEntity1.getMessages()) {
+                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
+     				//errorMessage += message.getMessageText() + "\n";
+                 }
+                 assertNotNull(blueprintSearchResponseEntity1);
+                 assertNotNull(blueprintSearchResponseEntity1.isErrors());
+                 // TODO: add tests for testing error message
+                 assertNotNull(blueprintSearchResponseEntity1.getResults());
+                 assertEquals(0, blueprintSearchResponseEntity1.getResults().size());
             }
-            
-            assertNotNull(blueprintSearchResponseEntity);
-            assertNotNull(blueprintSearchResponseEntity.isErrors());
-            // TODO: add tests for testing error message
-            // assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
-            assertNotNull(blueprintSearchResponseEntity.getResults());
-            assertEquals(0, blueprintSearchResponseEntity.getResults().size());
         }
     }
     
+
     @Test
     public void testEntitledUserOwnerFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -174,30 +195,182 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         if(response.getResults() != null){
             bluePrintCreated = response.getResults();
         }
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        
         if (!error) {
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
-            Assert.assertNotNull(bluePrint.getBlueprintType().toString(), bluePrintCreated.getBlueprintType().toString());
-            Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
-            Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
-            Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
-            
-            ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
-            for (Message message : findbyIdResponse.getMessages()) {
-                logger.warn("Error while Find request  [{}] ", message.getMessageText());
+			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+				assertNotNull(findbyIdResponse);
+				assertNotNull(findbyIdResponse.isErrors());
+				assertEquals(findbyIdResponse.getResults(), null);
+			}
+        }
+    }
+    
+    // This is a bug: Blueprints are not visible across Tenants
+    @Ignore
+    @Test
+    public void testEntitledUserPublicSearch() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        if (!error) {
+             if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
+            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.search(bluePrint.getName(), 0, 1);
+                 for (Message message : blueprintSearchResponseEntity.getMessages()) {
+                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
+     				//errorMessage += message.getMessageText() + "\n";
+                 }
+                 assertNotNull(blueprintSearchResponseEntity);
+                 assertNotNull(blueprintSearchResponseEntity.isErrors());
+                 // TODO: add tests for testing error message
+                 assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+                 assertNotNull(blueprintSearchResponseEntity.getResults());
+                 assertEquals(1, blueprintSearchResponseEntity.getResults().size());
             }
-            
-			Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
-			assertNotNull(findbyIdResponse);
-			assertNotNull(findbyIdResponse.isErrors());
-			assertEquals(findbyIdResponse.getResults(), null);
         }
     }
 
+    // This is a bug: Blueprints are not visible across Tenants
+    @Ignore
+    @Test
+    public void testEntitledUserPublicFindById() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        if (!error) {
+            if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+		        assertNotNull(findbyIdResponse.getResults());
+		        assertNotNull(findbyIdResponse.getResults().getId());
+		        assertEquals(bluePrintCreated.getId(), findbyIdResponse.getResults().getId());
+			}
+        }
+    }
+    
+    // This is a bug: Blueprints are not visible across users and groups
+    @Ignore
+    @Test
+    public void testEntitledUserCustomSearch() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        if (!error) {
+			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+				ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2
+						.search(bluePrint.getName(), 0, 1);
+				for (Message message : blueprintSearchResponseEntity.getMessages()) {
+					logger.warn("Error while Search request  [{}] ", message.getMessageText());
+					// errorMessage += message.getMessageText() + "\n";
+				}
+				assertNotNull(blueprintSearchResponseEntity);
+				assertNotNull(blueprintSearchResponseEntity.isErrors());
+				// TODO: add tests for testing error message
+				assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+				assertNotNull(blueprintSearchResponseEntity.getResults());
+				assertEquals(1, blueprintSearchResponseEntity.getResults().size());
+			}
+        }
+    }
+
+    // This is a bug: Blueprints are not visible across users and groups
+    @Ignore
+    @Test
+    public void testEntitledUserCustomFindById() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+
+        if (!error) {
+          if (bluePrintCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+		        assertNotNull(findbyIdResponse.getResults());
+		        assertNotNull(findbyIdResponse.getResults().getId());
+		        assertEquals(bluePrintCreated.getId(), findbyIdResponse.getResults().getId());
+			}
+        }
+    } 
+    
+    @Test
+    public void testEntitledUserPublicSearchForOutsizeTenant() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        if (!error) {
+            if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
+            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService3.search(bluePrint.getName(), 0, 1);
+                 for (Message message : blueprintSearchResponseEntity.getMessages()) {
+                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
+     				//errorMessage += message.getMessageText() + "\n";
+                 }
+                 assertNotNull(blueprintSearchResponseEntity);
+                 assertNotNull(blueprintSearchResponseEntity.isErrors());
+                 // TODO: add tests for testing error message
+                 assertNotNull(blueprintSearchResponseEntity.getResults());
+                 assertEquals(0, blueprintSearchResponseEntity.getResults().size());
+            }
+        }
+    }
+
+    @Test
+    public void testEntitledUserPublicFindByIdForOutsizeTenant() throws Exception {
+        logger.info("Create Blueprint [{}]", bluePrint.getName());
+        ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            bluePrintCreated = response.getResults();
+        }
+        if (!error) {
+            if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService3.findById(bluePrint.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+				assertNotNull(findbyIdResponse);
+				assertNotNull(findbyIdResponse.isErrors());
+				assertEquals(findbyIdResponse.getResults(), null);
+			}
+        }
+    }
+    
     @After
     public void cleanUp() {
         if (bluePrintCreated != null) {

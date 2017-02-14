@@ -47,6 +47,14 @@ public abstract class AbstractServiceTest {
 
     // UserGroup with userId2 entitled user
     protected static String USER_GROUP = "2c918086597e5d5f0159b00555450058";
+    
+    // new tenant user 
+    // login: jagdeeptenant@tenants.hyerform.io
+    // password: vjBcGk8mgl6L
+    protected static String userId3 = "2c9180865a17fdac015a3b2697e34349";
+    protected static String username3 = "iH1PyWSLlUqZXHO7ZK9M";
+    protected static String password3 = "76uaiditpbij8vLi8KVWYALBliaIxaS98cIntUhv";
+    
 
     protected int waitTime = 0, maxWaitTime = 0;
 
