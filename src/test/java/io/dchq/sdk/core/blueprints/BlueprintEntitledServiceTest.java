@@ -203,9 +203,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			}
         }
     }
-    
-    // This is a bug: Blueprints are not visible across Tenants
-
+   
     @Test
     public void testEntitledUserPublicSearch() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -225,20 +223,12 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
                  assertNotNull(blueprintSearchResponseEntity);
                  assertNotNull(blueprintSearchResponseEntity.isErrors());
                  // TODO: add tests for testing error message
-<<<<<<< HEAD
-<<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
-                 assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
-=======
->>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
-=======
->>>>>>> master
                  assertNotNull(blueprintSearchResponseEntity.getResults());
                  assertEquals(1, blueprintSearchResponseEntity.getResults().size());
             }
         }
     }
-    // This is a bug: Blueprints are not visible across Tenants
-
+ 
     @Test
     public void testEntitledUserPublicFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -263,8 +253,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         }
     }
     
-    // This is a bug: Blueprints are not visible across users and groups
-
     @Test
     public void testEntitledUserCustomSearch() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -285,13 +273,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(blueprintSearchResponseEntity);
 				assertNotNull(blueprintSearchResponseEntity.isErrors());
 				// TODO: add tests for testing error message
-<<<<<<< HEAD
-<<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
-				assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
-=======
->>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
-=======
->>>>>>> master
 				assertNotNull(blueprintSearchResponseEntity.getResults());
 				assertEquals(1, blueprintSearchResponseEntity.getResults().size());
 			}
