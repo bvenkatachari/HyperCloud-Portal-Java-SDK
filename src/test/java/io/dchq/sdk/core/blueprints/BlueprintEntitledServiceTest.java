@@ -134,21 +134,23 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 
-				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+		/*		{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.OWNER, false, null,
 						false, false },
-
-				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+*/
+				{ "User PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.PUBLIC, false, null,
 						false, false },
 
-				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+				{ "User By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false, userId2,
 						true, false },
 
-				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+				{ "User Visiblity PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false,
-						USER_GROUP, false, false }, });
+						USER_GROUP, false, false },
+
+						 });
 	}
 
     @Before
@@ -183,9 +185,8 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
             }
         }
     }
-    
 
-    @Test
+   @Test
     public void testEntitledUserOwnerFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
         ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
@@ -210,7 +211,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     }
     
     // This is a bug: Blueprints are not visible across Tenants
-    @Ignore
+
     @Test
     public void testEntitledUserPublicSearch() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -223,7 +224,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
              if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
-            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.search(bluePrint.getName(), 0, 1);
+            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.searchEntitled(bluePrint.getName(), 0, 1);
                  for (Message message : blueprintSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
      				//errorMessage += message.getMessageText() + "\n";
@@ -239,7 +240,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     }
 
     // This is a bug: Blueprints are not visible across Tenants
-    //@Ignore
+
     @Test
     public void testEntitledUserPublicFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -265,7 +266,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     }
     
     // This is a bug: Blueprints are not visible across users and groups
-    @Ignore
+
     @Test
     public void testEntitledUserCustomSearch() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -279,7 +280,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         if (!error) {
 			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
 				ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2
-						.search(bluePrintCreated.getName(), 0, 1);
+						.searchEntitled(bluePrintCreated.getName(), 0, 1);
 				for (Message message : blueprintSearchResponseEntity.getMessages()) {
 					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 					// errorMessage += message.getMessageText() + "\n";
@@ -295,7 +296,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     }
 
     // This is a bug: Blueprints are not visible across users and groups
-    @Ignore
+
     @Test
     public void testEntitledUserCustomFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -309,7 +310,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 
         if (!error) {
           if (bluePrintCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrintCreated.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
@@ -320,7 +321,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			}
         }
     } 
-    
+
     @Test
     public void testEntitledUserPublicSearchForOutsizeTenant() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -333,7 +334,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
             if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
-            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService3.search(bluePrint.getName(), 0, 1);
+            	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService3.searchEntitled(bluePrint.getName(), 0, 1);
                  for (Message message : blueprintSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
      				//errorMessage += message.getMessageText() + "\n";
@@ -359,7 +360,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
             if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-				ResponseEntity<Blueprint> findbyIdResponse = blueprintService3.findById(bluePrint.getId());
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService3.findById(bluePrintCreated.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
