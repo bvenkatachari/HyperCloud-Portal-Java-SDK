@@ -225,10 +225,13 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
                  assertNotNull(blueprintSearchResponseEntity);
                  assertNotNull(blueprintSearchResponseEntity.isErrors());
                  // TODO: add tests for testing error message
+<<<<<<< HEAD
 <<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
                  assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
 =======
 >>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
+=======
+>>>>>>> master
                  assertNotNull(blueprintSearchResponseEntity.getResults());
                  assertEquals(1, blueprintSearchResponseEntity.getResults().size());
             }
@@ -282,10 +285,13 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(blueprintSearchResponseEntity);
 				assertNotNull(blueprintSearchResponseEntity.isErrors());
 				// TODO: add tests for testing error message
+<<<<<<< HEAD
 <<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
 				assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
 =======
 >>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
+=======
+>>>>>>> master
 				assertNotNull(blueprintSearchResponseEntity.getResults());
 				assertEquals(1, blueprintSearchResponseEntity.getResults().size());
 			}
