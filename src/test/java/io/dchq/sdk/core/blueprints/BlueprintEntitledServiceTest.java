@@ -239,7 +239,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     }
 
     // This is a bug: Blueprints are not visible across Tenants
-    @Ignore
+    //@Ignore
     @Test
     public void testEntitledUserPublicFindById() throws Exception {
         logger.info("Create Blueprint [{}]", bluePrint.getName());
@@ -252,7 +252,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
             if (bluePrintCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
+				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrintCreated.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
@@ -279,7 +279,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
         if (!error) {
 			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
 				ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2
-						.search(bluePrint.getName(), 0, 1);
+						.search(bluePrintCreated.getName(), 0, 1);
 				for (Message message : blueprintSearchResponseEntity.getMessages()) {
 					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 					// errorMessage += message.getMessageText() + "\n";
