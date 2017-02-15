@@ -25,9 +25,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.PluginService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -38,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
@@ -45,6 +44,7 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * @author Intesar Mohammed
+ * @contributor Saurabh B.
  * @since 1.0
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -52,13 +52,14 @@ import static org.hamcrest.core.Is.is;
 public class PluginEntitleServiceTest extends AbstractServiceTest {
 
     private PluginService pluginService;
-    private PluginService pluginService2;
+    private PluginService pluginService2, pluginService3;
     private String messageText;
 
     @org.junit.Before
     public void setUp() throws Exception {
         pluginService = ServiceFactory.buildPluginService(rootUrl, username, password);
         pluginService2 = ServiceFactory.buildPluginService(rootUrl, username2, password2);
+        pluginService3 = ServiceFactory.buildPluginService(rootUrl, username3, password3);
     }
 
     private Plugin plugin;
@@ -68,18 +69,17 @@ public class PluginEntitleServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
+                {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
                 {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
-         /**       {"TestPlugin11111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
-                {"TestPlugin2", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, null, false},
-                {"TestPlugin3", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, "", false}
-         **/
+                {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
         });
     }
 
     public PluginEntitleServiceTest(String pluginName, String version, String pluginScript, String scriptType, String license,
                                     EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId, boolean errors) {
 
-        // random pluginname
+        // random plugin name
         if (pluginName == null){
             throw new IllegalArgumentException("PluginName==null");
         }
@@ -97,9 +97,7 @@ public class PluginEntitleServiceTest extends AbstractServiceTest {
         this.plugin.setBaseScript(pluginScript);
         this.plugin.setScriptLang(scriptType);
         this.plugin.setLicense(license);
-
         this.plugin.setEntitlementType(entitlementType);
-
 
         if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
             UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
@@ -117,54 +115,164 @@ public class PluginEntitleServiceTest extends AbstractServiceTest {
 
     }
 
-    @org.junit.Test
-    /**
-     * 1. User1 creates a Plugin
-     * 2. Shares with User2
-     * 3. Validate User2 can access the plugins
-     */
-    public void testEntitle() throws Exception {
-
-        logger.info("Creating plugins [{}]", this.plugin.getName());
+    // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom' through Search Operation.
+    @Test
+    public void testEntitledUserOwnerSearch() throws Exception {
+        logger.info("Create Plugin [{}]", plugin.getName());
         ResponseEntity<Plugin> response = pluginService.create(plugin);
-
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-
-        if (response.isErrors()) {
-            for (Message m : response.getMessages()) {
-                logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            pluginCreated = response.getResults();
+        }
+        if (!errors) {
+            if (pluginCreated.getEntitlementType().equals(EntitlementType.OWNER) ) {
+                ResponseEntity<List<Plugin>> pluginSearchResponseEntity1 = pluginService2.search(plugin.getName(), 0, 1);
+                for (Message message : pluginSearchResponseEntity1.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                    //errorMessage += message.getMessageText() + "\n";
+                }
+                assertNotNull(pluginSearchResponseEntity1);
+                assertNotNull(pluginSearchResponseEntity1.isErrors());
+                assertNotNull(pluginSearchResponseEntity1.getResults());
+                assertEquals(0, pluginSearchResponseEntity1.getResults().size());
             }
-            //check for errors
-            Assert.assertEquals(messageText ,errors, response.isErrors());
+
+            else if (pluginCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
+                ResponseEntity<List<Plugin>> pluginSearchResponseEntity = pluginService2.search(plugin.getName(), 0, 1);
+                for (Message message : pluginSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                    }
+                assertNotNull(pluginSearchResponseEntity);
+                assertNotNull(pluginSearchResponseEntity.isErrors());
+                assertEquals(1, pluginSearchResponseEntity.getResults().size());
+            }
+            else  if (pluginCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+                ResponseEntity<List<Plugin>> pluginSearchResponseEntity = pluginService2
+                        .search(plugin.getName(), 0, 1);
+                for (Message message : pluginSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                }
+                assertNotNull(pluginSearchResponseEntity);
+                assertNotNull(pluginSearchResponseEntity.isErrors());
+                assertEquals(1, pluginSearchResponseEntity.getResults().size());
+            }
+            else {
+                Assert.fail("Entitlement Type Not supported: " + pluginCreated.getEntitlementType());
+            }
         }
+    }
 
-        pluginCreated = response.getResults();
-        assertNotNull(response.getResults());
-        assertNotNull(response.getResults().getId());
-        Assert.assertNotNull(plugin.getName(), pluginCreated.getName());
-
-        // valid User2 can access plugins
-        if (plugin.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
-            ResponseEntity<Plugin> entitledResponse = pluginService2.findById(pluginCreated.getId());
-
-            assertNotNull(entitledResponse);
-            assertNotNull(entitledResponse.isErrors());
-            Assert.assertThat(false, is(equals(entitledResponse.isErrors())));
-
-            assertNotNull(entitledResponse.getResults());
-
-            assertEquals(pluginCreated.getId(), entitledResponse.getResults().getId());
-        } else if (plugin.getEntitlementType() == EntitlementType.OWNER) {
-            ResponseEntity<Plugin> entitledResponse = pluginService2.findById(pluginCreated.getId());
-            assertNotNull(entitledResponse);
-            assertNotNull(entitledResponse.isErrors());
-            //Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
-            assertNull(entitledResponse.getResults());
+    // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom'  through Find by ID.
+    @Test
+    public void testEntitledUserOwnerFindById() throws Exception {
+        logger.info("Create Plugin [{}]", plugin.getName());
+        ResponseEntity<Plugin> response = pluginService.create(plugin);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
         }
+        if(response.getResults() != null){
+            pluginCreated = response.getResults();
+        }
+        if (!errors) {
+            if (pluginCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
+                ResponseEntity<Plugin> findbyIdResponse = pluginService2.findById(pluginCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse);
+                assertNotNull(findbyIdResponse.isErrors());
+                assertEquals(findbyIdResponse.getResults(), null);
+            }
 
+            else  if (pluginCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+                ResponseEntity<Plugin> findbyIdResponse = pluginService2.findById(pluginCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse.getResults());
+                assertEquals(pluginCreated.getId(), findbyIdResponse.getResults().getId());
+            }
 
+            else if (pluginCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+                ResponseEntity<Plugin> findbyIdResponse = pluginService2.findById(pluginCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse.getResults());
+                assertEquals(pluginCreated.getId(), findbyIdResponse.getResults().getId());
+            }
+
+            else {
+                    Assert.fail("Entitlement Type Not supported: " + pluginCreated.getEntitlementType());
+
+                 }
+        }
+    }
+
+   // Negative Test for Entitlement - 'Owner', 'Everyone' & 'Custom' through Search operation for users that does not belong to same Tenant.
+    @Test
+    public void testEntitledUserSearchForOutsideTenant() throws Exception {
+        logger.info("Create Plugin [{}]", plugin.getName());
+        ResponseEntity<Plugin> response = pluginService.create(plugin);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            pluginCreated = response.getResults();
+        }
+        if (!errors) {
+
+            if (((pluginCreated.getEntitlementType().equals(EntitlementType.OWNER) )
+                    || (pluginCreated.getEntitlementType().equals(EntitlementType.PUBLIC))
+                    || (pluginCreated.getEntitlementType().equals(EntitlementType.CUSTOM)))) {
+                ResponseEntity<List<Plugin>> pluginSearchResponseEntity = pluginService3.search(plugin.getName(), 0, 1);
+                for (Message message : pluginSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                }
+                assertNotNull(pluginSearchResponseEntity);
+                assertNotNull(pluginSearchResponseEntity.isErrors());
+                assertEquals(0, pluginSearchResponseEntity.getResults().size());
+            }
+
+         else {
+                Assert.fail("Entitlement Type Not supported: " + pluginCreated.getEntitlementType());
+            }
+        }
+    }
+
+    // Negative Test for Entitlement - 'Owner', 'Everyone' & 'Custom' through find by ID for users that does not belong to same Tenant.
+    @Test
+    public void testEntitledUserFindByIdForOutsizeTenant() throws Exception {
+        logger.info("Create Plugin [{}]", plugin.getName());
+        ResponseEntity<Plugin> response = pluginService.create(plugin);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            pluginCreated = response.getResults();
+        }
+        if (!errors) {
+            if (((pluginCreated.getEntitlementType().equals(EntitlementType.OWNER) )
+                    || (pluginCreated.getEntitlementType().equals(EntitlementType.PUBLIC))
+                    || (pluginCreated.getEntitlementType().equals(EntitlementType.CUSTOM)))) {
+                ResponseEntity<Plugin> findbyIdResponse = pluginService3.findById(pluginCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse);
+                assertEquals(findbyIdResponse.getResults(), null);
+            }
+            else {
+                Assert.fail("Entitlement Type Not supported: " + pluginCreated.getEntitlementType());
+            }
+
+        }
     }
 
     @After

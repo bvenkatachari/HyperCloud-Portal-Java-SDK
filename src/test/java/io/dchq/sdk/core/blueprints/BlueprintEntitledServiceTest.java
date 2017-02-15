@@ -209,6 +209,8 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			}
         }
     }
+    
+    // This is a bug: Blueprints are not visible across Tenants
 
     @Test
     public void testEntitledUserPublicSearch() throws Exception {
@@ -230,12 +232,13 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
                  assertNotNull(blueprintSearchResponseEntity);
                  assertNotNull(blueprintSearchResponseEntity.isErrors());
                  // TODO: add tests for testing error message
-                 //assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+                 assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
                  assertNotNull(blueprintSearchResponseEntity.getResults());
                  assertEquals(1, blueprintSearchResponseEntity.getResults().size());
             }
         }
     }
+    // This is a bug: Blueprints are not visible across Tenants
 
     @Test
     public void testEntitledUserPublicFindById() throws Exception {
@@ -260,6 +263,8 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			}
         }
     }
+    
+    // This is a bug: Blueprints are not visible across users and groups
 
     @Test
     public void testEntitledUserCustomSearch() throws Exception {
@@ -282,12 +287,14 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(blueprintSearchResponseEntity);
 				assertNotNull(blueprintSearchResponseEntity.isErrors());
 				// TODO: add tests for testing error message
-				//assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+				assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
 				assertNotNull(blueprintSearchResponseEntity.getResults());
 				assertEquals(1, blueprintSearchResponseEntity.getResults().size());
 			}
         }
     }
+
+    // This is a bug: Blueprints are not visible across users and groups
 
     @Test
     public void testEntitledUserCustomFindById() throws Exception {
