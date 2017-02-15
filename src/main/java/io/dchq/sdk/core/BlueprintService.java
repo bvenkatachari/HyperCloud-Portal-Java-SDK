@@ -45,5 +45,13 @@ public interface BlueprintService extends GenericService<Blueprint, ResponseEnti
      */
     ResponseEntity<Blueprint> findYamlById(String id);
 
+    /**
+     * Search entitled <code>Blueprint</code>.
+     *
+     * @param token
+     * @return
+     */
+    ResponseEntity<List<Blueprint>> searchEntitled(String token, Integer page, Integer pageSize);
+
 
 }

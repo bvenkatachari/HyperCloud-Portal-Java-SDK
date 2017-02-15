@@ -47,13 +47,13 @@ abstract class GenericServiceImpl<E, RL, RO> implements GenericService<E, RL, RO
      * Represents the DCHQ base URL
      * <p>e.g. https://dchq.io/api/1.0/</p>
      */
-    private String baseURI;
+    protected String baseURI;
 
     /**
      * Represents the DCHQ endpoint
      * <p>e.g. blueprint</p>
      */
-    private String endpoint;
+    protected String endpoint;
 
     /**
      * Represents the authentication username
@@ -271,9 +271,11 @@ abstract class GenericServiceImpl<E, RL, RO> implements GenericService<E, RL, RO
 
     @Override
     public RL search(String term, Integer page, Integer pageSize) {
-        String authHeader = buildAuth();
-
         String url = baseURI + endpoint + "search";
+        return searchBase(term, page, pageSize, url);
+    }
+
+    protected RL searchBase(String term, Integer page, Integer pageSize, String url) {
         URI uri = getUri(url);
 
         page = (page == null || page < 0) ? 0 : page;
@@ -286,9 +288,10 @@ abstract class GenericServiceImpl<E, RL, RO> implements GenericService<E, RL, RO
 
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(url).queryParams(params).build();
 
+        String authHeader = buildAuth();
         RequestEntity request = getBasicRequestEntity(authHeader, uriComponents.toUri());
 
-        org.springframework.http.ResponseEntity<RL> res =
+        ResponseEntity<RL> res =
                 template.exchange(
                         uriComponents.toUriString(),
                         HttpMethod.GET,

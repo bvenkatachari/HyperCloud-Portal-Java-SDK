@@ -58,4 +58,10 @@ class BlueprintServiceImpl extends GenericServiceImpl<Blueprint, ResponseEntity<
     public ResponseEntity<Blueprint> findYamlById(String id) {
         return findById(id + "/yaml");
     }
+
+    @Override
+    public ResponseEntity<List<Blueprint>> searchEntitled(String term, Integer page, Integer pageSize) {
+        String url = baseURI + endpoint + "searchLibraryPage";
+        return searchBase(term, page, pageSize, url);
+    }
 }
