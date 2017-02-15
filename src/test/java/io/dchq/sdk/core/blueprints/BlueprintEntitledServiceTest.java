@@ -69,7 +69,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     private Blueprint bluePrint;
     private boolean error;
     private Blueprint bluePrintCreated;
-    private String errorMessage;
     
     public  BlueprintEntitledServiceTest (
     		String blueprintName, 
@@ -171,7 +170,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
             	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity1 = blueprintService2.search(bluePrint.getName(), 0, 1);
             	  for (Message message : blueprintSearchResponseEntity1.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(blueprintSearchResponseEntity1);
                  assertNotNull(blueprintSearchResponseEntity1.isErrors());
@@ -223,12 +221,14 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
             	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService2.searchEntitled(bluePrint.getName(), 0, 1);
                  for (Message message : blueprintSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(blueprintSearchResponseEntity);
                  assertNotNull(blueprintSearchResponseEntity.isErrors());
                  // TODO: add tests for testing error message
+<<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
                  assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+=======
+>>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
                  assertNotNull(blueprintSearchResponseEntity.getResults());
                  assertEquals(1, blueprintSearchResponseEntity.getResults().size());
             }
@@ -278,12 +278,14 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 						.searchEntitled(bluePrintCreated.getName(), 0, 1);
 				for (Message message : blueprintSearchResponseEntity.getMessages()) {
 					logger.warn("Error while Search request  [{}] ", message.getMessageText());
-					// errorMessage += message.getMessageText() + "\n";
 				}
 				assertNotNull(blueprintSearchResponseEntity);
 				assertNotNull(blueprintSearchResponseEntity.isErrors());
 				// TODO: add tests for testing error message
+<<<<<<< f3ff1931cdf9cdf545f42673dbfe58158ee87285
 				assertFalse(errorMessage,blueprintSearchResponseEntity.isErrors());
+=======
+>>>>>>> updated CloudProviderEntitleServiceTest and cleanup BluePrintEntitleServiceTest
 				assertNotNull(blueprintSearchResponseEntity.getResults());
 				assertEquals(1, blueprintSearchResponseEntity.getResults().size());
 			}
@@ -332,7 +334,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
             	 ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity = blueprintService3.searchEntitled(bluePrint.getName(), 0, 1);
                  for (Message message : blueprintSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(blueprintSearchResponseEntity);
                  assertNotNull(blueprintSearchResponseEntity.isErrors());
