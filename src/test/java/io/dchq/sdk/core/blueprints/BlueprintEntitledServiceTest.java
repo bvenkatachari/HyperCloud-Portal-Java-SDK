@@ -18,12 +18,10 @@ package io.dchq.sdk.core.blueprints;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +29,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -83,9 +80,9 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     		Visibility visible, 
     		String yaml, 
 			Map<String, String> customMap,
+			Boolean isInactive,
+			
     		EntitlementType entitlementType,
-    		Boolean isInactive, 
-    		
     		String entitledUserId,
     		boolean isEntitlementTypeUser,
     		/*
@@ -135,22 +132,21 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] {
 
 				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.OWNER, false, null,
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null,
 						false, false },
-
-				{ "User PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.PUBLIC, false, null,
+				
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null,
 						false, false },
-
-				{ "User By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false, userId2,
+				
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2,
 						true, false },
-
-				{ "User Visiblity PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.CUSTOM, false,
+				
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM,
 						USER_GROUP, false, false },
-
-						 });
+		});
 	}
 
     @Before
