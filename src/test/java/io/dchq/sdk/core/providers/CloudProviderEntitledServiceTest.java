@@ -66,11 +66,13 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     		String accountName,
     		String testUsername,
     		Boolean isActive,
-    		String password,
-    	
+    		String password,    	
+    		String domainName,
+    		String vmDestination,
+    		String template,
     		EntitlementType entitlementType, 
     		boolean isEntitlementTypeUser, 
-    		String entitledUserId,  
+    		String entitledUserId,
     		boolean success
     		) 
     {
@@ -96,20 +98,26 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
 
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.OWNER, true, userId2, "General Input", false },
-				/*
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.PUBLIC, true, userId2, "General Input", false },
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.CUSTOM, true, userId2, "General Input", false },
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, true, userId2, false },
 
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.OWNER, false, USER_GROUP, "General Input", false },
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.PUBLIC,false, USER_GROUP, "General Input", false },
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", Boolean.FALSE, "password",
-						EntitlementType.CUSTOM, false, USER_GROUP, "General Input", false }*/
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, true, userId2, false },
+
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, true, userId2, false },
+
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, false, USER_GROUP,
+						false },
+
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, false, USER_GROUP,
+						false },
+
+				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, USER_GROUP,
+						false }
         });
     }
 
@@ -136,7 +144,6 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
             	 ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity1 = registryAccountService2.search(registryAccount.getName(), 0, 1);
             	  for (Message message : registryAccountSearchResponseEntity1.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(registryAccountSearchResponseEntity1);
                  assertNotNull(registryAccountSearchResponseEntity1.isErrors());
@@ -184,15 +191,13 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
              if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
-            	 ResponseEntity<List<RegistryAccount>> RegistryAccountSearchResponseEntity = registryAccountService2.search(registryAccount.getName(), 0, 1);
+            	 ResponseEntity<List<RegistryAccount>> RegistryAccountSearchResponseEntity = registryAccountService2.search(registryAccountCreated.getName(), 0, 1);
                  for (Message message : RegistryAccountSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(RegistryAccountSearchResponseEntity);
                  assertNotNull(RegistryAccountSearchResponseEntity.isErrors());
                  // TODO: add tests for testing error message
-                 //assertFalse(errorMessage,RegistryAccountSearchResponseEntity.isErrors());
                  assertNotNull(RegistryAccountSearchResponseEntity.getResults());
                  assertEquals(1, RegistryAccountSearchResponseEntity.getResults().size());
             }
@@ -236,11 +241,9 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
 			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService2
-						.search(registryAccountCreated.getName(), 0, 1);
+				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService2.search(registryAccountCreated.getName(), 0, 1);
 				for (Message message : registryAccountSearchResponseEntity.getMessages()) {
 					logger.warn("Error while Search request  [{}] ", message.getMessageText());
-					// errorMessage += message.getMessageText() + "\n";
 				}
 				assertNotNull(registryAccountSearchResponseEntity);
 				assertNotNull(registryAccountSearchResponseEntity.isErrors());
@@ -268,7 +271,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
-		       // assertNotNull(findbyIdResponse.getResults());
+		        assertNotNull(findbyIdResponse.getResults());
 		        assertNotNull(findbyIdResponse.getResults().getId());
 		        assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
 			}
@@ -290,7 +293,6 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
             	 ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService3.search(registryAccount.getName(), 0, 1);
                  for (Message message : registryAccountSearchResponseEntity.getMessages()) {
                      logger.warn("Error while Search request  [{}] ", message.getMessageText());
-     				//errorMessage += message.getMessageText() + "\n";
                  }
                  assertNotNull(registryAccountSearchResponseEntity);
                  assertNotNull(registryAccountSearchResponseEntity.isErrors());
