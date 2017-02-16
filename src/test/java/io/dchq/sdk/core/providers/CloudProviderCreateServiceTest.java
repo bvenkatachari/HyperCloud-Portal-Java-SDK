@@ -156,7 +156,56 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				// volume provider
 				{ AccountType.VOLUME_PROVIDER, "Volume Provider testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", "hardwareId", "templateId", "opts", 10, false },
-        });
+
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,  null, null, null, false },
+				{ AccountType.RACKSPACE, "    ", "dchqinc", "apiKey", null, null, null, null,  null, null, null, false },
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "     ", "apiKey", null, null, null, null,  null, null, null, false },
+				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "     ", null, null, null, null,  null, null, null, false },
+				//TODO : Failing
+				//{ null, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,  null, null, null, false },
+
+
+
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
+				{ AccountType.AWS_EC2, "   ", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "   ", "apiKey", null, null, null, null, null, null, null, false},
+				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false},
+				//{ null, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
+
+
+
+				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
+				{ AccountType.DIGITALOCEAN, "    ", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
+				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "  ", "apiKey", null, null, null, null, null, null, null, false },
+				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false },
+				//{ null, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
+
+
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "   ", "dchqinc", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "  ", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "   ", null, null, null, null, null,null, null, false },
+				//{ null, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
+
+
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "     ", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "  ", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "   ", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "  ",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "    ", null, null, null, null, null, false },
+				//{ null, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+
+
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "    ", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "   ", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "   ", null, null,  "http://dchq.co.in", null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "   ", null, null, null, null, false },
+				//{ null, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
+
+
+		});
     }
     
     @Before
