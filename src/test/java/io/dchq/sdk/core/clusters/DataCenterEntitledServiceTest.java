@@ -19,15 +19,13 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.base.UsernameEntityBase;
-import com.dchq.schema.beans.one.plugin.Plugin;
 import com.dchq.schema.beans.one.provider.DataCenter;
 import com.dchq.schema.beans.one.security.EntitlementType;
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DataCenterService;
 import io.dchq.sdk.core.ServiceFactory;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -40,18 +38,14 @@ import java.util.List;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
-
-/**
- * Created by Abedeen on 04/05/16.
- */
 /**
  * Abstracts class for holding test credentials.
  *
  * @author Abedeen.
+ * @updater Saurabh B.
  * @since 1.0
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -59,36 +53,70 @@ import static org.junit.Assert.assertEquals;
 public class DataCenterEntitledServiceTest extends AbstractServiceTest {
 
     private DataCenterService dataCenterService;
-    private DataCenterService dataCenterService2;
+    private DataCenterService dataCenterService2, dataCenterService3;
+
+    DataCenter dataCenter;
+    DataCenter dataCenterCreated;
+    boolean error;
+    String validationMessage;
 
     @org.junit.Before
     public void setUp() throws Exception{
         dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, username, password);
         dataCenterService2 = ServiceFactory.buildDataCenterService(rootUrl, username2, password2);
+        dataCenterService3 = ServiceFactory.buildDataCenterService(rootUrl, username3, password3);
     }
 
-    DataCenter dataCenter;
-    DataCenter dataCenterCreated;
-    boolean createError;
-    String validationMessage;
+
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"Test Cluster - AA4",Boolean.FALSE,EntitlementType.CUSTOM, true, userId2,"\nAll Input Values are normal. Malfunction in SDK",false},
-                {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, null,"\n Empty Cluster Name is Not Valid", false},
-                {"Testcluster Entitled ",Boolean.FALSE,EntitlementType.CUSTOM, false, "", "\n Empty Cluster Name is Not Valid", false}
-           /*   {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, "General Input", false},
-                {"TestPlugin11111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, "General Input", false},
-                {"TestPlugin2", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, null, "General Input", false},
-                {"TestPlugin3", "1.1", "Dummy Script", "PERL", "EULA", EntitlementType.OWNER, false, "", "General Input", false}*/
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced",
+                        5, "1g",false,true, 4, EntitlementType.OWNER, true, userId2, "\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced",
+                        5, "1g",false,true, 4, EntitlementType.PUBLIC, true, userId2, "\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced",
+                        5, "1g",false,true, 4, EntitlementType.CUSTOM, true, userId2, "\nAll Input Values are normal. Malfunction in SDK",false},
+                {"Cluster AA4","Weave", "ABC",EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced",
+                        5, "1g",false,true, 4, EntitlementType.CUSTOM, false, USER_GROUP, "\nAll Input Values are normal. Malfunction in SDK",false},
 
 
         });
     }
-    // Create - Update - Delete
+    public DataCenterEntitledServiceTest(String clusterName, String networkType, String description,
+                                       EntitlementType blueprintType, EntitlementType plugins, String capAdd,
+                                       String networkPass, int cpuShares, String memoryLimit,
+                                       boolean terminationProtection,boolean approvalEnforced,
+                                       int maxContainerLimit, EntitlementType entitlementType, boolean isEntitlementTypeUser,
+                                         String entitledUserId, String validationMessage, boolean error)
 
-    public DataCenterEntitledServiceTest(String clusterName,Boolean autoScaleFlag,EntitlementType blueprintType, boolean isEntitlementTypeUser, String entitledUserId,String validationMessage,boolean success) {
-        this.dataCenter = new DataCenter().withName(clusterName).withAutoScale(autoScaleFlag).withBlueprintEntitlementType(blueprintType);
+    {
+        // random clustername
+        if (clusterName == null){
+            throw new IllegalArgumentException("ClusterName==null");
+        }
+
+        if (!clusterName.isEmpty()) {
+            String prefix = RandomStringUtils.randomAlphabetic(3);
+            clusterName = prefix + clusterName;
+            clusterName = org.apache.commons.lang3.StringUtils.lowerCase(clusterName);
+        }
+
+
+
+        this.dataCenter = new DataCenter().withName(clusterName).withNetwork(networkType).withBlueprintEntitlementType(blueprintType).withPluginEntitlementType(plugins);
+        this.dataCenter.setDescription(description);
+        this.dataCenter.setCapAdd(capAdd);
+        this.dataCenter.setNetworkPass(networkPass);
+        this.dataCenter.setCpuShares(cpuShares);
+        this.dataCenter.setMemLimit(memoryLimit);
+        this.dataCenter.setTerminationProtection(terminationProtection);
+        this.dataCenter.setApprovalEnforced(approvalEnforced);
+        this.dataCenter.setMaxContainerLimit(maxContainerLimit);
+        this.dataCenter.setEntitlementType(entitlementType);
+        this.validationMessage = validationMessage;
+        this.error=error;
+
         if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
             UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
             List<UsernameEntityBase> entiledUsers = new ArrayList<>();
@@ -100,70 +128,183 @@ public class DataCenterEntitledServiceTest extends AbstractServiceTest {
             entiledUsers.add(entitledUser);
             this.dataCenter.setEntitledUserGroups(entiledUsers);
         }
-        this.createError=success;
         this.validationMessage=validationMessage;
 
     }
 
-    @org.junit.Test
-    public void testEntitle() throws Exception {
-
-        logger.info("Create Cluster with Name [{}]", dataCenter.getName());
-        if (createError)
-            logger.info("Input for create Cluster is Expected to generate Error: [{}]", validationMessage);
-
+    // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom' through Search Operation.
+    @Test
+    public void testEntitledUserOwnerSearch() throws Exception {
+        logger.info("Create Cluster [{}]", dataCenter.getName());
         ResponseEntity<DataCenter> response = dataCenterService.create(dataCenter);
-        for (Message message : response.getMessages())
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-
-        if (response.getResults() != null) this.dataCenterCreated = response.getResults();
-
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        assertEquals(validationMessage, ((Boolean) createError).toString(), ((Boolean) response.isErrors()).toString());
-
-        //if(!response.isErrors()  )
-
-        if (!createError) {
-
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-
-            this.dataCenterCreated = response.getResults();
-
-            assertEquals(dataCenter.getName(), dataCenterCreated.getName());
-            assertEquals(dataCenter.getEntitledBlueprint(), dataCenterCreated.getEntitledBlueprint());
-            assertEquals(dataCenter.isAutoScale(), dataCenterCreated.isAutoScale());
-
-            // valid User2 can access plugins
-            if (dataCenter.getEntitlementType() == EntitlementType.CUSTOM && !StringUtils.isEmpty(userId2)) {
-                ResponseEntity<DataCenter> entitledResponse = dataCenterService2.findById(dataCenterCreated.getId());
-
-                assertNotNull(entitledResponse);
-                assertNotNull(entitledResponse.isErrors());
-                Assert.assertThat(false, is(equals(entitledResponse.isErrors())));
-
-                assertNotNull(entitledResponse.getResults());
-
-                junit.framework.Assert.assertEquals(dataCenterCreated.getId(), entitledResponse.getResults().getId());
-            } else if (dataCenter.getEntitlementType() == EntitlementType.OWNER) {
-                ResponseEntity<DataCenter> entitledResponse = dataCenterService2.findById(dataCenterCreated.getId());
-                assertNotNull(entitledResponse);
-                assertNotNull(entitledResponse.isErrors());
-                //Assert.assertThat(true, is(equals(entitledResponse.isErrors())));
-                assertNull(entitledResponse.getResults());
-
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            dataCenterCreated = response.getResults();
+        }
+        if (!error) {
+            if (dataCenterCreated.getEntitlementType().equals(EntitlementType.OWNER) ) {
+                ResponseEntity<List<DataCenter>> clusterSearchResponseEntity1 = dataCenterService2.search(dataCenter.getName(), 0, 1);
+                for (Message message : clusterSearchResponseEntity1.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                    }
+                assertNotNull(clusterSearchResponseEntity1);
+                assertNotNull(clusterSearchResponseEntity1.isErrors());
+                assertNotNull(clusterSearchResponseEntity1.getResults());
+                Assert.assertEquals(0, clusterSearchResponseEntity1.getResults().size());
             }
 
+            else if (dataCenterCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
+                ResponseEntity<List<DataCenter>> clusterSearchResponseEntity = dataCenterService2.search(dataCenter.getName(), 0, 1);
+                for (Message message : clusterSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                }
+                assertNotNull(clusterSearchResponseEntity);
+                assertNotNull(clusterSearchResponseEntity.isErrors());
+                Assert.assertEquals(1, clusterSearchResponseEntity.getResults().size());
+            }
+            else  if (dataCenterCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+                ResponseEntity<List<DataCenter>> clusterSearchResponseEntity = dataCenterService2
+                        .search(dataCenter.getName(), 0, 1);
+                for (Message message : clusterSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                }
+                assertNotNull(clusterSearchResponseEntity);
+                assertNotNull(clusterSearchResponseEntity.isErrors());
+                Assert.assertEquals(1, clusterSearchResponseEntity.getResults().size());
+            }
+            else {
+                Assert.fail("Entitlement Type Not supported: " + dataCenterCreated.getEntitlementType());
+            }
+        }
+    }
+
+    // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom'  through Find by ID.
+    @Test
+    public void testEntitledUserOwnerFindById() throws Exception {
+        logger.info("Create Cluster [{}]", dataCenter.getName());
+        ResponseEntity<DataCenter> response = dataCenterService.create(dataCenter);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            dataCenterCreated = response.getResults();
+        }
+        if (!error) {
+            if (dataCenterCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
+                ResponseEntity<DataCenter> findbyIdResponse = dataCenterService2.findById(dataCenterCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse);
+                assertNotNull(findbyIdResponse.isErrors());
+                Assert.assertEquals(findbyIdResponse.getResults(), null);
+            }
+
+            else  if (dataCenterCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+                ResponseEntity<DataCenter> findbyIdResponse = dataCenterService2.findById(dataCenterCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse.getResults());
+                Assert.assertEquals(dataCenterCreated.getId(), findbyIdResponse.getResults().getId());
+            }
+
+            else if (dataCenterCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+                ResponseEntity<DataCenter> findbyIdResponse = dataCenterService2.findById(dataCenterCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse.getResults());
+                Assert.assertEquals(dataCenterCreated.getId(), findbyIdResponse.getResults().getId());
+            }
+
+            else {
+                Assert.fail("Entitlement Type Not supported: " + dataCenterCreated.getEntitlementType());
+
+            }
+        }
+    }
+
+    // Negative Test for Entitlement - 'Owner', 'Everyone' & 'Custom' through Search operation for users that does not belong to same Tenant.
+    @Test
+    public void testEntitledUserSearchForOutsideTenant() throws Exception {
+        logger.info("Create Cluster [{}]", dataCenter.getName());
+        ResponseEntity<DataCenter> response = dataCenterService.create(dataCenter);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            dataCenterCreated = response.getResults();
+        }
+        if (!error) {
+
+            if (((dataCenterCreated.getEntitlementType().equals(EntitlementType.OWNER) )
+                    || (dataCenterCreated.getEntitlementType().equals(EntitlementType.PUBLIC))
+                    || (dataCenterCreated.getEntitlementType().equals(EntitlementType.CUSTOM)))) {
+                ResponseEntity<List<DataCenter>> clusterSearchResponseEntity = dataCenterService3.search(dataCenter.getName(), 0, 1);
+                for (Message message : clusterSearchResponseEntity.getMessages()) {
+                    logger.warn("Error while Search request  [{}] ", message.getMessageText());
+                }
+                assertNotNull(clusterSearchResponseEntity);
+                assertNotNull(clusterSearchResponseEntity.isErrors());
+                Assert.assertEquals(0, clusterSearchResponseEntity.getResults().size());
+            }
+
+            else {
+                Assert.fail("Entitlement Type Not supported: " + dataCenterCreated.getEntitlementType());
+            }
+        }
+    }
+
+    // Negative Test for Entitlement - 'Owner', 'Everyone' & 'Custom' through find by ID for users that does not belong to same Tenant.
+    @Test
+    public void testEntitledUserFindByIdForOutsizeTenant() throws Exception {
+        logger.info("Create Cluster [{}]", dataCenter.getName());
+        ResponseEntity<DataCenter> response = dataCenterService.create(dataCenter);
+        for (Message m : response.getMessages()) {
+            logger.warn("[{}]", m.getMessageText());
+        }
+        if(response.getResults() != null){
+            dataCenterCreated = response.getResults();
+        }
+        if (!error) {
+            if (((dataCenterCreated.getEntitlementType().equals(EntitlementType.OWNER) )
+                    || (dataCenterCreated.getEntitlementType().equals(EntitlementType.PUBLIC))
+                    || (dataCenterCreated.getEntitlementType().equals(EntitlementType.CUSTOM)))) {
+                ResponseEntity<DataCenter> findbyIdResponse = dataCenterService3.findById(dataCenterCreated.getId());
+                for (Message message : findbyIdResponse.getMessages()) {
+                    logger.warn("Error while Find request  [{}] ", message.getMessageText());
+                }
+                Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+                assertNotNull(findbyIdResponse);
+                Assert.assertEquals(findbyIdResponse.getResults(), null);
+            }
+            else {
+                Assert.fail("Entitlement Type Not supported: " + dataCenterCreated.getEntitlementType());
+            }
 
         }
     }
+
+    //Delete the Cluster created above to keep the data neat & clean.
     @After
     public void cleanUp() {
         logger.info("cleaning up...");
 
-        if (dataCenterCreated!=null) {
-            dataCenterService.delete(dataCenterCreated.getId());
+        if (dataCenterCreated != null) {
+            ResponseEntity<DataCenter> deleteResponse  =   dataCenterService.delete(dataCenterCreated.getId());
+
+            for (Message m : deleteResponse.getMessages()){
+                logger.warn("[{}]", m.getMessageText());
+                validationMessage = m.getMessageText();}
+
+            //check for errors
+            Assert.assertFalse(validationMessage ,deleteResponse.isErrors());
         }
     }
 }
