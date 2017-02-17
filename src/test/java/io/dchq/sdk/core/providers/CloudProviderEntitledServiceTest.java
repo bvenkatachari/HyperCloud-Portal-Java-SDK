@@ -106,15 +106,6 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 
 				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, true, userId2, false },
-				
-
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
-						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, false, USER_GROUP,
-						false },
-
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
-						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, false, USER_GROUP,
-						false },
 
 				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, USER_GROUP,
@@ -218,6 +209,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         }
         if (!error) {
             if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+            	logger.info("Created ID is [{}]", registryAccountCreated.getId());
 				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2.findById(registryAccountCreated.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
