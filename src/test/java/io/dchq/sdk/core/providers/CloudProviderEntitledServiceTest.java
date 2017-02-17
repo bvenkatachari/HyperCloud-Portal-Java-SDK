@@ -106,6 +106,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 
 				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, true, userId2, false },
+				
 
 				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, false, USER_GROUP,
@@ -149,7 +150,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
                  assertNotNull(registryAccountSearchResponseEntity1.isErrors());
                  // TODO: add tests for testing error message
                  assertNotNull(registryAccountSearchResponseEntity1.getResults());
-                 assertEquals(0, registryAccountSearchResponseEntity1.getResults().size());
+                 assertEquals(1, registryAccountSearchResponseEntity1.getResults().size());
             }
         }
     }
