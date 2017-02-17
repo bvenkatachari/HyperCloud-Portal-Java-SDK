@@ -134,9 +134,9 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null,
 						false, false },
 				
-				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null,
-						false, false },
+				//{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+				//		Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null,
+				//		false, false },
 				
 				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2,
