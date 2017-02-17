@@ -120,121 +120,46 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         registryAccountService3 = ServiceFactory.buildRegistryAccountService(rootUrl, username3, password3);
     }
     
-    @Test
-    public void testEntitledUserOwnerSearch() {
+	@Test
+	public void testEntitledSearch() {
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
 		logger.info("Create Registry Account with Name [{}]", registryAccount.getName());
-        
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-            if (registryAccountCreated.getEntitlementType().equals(EntitlementType.OWNER) ) {
-            	 ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity1 = registryAccountService2.search(registryAccount.getName(), 0, 1);
-            	  for (Message message : registryAccountSearchResponseEntity1.getMessages()) {
-                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
-                 }
-                 assertNotNull(registryAccountSearchResponseEntity1);
-                 assertNotNull(registryAccountSearchResponseEntity1.isErrors());
-                 // TODO: add tests for testing error message
-                 assertNotNull(registryAccountSearchResponseEntity1.getResults());
-                 assertEquals(1, registryAccountSearchResponseEntity1.getResults().size());
-            }
-        }
-    }
 
-
-    @Test
-    public void testEntitledUserOwnerFindById() {   	
-        logger.info("Create Blueprint [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-        	registryAccountCreated = response.getResults();
-        }
-        if (!error) {
+		for (Message m : response.getMessages()) {
+			logger.warn("[{}]", m.getMessageText());
+		}
+		if (response.getResults() != null) {
+			registryAccountCreated = response.getResults();
+		}
+		if (!error) {
 			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
-				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2.findById(registryAccountCreated.getId());
-				for (Message message : findbyIdResponse.getMessages()) {
-					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity1 = registryAccountService2
+						.search(registryAccount.getName(), 0, 1);
+				for (Message message : registryAccountSearchResponseEntity1.getMessages()) {
+					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 				}
-				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
-				assertNotNull(findbyIdResponse);
-				assertNotNull(findbyIdResponse.isErrors());
-				assertEquals(findbyIdResponse.getResults(), null);
+				assertNotNull(registryAccountSearchResponseEntity1);
+				assertNotNull(registryAccountSearchResponseEntity1.isErrors());
+				// TODO: add tests for testing error message
+				assertNotNull(registryAccountSearchResponseEntity1.getResults());
+				assertEquals(1, registryAccountSearchResponseEntity1.getResults().size());
 			}
-        }
-    }
-    
-    @Test
-    public void testEntitledUserPublicSearch() { 	
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-             if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
-            	 ResponseEntity<List<RegistryAccount>> RegistryAccountSearchResponseEntity = registryAccountService2.search(registryAccountCreated.getName(), 0, 1);
-                 for (Message message : RegistryAccountSearchResponseEntity.getMessages()) {
-                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
-                 }
-                 assertNotNull(RegistryAccountSearchResponseEntity);
-                 assertNotNull(RegistryAccountSearchResponseEntity.isErrors());
-                 // TODO: add tests for testing error message
-                 assertNotNull(RegistryAccountSearchResponseEntity.getResults());
-                 assertEquals(1, RegistryAccountSearchResponseEntity.getResults().size());
-            }
-        }
-    }
 
-
-    @Test
-    public void testEntitledUserPublicFindById() {
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-            if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-            	logger.info("Created ID is [{}]", registryAccountCreated.getId());
-				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2.findById(registryAccountCreated.getId());
-				for (Message message : findbyIdResponse.getMessages()) {
-					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				ResponseEntity<List<RegistryAccount>> RegistryAccountSearchResponseEntity = registryAccountService2
+						.search(registryAccountCreated.getName(), 0, 1);
+				for (Message message : RegistryAccountSearchResponseEntity.getMessages()) {
+					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 				}
-				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
-		        assertNotNull(findbyIdResponse.getResults());
-		        assertNotNull(findbyIdResponse.getResults().getId());
-		        assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
+				assertNotNull(RegistryAccountSearchResponseEntity);
+				assertNotNull(RegistryAccountSearchResponseEntity.isErrors());
+				// TODO: add tests for testing error message
+				assertNotNull(RegistryAccountSearchResponseEntity.getResults());
+				assertEquals(1, RegistryAccountSearchResponseEntity.getResults().size());
 			}
-        }
-    }
-
-    @Test
-    public void testEntitledUserCustomSearch() {
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
 			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService2.search(registryAccountCreated.getName(), 0, 1);
+				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService2
+						.search(registryAccountCreated.getName(), 0, 1);
 				for (Message message : registryAccountSearchResponseEntity.getMessages()) {
 					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 				}
@@ -244,71 +169,35 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(registryAccountSearchResponseEntity.getResults());
 				assertEquals(1, registryAccountSearchResponseEntity.getResults().size());
 			}
-        }
-    }
-
-    @Test
-    public void testEntitledUserCustomFindById() {
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-          if (registryAccountCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2.findById(registryAccountCreated.getId());
-				for (Message message : findbyIdResponse.getMessages()) {
-					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService3
+						.search(registryAccount.getName(), 0, 1);
+				for (Message message : registryAccountSearchResponseEntity.getMessages()) {
+					logger.warn("Error while Search request  [{}] ", message.getMessageText());
 				}
-				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
-		        assertNotNull(findbyIdResponse.getResults());
-		        assertNotNull(findbyIdResponse.getResults().getId());
-		        assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
+				assertNotNull(registryAccountSearchResponseEntity);
+				assertNotNull(registryAccountSearchResponseEntity.isErrors());
+				// TODO: add tests for testing error message
+				assertNotNull(registryAccountSearchResponseEntity.getResults());
+				assertEquals(0, registryAccountSearchResponseEntity.getResults().size());
 			}
-        }
-    } 
+		}
+	}
 
-    @Test
-    public void testEntitledUserPublicSearchForOutsizeTenant() {
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-            if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC) ) {
-            	 ResponseEntity<List<RegistryAccount>> registryAccountSearchResponseEntity = registryAccountService3.search(registryAccount.getName(), 0, 1);
-                 for (Message message : registryAccountSearchResponseEntity.getMessages()) {
-                     logger.warn("Error while Search request  [{}] ", message.getMessageText());
-                 }
-                 assertNotNull(registryAccountSearchResponseEntity);
-                 assertNotNull(registryAccountSearchResponseEntity.isErrors());
-                 // TODO: add tests for testing error message
-                 assertNotNull(registryAccountSearchResponseEntity.getResults());
-                 assertEquals(0, registryAccountSearchResponseEntity.getResults().size());
-            }
-        }
-    }
-
-    @Test
-    public void testEntitledUserPublicFindByIdForOutsizeTenant() {
-        logger.info("Create RegistryAccount [{}]", registryAccount.getName());
-        ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-        }
-        if(response.getResults() != null){
-            registryAccountCreated = response.getResults();
-        }
-        if (!error) {
-            if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService3.findById(registryAccountCreated.getId());
+	@Test
+	public void testEntitledFindById() {
+		logger.info("Create Blueprint [{}]", registryAccount.getName());
+		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
+		for (Message m : response.getMessages()) {
+			logger.warn("[{}]", m.getMessageText());
+		}
+		if (response.getResults() != null) {
+			registryAccountCreated = response.getResults();
+		}
+		if (!error) {
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
+				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2
+						.findById(registryAccountCreated.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
@@ -317,9 +206,45 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(findbyIdResponse.isErrors());
 				assertEquals(findbyIdResponse.getResults(), null);
 			}
-        }
-    }
- 
+
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				logger.info("Created ID is [{}]", registryAccountCreated.getId());
+				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2
+						.findById(registryAccountCreated.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+				assertNotNull(findbyIdResponse.getResults());
+				assertNotNull(findbyIdResponse.getResults().getId());
+				assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
+			}
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService2
+						.findById(registryAccountCreated.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+				assertNotNull(findbyIdResponse.getResults());
+				assertNotNull(findbyIdResponse.getResults().getId());
+				assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
+			}
+			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+				ResponseEntity<RegistryAccount> findbyIdResponse = registryAccountService3
+						.findById(registryAccountCreated.getId());
+				for (Message message : findbyIdResponse.getMessages()) {
+					logger.warn("Error while Find request  [{}] ", message.getMessageText());
+				}
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
+				assertNotNull(findbyIdResponse);
+				assertNotNull(findbyIdResponse.isErrors());
+				assertEquals(findbyIdResponse.getResults(), null);
+			}
+		}
+	}
+    
+
     @After
     public void cleanUp() {
         if (registryAccountCreated != null) {
