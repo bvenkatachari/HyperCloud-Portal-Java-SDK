@@ -133,6 +133,7 @@ public class DataCenterEntitledServiceTest extends AbstractServiceTest {
     }
 
     // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom' through Search Operation.
+    @Ignore
     @Test
     public void testEntitledUserOwnerSearch() throws Exception {
         logger.info("Create Cluster [{}]", dataCenter.getName());
@@ -181,6 +182,7 @@ public class DataCenterEntitledServiceTest extends AbstractServiceTest {
     }
 
     // Test for Entitlement - 'Only Me', 'Everyone' & 'Custom'  through Find by ID.
+    @Ignore
     @Test
     public void testEntitledUserOwnerFindById() throws Exception {
         logger.info("Create Cluster [{}]", dataCenter.getName());
