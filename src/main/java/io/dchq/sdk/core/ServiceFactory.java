@@ -70,4 +70,12 @@ public class ServiceFactory {
     public static final TenantService buildTenantService(String baseURI, String username, String password) {
         return new TenantServiceImpl(baseURI, username, password);
     }
+
+    public static final NetworkService buildNetworkService(String baseURI, String username, String password) {
+        return new NetworkServiceImpl(baseURI, username, password);
+    }
+
+    public static final DockerVolumeService buildDockerVolumeService(String baseURI, String username, String password) {
+        return new DockerVolumeServiceImpl(baseURI, username, password);
+    }
 }
