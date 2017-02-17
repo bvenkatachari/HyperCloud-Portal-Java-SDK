@@ -1,11 +1,11 @@
 <figure>
-<img src="http://ww1.prweb.com/prfiles/2015/07/21/12907174/gI_146921_dchq-logo.png" alt="" />
+<img src="http://hypergrid.com/wp-content/uploads/2016/07/HyperGridLogo-horiz-1800px.png" alt="" />
 </figure>
 
 
 
-# DCHQ-Java-SDK
-DCHQ-Java-SDK simplifies using DCHQ REST API's. Providers high-level java abstraction for REST API's.
+# HyperForm (formerly DCHQ) Java SDK
+HyperForm-Java-SDK simplifies using DCHQ REST API's. Providers high-level java abstraction for REST API's.
 
 # OpenSource and Community-Led
  The SDK is open-source and community driven effort. If you want to contribute please reach out to us founders@dchq.io
