@@ -139,8 +139,8 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				/*
-				{ "Blueprint-version", BlueprintType.DOCKER_COMPOSE, null, "description",
+
+				/*{ "Blueprint-version", BlueprintType.DOCKER_COMPOSE, null, "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },*/
 
@@ -265,7 +265,7 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         }
     }
 
-    @After
+   /* @After
     public void cleanUp() {
         if (bluePrintCreated != null) {
             logger.info("cleaning up...");
@@ -274,5 +274,5 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
                 logger.warn("Error blueprint deletion: [{}] ", message.getMessageText());
             }
         }
-    }
+    }*/
 }
