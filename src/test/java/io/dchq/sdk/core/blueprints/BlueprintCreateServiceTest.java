@@ -265,7 +265,7 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         }
     }
 
-   /* @After
+    @After
     public void cleanUp() {
         if (bluePrintCreated != null) {
             logger.info("cleaning up...");
@@ -274,5 +274,5 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
                 logger.warn("Error blueprint deletion: [{}] ", message.getMessageText());
             }
         }
-    }*/
+    }
 }
