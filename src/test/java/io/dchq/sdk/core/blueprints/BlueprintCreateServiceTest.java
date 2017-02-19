@@ -114,29 +114,35 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
         
         return Arrays.asList(new Object[][]{
 
-        	{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+        		{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "Blueprint", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+				{ "Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "Blueprint", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
+				{ "Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description", "https://dchq.io",
 						Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "AB", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "ABC", "description",
 						"https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "6.0", "description",
+				
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,
 						false },
 
