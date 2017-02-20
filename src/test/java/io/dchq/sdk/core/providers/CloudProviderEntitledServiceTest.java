@@ -98,16 +98,16 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
 
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+				{ AccountType.HYPER_V, "Microsoft 1 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, true, userId2, false },
 
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+				{ AccountType.HYPER_V, "Microsoft 2 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, true, userId2, false },
 
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+				{ AccountType.HYPER_V, "Microsoft 3 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, true, userId2, false },
 
-				{ AccountType.HYPER_V, "Microsoft Hyper-V testAccount", "dchqinc", false, "password",
+				{ AccountType.HYPER_V, "Microsoft 4 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, USER_GROUP,
 						false }
         });

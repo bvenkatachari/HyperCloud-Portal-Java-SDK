@@ -103,9 +103,9 @@ public class CloudProviderUpdateServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
 				// public clouds
-				{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,
+				{ AccountType.RACKSPACE, "Rackspace US 2 testAccount", "dchqinc", "apiKey", null, null, null, null,
 						null, null, null, false },
-				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null,
+				{ AccountType.AWS_EC2, "Amazon 1 EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null,
 						null, null, false },
 				{ AccountType.DIGITALOCEAN, "Digital Ociean testAccount", "dchqinc", "apiKey", null, null, null, null,
 						null, null, null, false },
@@ -114,13 +114,13 @@ public class CloudProviderUpdateServiceTest extends AbstractServiceTest {
 				//		null, null, null, null, null, false },
 				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
 						null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 2 Azure testAccount", "dchqinc", "password", "user@dchq.io",
 						"tenantId", null, null, null, null, null, false },
 				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", null, null, null, null, false },
 
 				// private cloud
-				{ AccountType.OPENSTACK, "Openstack testAccount", "dchqinc", "password", null, null,
+				{ AccountType.OPENSTACK, "G Openstack testAccount", "dchqinc", "password", null, null,
 						"http://dchq.co.in", null, null, null, null, false },
 				//{ AccountType.VSPHERE, "VMware vSphere testAccount", "dchqinc", "password", null, null,
 				//		"http://dchq.co.in", null, null, null, null, false },
