@@ -35,6 +35,7 @@ cobertura {
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
+    tasks.withType(Javadoc).all { enabled = false }
 }
 
 task sourcesJar(type: Jar) {
