@@ -63,7 +63,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-				{ "Rackspace US 1 testAccount", "dchqinc", "7b1fa480664b4823b72abed54ebb9b0f", AccountType.RACKSPACE,
+				{ "Rackspace US 66 testAccount", "dchqinc", "7b1fa480664b4823b72abed54ebb9b0f", AccountType.RACKSPACE,
 						false }
         });
     }
@@ -147,7 +147,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 			logger.info("FindAll User RegistryAccount by Id [{}]", registryAccountCreated.getId());
 			this.countAfterCreate = testRegistryAccountPosition(registryAccountCreated.getId());
 			assertEquals(
-					"Count of FInd all RegistryAccount between before and after create does not have diffrence of 1 for UserId :"
+					"Count of Find all RegistryAccount between before and after create does not have diffrence of 1 for UserId :"
 							+ registryAccountCreated.getId(),
 					countBeforeCreate + 1, countAfterCreate);
 		}

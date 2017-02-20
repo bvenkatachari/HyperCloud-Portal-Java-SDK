@@ -122,7 +122,7 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				//TODO: This seems to be a bug, need to verify
 				//{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null, null, null, null, null, null, false },
 				
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
+				{ AccountType.ALICLOUD, "Biggest ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
 						null, null, false },
 				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure 1 testAccount", "dchqinc", "password", "user@dchq.io",
 						"tenantId", null, null, null, null, null, false },
@@ -177,21 +177,21 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
 				{ AccountType.DIGITALOCEAN, "    ", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
 				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "  ", "apiKey", null, null, null, null, null, null, null, false },
-				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false },
+				{ AccountType.DIGITALOCEAN, "Duplicate Digital Ocean testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false },
 				//{ null, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
 
 
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "A ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
 				{ AccountType.ALICLOUD, "   ", "dchqinc", "password", null, null, null, null, null,null, null, false },
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "  ", "password", null, null, null, null, null,null, null, false },
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "   ", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "B ALICLOUD testAccount", "  ", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "C ALICLOUD testAccount", "dchqinc", "   ", null, null, null, null, null,null, null, false },
 				//{ null, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
 
 
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 11 Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
 				{ AccountType.MICROSOFT_AZURE, "     ", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "  ", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "   ", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 12 Azure testAccount", "  ", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 13 Azure testAccount", "dchqinc", "   ", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
 				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "  ",  "tenantId", null, null, null, null, null, false },
 				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "    ", null, null, null, null, null, false },
 				//{ null, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },

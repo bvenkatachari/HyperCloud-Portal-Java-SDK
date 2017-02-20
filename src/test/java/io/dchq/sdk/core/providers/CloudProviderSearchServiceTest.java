@@ -111,7 +111,7 @@ public class CloudProviderSearchServiceTest extends AbstractServiceTest {
 				// TODO: Seems to be a bug need to verify
 				//{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null,
 				//		null, null, null, null, null, false },
-				{ AccountType.ALICLOUD, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
+				{ AccountType.ALICLOUD, "Given ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
 						null, null, false },
 				{ AccountType.MICROSOFT_AZURE, "Microsoft 1 Azure testAccount", "dchqinc", "password", "user@dchq.io",
 						"tenantId", null, null, null, null, null, false },
