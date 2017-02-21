@@ -5,6 +5,7 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.NetworkService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -21,6 +22,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest{
 
     private NetworkService networkService;
 
+@Ignore
     @org.junit.Before
     public void setUp() throws Exception{
         networkService = ServiceFactory.buildNetworkService(rootUrl, username, password);

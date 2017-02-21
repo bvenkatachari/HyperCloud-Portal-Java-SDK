@@ -7,6 +7,7 @@ import io.dchq.sdk.core.DockerVolumeService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -27,7 +28,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest{
     boolean error;
     String validationMessage;
 
-
+@Ignore
     @org.junit.Before
     public void setUp() throws Exception{
         dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, username, password);
