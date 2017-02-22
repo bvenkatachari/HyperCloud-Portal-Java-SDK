@@ -19,6 +19,7 @@ import org.junit.runners.Parameterized;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
+@Ignore
 public class DockerVolumeCreateServiceTest extends AbstractServiceTest{
 
     private DockerVolumeService dockerVolumeService;
