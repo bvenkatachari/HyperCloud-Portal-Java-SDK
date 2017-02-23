@@ -37,13 +37,11 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.security.Organization;
-import com.dchq.schema.beans.one.security.Profile;
 import com.dchq.schema.beans.one.security.Users;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.UserService;
-import io.dchq.sdk.core.profiles.ProfileSearchServiceTest;
 
 /**
  * <code>UsersService</code> Integration Tests.
