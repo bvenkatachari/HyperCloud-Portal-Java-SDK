@@ -53,6 +53,9 @@ public abstract class AbstractServiceTest {
     protected static String userId3 = "2c9180865a17fdac015a3b2697e34349";
     protected static String username3 = "iH1PyWSLlUqZXHO7ZK9M";
     protected static String password3 = "76uaiditpbij8vLi8KVWYALBliaIxaS98cIntUhv";
+
+    protected  static String bluePrintID = "2c9180865a4a48d9015a52b610c8080c"; //App & Machines Blueprints Test
+    protected  static String clusterID = "2c9180865a6421f0015a646b0ff40684";   //Cluster name : Docker-Engine
     
 
     protected int waitTime = 0, maxWaitTime = 0;
