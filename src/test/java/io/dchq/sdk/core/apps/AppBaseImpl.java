@@ -18,7 +18,7 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by Saurabh Bhatia on 2/27/2017.
  */
 
-public class AppBaseImplTest extends AbstractServiceTest implements AppBaseTest {
+public class AppBaseImpl extends AbstractServiceTest implements AppBase {
 
     protected AppService appService;
     protected BlueprintService blueprintService;
@@ -37,8 +37,8 @@ public class AppBaseImplTest extends AbstractServiceTest implements AppBaseTest 
 
     public App deployAndWait(Blueprint blueprint) {
 
-        blueprint.setName("Override Existing");
-        blueprint.setYml("LB:\n image: nginx:latest");
+         blueprint.setName("Override Existing");
+  //      blueprint.setYml("LB:\n image: nginx:latest");
 
         //Set Cluster ID
         PkEntityBase dc = new PkEntityBase();
@@ -102,8 +102,9 @@ public class AppBaseImplTest extends AbstractServiceTest implements AppBaseTest 
             if (app.getProvisionState() != ProvisionState.DESTROYED) {
                 Assert.fail("App Status doesn't get changed to DESTROYED, still showing : " + app.getProvisionState());
             }
+            logger.info("Fished Destroying provisioning app [{}] with status [{}]", app.getName(), app.getProvisionState());
         }
-        response = appService.findById(app.getId());
+       // response = appService.findById(app.getId());
 
     }
 

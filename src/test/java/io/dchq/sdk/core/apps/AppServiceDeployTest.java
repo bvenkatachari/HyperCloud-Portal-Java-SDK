@@ -3,23 +3,29 @@ package io.dchq.sdk.core.apps;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provision.App;
 import org.junit.After;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
+import com.dchq.schema.beans.base.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class AppServiceDeployTest extends AppBaseImplTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(Parameterized.class)
+public class AppServiceDeployTest extends AppBaseImpl {
 
     private App app;
     private Blueprint blueprint;
-
+    private String blueprintId;
 
     public AppServiceDeployTest(
             String blueprintId
     ) {
         // random user name
-        blueprint = blueprintService.findById(blueprintId).getResults();
+        this.bluePrintID = blueprintId;
 
         // TODO
         //this.errorMessage = message;
@@ -33,12 +39,13 @@ public class AppServiceDeployTest extends AppBaseImplTest {
         });
     }
 
-
     //Deploy Blueprint Successfully
     @Test
     public void testDeployAppAndWait() {
 
-        Blueprint blueprint = null;
+        ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(bluePrintID);
+        blueprint = blueprintResponseEntity.getResults();
+
         app = deployAndWait(blueprint /* TODO - pass errorMessage, success */);
         System.out.println("App Provision State we get it : " + app.getProvisionState());
     }

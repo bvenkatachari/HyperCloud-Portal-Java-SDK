@@ -7,7 +7,7 @@ import com.dchq.schema.beans.one.provision.App;
 /**
  * Created by Saurabh Bhatia on 2/27/2017.
  */
-public interface AppBaseTest {
+public interface AppBase {
 
     public App deployAndWait(Blueprint blueprint);
 
