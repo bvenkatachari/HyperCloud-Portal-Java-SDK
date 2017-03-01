@@ -68,6 +68,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest{
 				{ "testvalumn", "test options", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
    }
    
+   @Ignore
    @Test
    public void testCreate()
 	{

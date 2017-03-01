@@ -31,7 +31,6 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-@Ignore
 public class NetworkCreateServiceTest extends AbstractServiceTest{
 
     private NetworkService networkService;
@@ -65,6 +64,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest{
     }
   
     @Ignore
+    @Test
 	public void createTest() {
 
 		logger.info("Create network name[{}] driver [{}] server [{}]", network.getName(), network.getDriver(),
