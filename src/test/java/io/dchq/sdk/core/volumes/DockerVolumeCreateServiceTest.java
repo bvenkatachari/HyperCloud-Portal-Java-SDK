@@ -46,27 +46,29 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest{
         dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, username, password);
     }
 
-   public DockerVolumeCreateServiceTest (
-		   String volumeName,
-			String options, 
-			List<UsernameEntityBase> entitledUser, 
+	public DockerVolumeCreateServiceTest(
+			String volumeName, 
+			String options,
 			String provider, 
-			String server) {
+			String server
+			) 
+	{
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setOptionsText(options);
-		
+		this.dockerVolume.setVolumeId(provider);
+		this.dockerVolume.setHostIp(server);
 	}
    @Parameterized.Parameters
    public static Collection<Object[]> data() throws Exception {
-	   
-       return Arrays.asList(new Object[][]{
-               // TODO: add more test data for all sorts of validations
-				{ "testvalumn", "test options", "Local Volumne Provider" , "qe-100(DockerEngine)"}
-       });
+	    
+		return Arrays.asList(new Object[][] {
+				// TODO: add more test data for all sorts of validations
+				// Id of Local Volumne Provider is
+				{ "testvalumn", "test options", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
    }
    
-   @Ignore
+   @Test
    public void testCreate()
 	{
 		logger.info("Create docker volumne name[{}] options [{}] EntitledUser [{}] ", dockerVolume.getName(),
