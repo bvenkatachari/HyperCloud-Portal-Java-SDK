@@ -64,9 +64,9 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
-				// passing Id of createdOn, Local Volume Provider and IP address of qe-100
+				// passing Id of createdOn, Local Volume Provider
 				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9",
-						"13.64.234.111" } });
+						"qe-100" } });
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 				Thread.sleep(10000);
 				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 			} catch (InterruptedException e) {
-				
+				// TODO: handling exception
 			}
 			Assert.assertFalse(response.isErrors());
 			assertNotNull(response);
