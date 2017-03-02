@@ -90,7 +90,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 			} catch (InterruptedException e) {
 				// TODO: handling exception
 			}
-			Assert.assertFalse(response.isErrors());
+			
 			assertNotNull(response);
 			assertNotNull(response.isErrors());
 			if (this.dockerVolumeCreated != null) {

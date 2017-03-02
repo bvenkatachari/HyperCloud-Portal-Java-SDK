@@ -51,7 +51,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	public NetworkCreateServiceTest(
 			String name, 
 			String driver, 
-			String server			
+			String dockerServerName			
 			) 
 	{
 		// random user name
@@ -60,7 +60,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
-		network.setDockerServerName(server);
+		network.setDockerServerName(dockerServerName);
 	}
 
 	@Parameterized.Parameters
@@ -83,7 +83,12 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		}
 
 		while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
-			Assert.assertFalse(response.isErrors());
+			try {
+				Thread.sleep(5000);
+				logger.info("Network Status is [{}]", networkCreated.getStatus());
+			} catch (InterruptedException e) {
+				// TODO: handling exception
+			}
 			assertNotNull(response);
 			assertNotNull(response.isErrors());
 			if (this.networkCreated != null) {
