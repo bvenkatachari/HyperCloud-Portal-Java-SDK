@@ -2,7 +2,11 @@ package io.dchq.sdk.core;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.container.Container;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifeCyclePluginProfile;
+import com.dchq.schema.beans.one.provision.AppScaleInProfile;
+import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.ArrayList;
@@ -100,4 +104,23 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
         return super.doPost(new ArrayList<>(), "/" + appId + "/destroy");
     }
 
+    @Override
+    public ResponseEntity<App> start(String appId) {
+        return super.doPost(new ArrayList<>(), "/" + appId +  "/start");
+    }
+
+    @Override
+    public ResponseEntity<App> stop(String appId) {
+        return super.doPost("", "/" + appId +  "/stop");
+    }
+
+    @Override
+    public ResponseEntity<App> postScaleOutCreateNow(AppScaleOutProfile appScaleOutProfile, String appId){
+        return super.doPost(appScaleOutProfile, "/" + appId + "/scale-out-create-now");
+    }
+
+    @Override
+    public ResponseEntity<App> postScaleInRemoveNow(AppScaleInProfile appScaleInProfile, String appId){
+        return super.doPost(appScaleInProfile, "/" + appId + "/scale-in-now");
+    }
 }

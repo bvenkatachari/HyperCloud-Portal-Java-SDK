@@ -9,7 +9,7 @@ import com.dchq.schema.beans.one.provision.App;
  */
 public interface AppBase {
 
-    public App deployAndWait(Blueprint blueprint);
+    public App deployAndWait(Blueprint blueprint, boolean error, String validationMessage);
 
     public void destroyAndWait(App app);
 

@@ -2,7 +2,11 @@ package io.dchq.sdk.core;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.container.Container;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifeCyclePluginProfile;
+import com.dchq.schema.beans.one.provision.AppScaleInProfile;
+import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 
 import java.util.List;
 
@@ -101,5 +105,42 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      * @return
      */
     ResponseEntity<App> destroy(String appId);
+
+    /**
+     * Stop App Service.
+     *
+   //  * @param container
+     * @param appId
+     * @return
+     */
+   ResponseEntity<App> stop(String appId);
+
+    /**
+     * Start App Service.
+     *
+     * @param appId
+     * @return
+     */
+
+    ResponseEntity<App> start(String appId);
+
+    /**
+     * Create Scale Out Service.
+     * @param appScaleOutProfile
+     * @param appId
+     * @return
+     */
+
+    ResponseEntity<App> postScaleOutCreateNow(AppScaleOutProfile appScaleOutProfile, String appId);
+
+    /**
+     * Scale In Remove Service.
+     * @param appScaleInProfile
+     * @param appId
+     * @return
+     */
+    ResponseEntity<App> postScaleInRemoveNow(AppScaleInProfile appScaleInProfile, String appId);
+//    ResponseEntity<App> redeploy(String appId);
+
 
 }

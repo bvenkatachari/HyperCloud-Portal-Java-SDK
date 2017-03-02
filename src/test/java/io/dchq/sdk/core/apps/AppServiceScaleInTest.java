@@ -1,5 +1,6 @@
 package io.dchq.sdk.core.apps;
 
+import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provision.App;
 import com.dchq.schema.beans.one.security.EntitlementType;
@@ -10,24 +11,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
-import com.dchq.schema.beans.base.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Created by Saurabh Bhatia on 3/1/2017.
+ */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class AppServiceDeployTest extends AppBaseImpl {
-
+public class AppServiceScaleInTest extends AppBaseImpl {
 
     private App app;
     private Blueprint blueprint;
     private String blueprintId;
-    private String blueprintName;
+    private String bluePrintName;
     boolean error;
     private String validationMessage;
 
-    public AppServiceDeployTest(
+    public AppServiceScaleInTest(
             String blueprintId,
             String blueprintName,
             EntitlementType entitlementType,
@@ -40,10 +43,9 @@ public class AppServiceDeployTest extends AppBaseImpl {
         blueprintName = prefix + blueprintName;
         blueprintName = org.apache.commons.lang3.StringUtils.lowerCase(blueprintName);
 
-        this.blueprintName = blueprintName;
-//       this.blueprint.setName(blueprintName);
+        this.bluePrintName = blueprintName;
         this.blueprintId = blueprintId;
-        this.validationMessage=validationMessage;
+        this.validationMessage = validationMessage;
         this.error = error;
     }
 
@@ -54,24 +56,28 @@ public class AppServiceDeployTest extends AppBaseImpl {
         });
     }
 
-    //Deploy Blueprint Successfully
+    //Deploy Blueprint Successfully and then Scale-Out the App and at last call Scale In to Remove extra node
     @Test
-    public void testDeployAppAndWait() {
+    public void testScaleInNow() {
 
         ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
         blueprint = blueprintResponseEntity.getResults();
 
         //Override existing blueprint name
-        blueprint.setName(blueprintName);
+        blueprint.setName(bluePrintName);
 
-        app = deployAndWait(blueprint, error, validationMessage);
+        //call Scale In remove Service
+        app = scaleInRemoveService(blueprint, error, validationMessage);
         System.out.println("App Provision State we get it : " + app.getProvisionState());
+
+        //To-Do Validation of removal is left.
     }
 
     // Destroy above created app
     @After
     public void testDestroyAppAndWait() {
-        destroyAndWait(app);
-    }
 
+        destroyAndWait(app);
+
+    }
 }
