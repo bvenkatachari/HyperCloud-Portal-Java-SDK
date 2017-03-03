@@ -47,7 +47,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	String validationMessage;
 
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60);
+	long endTime = startTime + (60 * 60 * 50);
 
 	public NetworkCreateServiceTest(
 			String name, 
@@ -72,7 +72,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	@Test
 	public void createTest() {
 		logger.info("Create network name as [{}] driver [{}] server [{}]", network.getName(), network.getDriver(),
-				network.getDockerServerName());
+				network.getDockerServer());
 		ResponseEntity<DockerNetwork> response = networkService.create(network);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
