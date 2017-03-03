@@ -86,6 +86,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 		while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
 			try {
 				Thread.sleep(10000);
+				dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
 				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 			} catch (InterruptedException e) {
 				// TODO: handling exception

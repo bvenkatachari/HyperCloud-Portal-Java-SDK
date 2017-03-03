@@ -57,6 +57,7 @@ public abstract class AbstractServiceTest {
   //  protected  static String bluePrintID = "2c9180865a4a48d9015a52b610c8080c"; //App & Machines Blueprints Test
     protected  static String clusterID = "2c9180865a6421f0015a646b0ff40684";   //Cluster name : Docker-Engine
     
+    protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
 
     protected int waitTime = 0, maxWaitTime = 0;
 

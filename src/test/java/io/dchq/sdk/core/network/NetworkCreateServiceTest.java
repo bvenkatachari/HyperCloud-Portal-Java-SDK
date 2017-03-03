@@ -17,6 +17,7 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.network.DockerNetwork;
 import com.dchq.schema.beans.one.network.DockerNetworkStatus;
 
@@ -50,8 +51,8 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 
 	public NetworkCreateServiceTest(
 			String name, 
-			String driver, 
-			String dockerServerName			
+			String driver,
+			String dockerServerId
 			) 
 	{
 		// random user name
@@ -60,12 +61,12 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
-		network.setDockerServerName(dockerServerName);
+		network.setDockerServer(new NameEntityBase().withId(dockerServerId));
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", "qe-100"  } });
+		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
 	}
 
 	@Test
@@ -85,6 +86,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
 			try {
 				Thread.sleep(5000);
+				networkCreated = networkService.findById(networkCreated.getId()).getResults();
 				logger.info("Network Status is [{}]", networkCreated.getStatus());
 			} catch (InterruptedException e) {
 				// TODO: handling exception
