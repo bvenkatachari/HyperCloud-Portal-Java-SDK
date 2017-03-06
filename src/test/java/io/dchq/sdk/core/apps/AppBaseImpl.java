@@ -5,7 +5,6 @@ import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.container.Container;
-import com.dchq.schema.beans.one.container.ContainerState;
 import com.dchq.schema.beans.one.container.ContainerStatus;
 import com.dchq.schema.beans.one.provision.*;
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -57,7 +56,7 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
                 validationMessage = m.getMessageText();
             }
             //check for errors
-            Assert.assertEquals(validationMessage ,error, appResponseEntity.isErrors());
+            Assert.assertEquals(validationMessage, error, appResponseEntity.isErrors());
         }
         App app = appResponseEntity.getResults();
 
@@ -133,11 +132,11 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         //First Deploy the App and Check Status
         App app = deployAndWait(blueprint, error, validationMessage);
 
-        logger.info("Running App: " +app.getName()+ "  , with no. of containers :  " +app.getContainers().size());
-        logger.info("Process to Stop App ID : " +app.getId()+ " started");
+        logger.info("Running App: " + app.getName() + "  , with no. of containers :  " + app.getContainers().size());
+        logger.info("Process to Stop App ID : " + app.getId() + " started");
 
         // Stop above deployed App
-     List <Container> con = app.getContainers();
+        List<Container> con = app.getContainers();
 
         ResponseEntity<App> appStopResponseEntity = appService.stop(app.getId());
 
@@ -147,14 +146,14 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
                 validationMessage = m.getMessageText();
             }
             //check for errors
-            Assert.assertEquals(validationMessage ,error, appStopResponseEntity.isErrors());
+            Assert.assertEquals(validationMessage, error, appStopResponseEntity.isErrors());
         }
 
-         app = appStopResponseEntity.getResults();
+        app = appStopResponseEntity.getResults();
 
         assertNotNull(appStopResponseEntity.getResults());
 
-        return  app;
+        return app;
     }
 
     public App scaleOutCreateService(Blueprint blueprint, boolean error, String validationMessage) {
@@ -162,29 +161,29 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         //First Deploy the App and Check Status
         App app = deployAndWait(blueprint, error, validationMessage);
 
-        logger.info("Running App: " +app.getName()+ "  , with no. of containers :  " +app.getContainers().size());
-        logger.info("Process to Scale-Out for App ID : " +app.getId()+ " started");
+        logger.info("Running App: " + app.getName() + "  , with no. of containers :  " + app.getContainers().size());
+        logger.info("Process to Scale-Out for App ID : " + app.getId() + " started");
 
         //Execute GET request for Above to get Scale out response
-        ResponseEntity <AppScaleOutProfile> appServiceScaleOutResponseEntity = appService.findScaleOutCreate(app.getId());
+        ResponseEntity<AppScaleOutProfile> appServiceScaleOutResponseEntity = appService.findScaleOutCreate(app.getId());
 
         assertNotNull(appServiceScaleOutResponseEntity.getResults());
 
-        AppScaleOutProfile  scaleOutProfile = new AppScaleOutProfile();
-                //Scale Out Profile Results
-                  scaleOutProfile = appServiceScaleOutResponseEntity.getResults();
+        AppScaleOutProfile scaleOutProfile = new AppScaleOutProfile();
+        //Scale Out Profile Results
+        scaleOutProfile = appServiceScaleOutResponseEntity.getResults();
 
         //Retrieve Cluster Profile in List
         List<ClusterProfile> clusterProfiles = scaleOutProfile.getClusterProfiles();
-        int k=0;
+        int k = 0;
 
         //Create new array list to initialize and add cluster profile object.
-        ArrayList <ClusterProfile> clusterProfileModified = new ArrayList<ClusterProfile>();
+        ArrayList<ClusterProfile> clusterProfileModified = new ArrayList<ClusterProfile>();
 
-       // ClusterProfile setClusterProfileValues = new ClusterProfile();
+        // ClusterProfile setClusterProfileValues = new ClusterProfile();
 
-        for ( ClusterProfile setClusterProfileValues : clusterProfiles){
-            if (k< clusterProfiles.size() ) {
+        for (ClusterProfile setClusterProfileValues : clusterProfiles) {
+            if (k < clusterProfiles.size()) {
 
                 logger.info("Total Active Nodes: " + setClusterProfileValues.getTotalActive());
 
@@ -210,55 +209,122 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         scaleOutProfile.setNote("New Note Added");
         scaleOutProfile.setClusterProfiles(clusterProfileModified);
 
-       logger.info("Current Cluster Profile Size before Scaleout is : " +scaleOutProfile.getClusterProfiles().size()) ;
+        logger.info("Current Cluster Profile Size before Scaleout is : " + scaleOutProfile.getClusterProfiles().size());
 
-       ResponseEntity<App> appScaleOutCreateResponseEntity = appService.postScaleOutCreateNow(scaleOutProfile,app.getId());
+        ResponseEntity<App> appScaleOutCreateResponseEntity = appService.postScaleOutCreateNow(scaleOutProfile, app.getId());
 
-       if (appScaleOutCreateResponseEntity.isErrors()) {
+        if (appScaleOutCreateResponseEntity.isErrors()) {
             for (Message m : appScaleOutCreateResponseEntity.getMessages()) {
                 logger.warn("[{}]", m.getMessageText());
                 validationMessage = m.getMessageText();
             }
             //check for errors
-            Assert.assertEquals(validationMessage ,error, appScaleOutCreateResponseEntity.isErrors());
+            Assert.assertEquals(validationMessage, error, appScaleOutCreateResponseEntity.isErrors());
         }
 
-      //  scaleOutResult = appScaleOutCreateResponseEntity.getResults();
+        //  scaleOutResult = appScaleOutCreateResponseEntity.getResults();
         assertNotNull(appScaleOutCreateResponseEntity.getResults());
 
-       //Validate Scale Out Create New Size
+        //Validate Scale Out Create New Size
         assertEquals(Math.toIntExact(clusterProfileModified.get(0).getNewActive()), appScaleOutCreateResponseEntity.getResults().getContainers().size());
 
-        logger.info("New Cluster Profile Size after Scale Out displaying now : " +appScaleOutCreateResponseEntity.getResults().getContainers().size());
+        logger.info("New Cluster Profile Size after Scale Out displaying now : " + appScaleOutCreateResponseEntity.getResults().getContainers().size());
 
-       app = appService.findById(app.getId()).getResults();
+        app = appService.findById(app.getId()).getResults();
 
-        return  app;
+        int j = app.getContainers().size();
+
+        //Validate Both Scale Out Container Status should be in Running State
+       for (int i=0; i<j ;i++) {
+
+            if (app != null) {
+
+                ContainerStatus status = app.getContainers().get(i).getContainerStatus();
+
+                while ((status != ContainerStatus.RUNNING) && (System.currentTimeMillis() < endTime)) {
+
+                    logger.info("Found Container {" +i+ "}  with status: ", status);
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        logger.warn(e.getLocalizedMessage(), e);
+                    }
+                    app = appService.findById(app.getId()).getResults();
+                    status = app.getContainers().get(i).getContainerStatus();
+                }
+
+            }
+        }
+
+        logger.info("Scale-Out Create Successfully Completed");
+
+
+        app = appService.findById(app.getId()).getResults();
+
+        return app;
     }
 
-    public App scaleInRemoveService(Blueprint blueprint, boolean error, String validationMessage) {
+    public App scaleInRemoveService(Blueprint blueprint, boolean error, String validationMessage) throws InterruptedException {
 
-        //First Deploy the App and Check Status and Call Scale Out to create extra node
-     //   App app = scaleOutCreateService(blueprint, error, validationMessage);
+        // First Deploy the App and Check Status and Call Scale Out to create extra node
+        App app = scaleOutCreateService(blueprint, error, validationMessage);
 
-        App app = deployAndWait(blueprint, error, validationMessage);
+        logger.info("Running App: " + app.getName() + "  , with no. of containers :  " + app.getContainers().size());
+        logger.info("Process to Scale-In-Remove for App ID : " + app.getId() + " started");
 
-        logger.info("Running App: " +app.getName()+ "  , with no. of containers :  " +app.getContainers().size());
-        logger.info("Process to Scale-In-Remove for App ID : " +app.getId()+ " started");
+        Thread.sleep(10000);
 
-        ResponseEntity <App> appServiceScaleInResponseEntity = appService.findScaleIn(app.getId());
+        //Execute GET request for Above to get Scale In response
+        ResponseEntity<AppScaleInProfile> appServiceScaleInResponseEntity = appService.findScaleIn(app.getId());
 
         assertNotNull(appServiceScaleInResponseEntity.getResults());
 
-        //    App  scaleOutResult = appService.findScaleOutCreate(app.getId()).getResults();
-
         AppScaleInProfile scaleInProfile = new AppScaleInProfile();
-        scaleInProfile.setNote("ABC");
+        //Scale In Profile Results
+        scaleInProfile = appServiceScaleInResponseEntity.getResults();
 
-        // To Do Set   ClusterProfile active / inactive & new node value;
-        //   scaleInProfile.getClusterProfiles();
+        Thread.sleep(5000);
 
-        ResponseEntity<App> appScaleInRemoveResponseEntity = appService.postScaleInRemoveNow(scaleInProfile,app.getId());
+        //Retrieve Cluster Profile in List
+        List<ClusterProfile> clusterProfilesForScaleIN = scaleInProfile.getClusterProfiles();
+        int k = 0;
+
+        //Create new array list to initialize and add cluster profile object.
+        ArrayList<ClusterProfile> clusterProfileForScaleInModified = new ArrayList<ClusterProfile>();
+
+        // ClusterProfile setClusterProfileValues = new ClusterProfile();
+
+        for (ClusterProfile setClusterProfileforScaleInValues : clusterProfilesForScaleIN) {
+            if (k < clusterProfilesForScaleIN.size()) {
+
+                logger.info("Total Active Nodes before Scale-In: " + setClusterProfileforScaleInValues.getTotalActive());
+
+                //Store total Active node value
+                int totalActive = setClusterProfileforScaleInValues.getTotalActive();
+
+                //Set NewActive Value
+                setClusterProfileforScaleInValues.setNewActive(totalActive - 1);
+                logger.info("Set Cluster New Active node to: " + setClusterProfileforScaleInValues.getNewActive());
+
+                logger.info("Check Cluster Active : " + setClusterProfileforScaleInValues.getActive());
+                setClusterProfileforScaleInValues.setActive(true);
+
+                //Add ClusterProfile Object in new Arraylist of ClusterProfile
+                clusterProfileForScaleInModified.add(setClusterProfileforScaleInValues);
+                k++;
+            }
+            ;
+
+        }
+
+        //Set ScaleInProfile value to Create new Scale out
+        scaleInProfile.setNote("Note Added");
+        scaleInProfile.setClusterProfiles(clusterProfileForScaleInModified);
+
+        logger.info("Current Cluster Profile Size before Scale-In is : " + scaleInProfile.getClusterProfiles().size());
+
+        ResponseEntity<App> appScaleInRemoveResponseEntity = appService.postScaleInRemoveNow(scaleInProfile, app.getId());
 
         if (appScaleInRemoveResponseEntity.isErrors()) {
             for (Message m : appScaleInRemoveResponseEntity.getMessages()) {
@@ -266,13 +332,34 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
                 validationMessage = m.getMessageText();
             }
             //check for errors
-            Assert.assertEquals(validationMessage ,error, appScaleInRemoveResponseEntity.isErrors());
+            Assert.assertEquals(validationMessage, error, appScaleInRemoveResponseEntity.isErrors());
         }
-
-        //  scaleOutResult = appScaleOutCreateResponseEntity.getResults();
 
         assertNotNull(appScaleInRemoveResponseEntity.getResults());
 
-        return  app;
+        app = appService.findById(app.getId()).getResults();
+
+        //Validate Scale In Remove Container Status
+        ContainerStatus status = app.getContainers().get(0).getContainerStatus();
+
+        if (app != null) {
+
+            while ((status != ContainerStatus.DESTROYED) && (System.currentTimeMillis() < endTime)) {
+                logger.info("Found Container with status [{}]", status);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    logger.warn(e.getLocalizedMessage(), e);
+                }
+                app = appService.findById(app.getId()).getResults();
+                status = app.getContainers().get(0).getContainerStatus();
+            }
+
+            logger.info("Finished provisioning for Container Removed Status after Scale-In is  : " + status);
+            logger.info("Scale-In Remove Successfully Completed");
+        }
+        app = appService.findById(app.getId()).getResults();
+        return app;
     }
 }
+

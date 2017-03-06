@@ -2,9 +2,7 @@ package io.dchq.sdk.core;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
-import com.dchq.schema.beans.one.container.Container;
 import com.dchq.schema.beans.one.provision.App;
-import com.dchq.schema.beans.one.provision.AppLifeCyclePluginProfile;
 import com.dchq.schema.beans.one.provision.AppScaleInProfile;
 import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 
@@ -74,7 +72,7 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      *
      * @return ResponseEntity, specific scaled-in response for a live app by ID.
      */
-    ResponseEntity<App> findScaleIn(String id);
+    ResponseEntity<AppScaleInProfile> findScaleIn(String id);
 
     /**
      * Find historical cpu, memory utilization/monitoring data for the app by ID.

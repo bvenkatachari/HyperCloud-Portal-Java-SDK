@@ -2,9 +2,7 @@ package io.dchq.sdk.core;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
-import com.dchq.schema.beans.one.container.Container;
 import com.dchq.schema.beans.one.provision.App;
-import com.dchq.schema.beans.one.provision.AppLifeCyclePluginProfile;
 import com.dchq.schema.beans.one.provision.AppScaleInProfile;
 import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,6 +26,8 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     public static final ParameterizedTypeReference<ResponseEntity<App>> singleTypeReference = new ParameterizedTypeReference<ResponseEntity<App>>() {
     };
     public static final ParameterizedTypeReference<ResponseEntity<AppScaleOutProfile>> scaleOutReference = new ParameterizedTypeReference<ResponseEntity<AppScaleOutProfile>>() {
+    };
+    public static final ParameterizedTypeReference<ResponseEntity<AppScaleInProfile>> scaleInReference = new ParameterizedTypeReference<ResponseEntity<AppScaleInProfile>>() {
     };
 
     public static final String ENDPOINT = "apps/";
@@ -76,14 +76,17 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
         return findById(id + "/rollback");
     }
 
-  /*  @Override
-    public ResponseEntity<App> findScaleOutCreate(String id) {
-        return findById(id + "/scale-out-create");
-    }*/
+    @Override
+    public ResponseEntity<AppScaleOutProfile> findScaleOutCreate(String id) {
+        ResponseEntity<AppScaleOutProfile> scaleOutProfileResponseEntity = (ResponseEntity<AppScaleOutProfile>) doGet(id + "/scale-out-create", scaleOutReference);
+        return scaleOutProfileResponseEntity;
+
+    }
 
     @Override
-    public ResponseEntity<App> findScaleIn(String id) {
-        return findById(id + "/scale-in");
+    public ResponseEntity<AppScaleInProfile> findScaleIn(String id) {
+        ResponseEntity<AppScaleInProfile> scaleInProfileResponseEntity = (ResponseEntity<AppScaleInProfile>) doGet(id + "/scale-in", scaleInReference);
+        return scaleInProfileResponseEntity;
     }
 
     @Override
@@ -126,11 +129,6 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
         return super.doPost(appScaleInProfile, "/" + appId + "/scale-in-now");
     }
 
-    @Override
-    public ResponseEntity<AppScaleOutProfile> findScaleOutCreate(String id) {
-           ResponseEntity<AppScaleOutProfile> scaleOutProfileResponseEntity = (ResponseEntity<AppScaleOutProfile>) doGet(id + "/scale-out-create", scaleOutReference);
-           return scaleOutProfileResponseEntity;
 
-    }
 
 }

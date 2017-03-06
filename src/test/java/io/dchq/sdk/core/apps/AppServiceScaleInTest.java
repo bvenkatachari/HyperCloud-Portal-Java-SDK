@@ -58,7 +58,7 @@ public class AppServiceScaleInTest extends AppBaseImpl {
 
     //Deploy Blueprint Successfully and then Scale-Out the App and at last call Scale In to Remove extra node
     @Test
-    public void testScaleInNow() {
+    public void testScaleInNow() throws InterruptedException {
 
         ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
         blueprint = blueprintResponseEntity.getResults();
