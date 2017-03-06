@@ -67,7 +67,7 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      *
      * @return ResponseEntity, specific scaled-out response for a live app by ID.
      */
-    ResponseEntity<App> findScaleOutCreate(String id);
+    ResponseEntity<AppScaleOutProfile> findScaleOutCreate(String id);
 
     /**
      * Find scaled-in app

@@ -14,8 +14,10 @@ import io.dchq.sdk.core.BlueprintService;
 import io.dchq.sdk.core.ServiceFactory;
 import org.junit.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
 /**
@@ -161,23 +163,58 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         App app = deployAndWait(blueprint, error, validationMessage);
 
         logger.info("Running App: " +app.getName()+ "  , with no. of containers :  " +app.getContainers().size());
-        logger.info("Process to Scale-Out App ID : " +app.getId()+ " started");
+        logger.info("Process to Scale-Out for App ID : " +app.getId()+ " started");
 
-        ResponseEntity <App> appServiceScaleOutResponseEntity = appService.findScaleOutCreate(app.getId());
+        //Execute GET request for Above to get Scale out response
+        ResponseEntity <AppScaleOutProfile> appServiceScaleOutResponseEntity = appService.findScaleOutCreate(app.getId());
 
         assertNotNull(appServiceScaleOutResponseEntity.getResults());
 
-    //    App  scaleOutResult = appService.findScaleOutCreate(app.getId()).getResults();
+        AppScaleOutProfile  scaleOutProfile = new AppScaleOutProfile();
+                //Scale Out Profile Results
+                  scaleOutProfile = appServiceScaleOutResponseEntity.getResults();
 
-        AppScaleOutProfile scaleOutProfile = new AppScaleOutProfile();
-        scaleOutProfile.setNote("ABC");
+        //Retrieve Cluster Profile in List
+        List<ClusterProfile> clusterProfiles = scaleOutProfile.getClusterProfiles();
+        int k=0;
 
-        // To Do Set   ClusterProfile active / inactive & new node value;
-        //   scaleOutProfile.getClusterProfiles();
+        //Create new array list to initialize and add cluster profile object.
+        ArrayList <ClusterProfile> clusterProfileModified = new ArrayList<ClusterProfile>();
 
-        ResponseEntity<App> appScaleOutCreateResponseEntity = appService.postScaleOutCreateNow(scaleOutProfile,app.getId());
+       // ClusterProfile setClusterProfileValues = new ClusterProfile();
 
-        if (appScaleOutCreateResponseEntity.isErrors()) {
+        for ( ClusterProfile setClusterProfileValues : clusterProfiles){
+            if (k< clusterProfiles.size() ) {
+
+                logger.info("Total Active Nodes: " + setClusterProfileValues.getTotalActive());
+
+                //Store total Active node value
+                int totalActive = setClusterProfileValues.getTotalActive();
+
+                //Set NewActive Value
+                setClusterProfileValues.setNewActive(totalActive + 1);
+                logger.info("Set Cluster New Active to: " + setClusterProfileValues.getNewActive());
+
+                logger.info("Check Cluster Active : " + setClusterProfileValues.getActive());
+                setClusterProfileValues.setActive(true);
+
+                //Add ClusterProfile Object in new Arraylist of ClusterProfile
+                clusterProfileModified.add(setClusterProfileValues);
+                k++;
+            }
+            ;
+
+        }
+
+        //Set ScaleOutProfile value to Create new Scale out
+        scaleOutProfile.setNote("New Note Added");
+        scaleOutProfile.setClusterProfiles(clusterProfileModified);
+
+       logger.info("Current Cluster Profile Size before Scaleout is : " +scaleOutProfile.getClusterProfiles().size()) ;
+
+       ResponseEntity<App> appScaleOutCreateResponseEntity = appService.postScaleOutCreateNow(scaleOutProfile,app.getId());
+
+       if (appScaleOutCreateResponseEntity.isErrors()) {
             for (Message m : appScaleOutCreateResponseEntity.getMessages()) {
                 logger.warn("[{}]", m.getMessageText());
                 validationMessage = m.getMessageText();
@@ -187,8 +224,14 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         }
 
       //  scaleOutResult = appScaleOutCreateResponseEntity.getResults();
-
         assertNotNull(appScaleOutCreateResponseEntity.getResults());
+
+       //Validate Scale Out Create New Size
+        assertEquals(Math.toIntExact(clusterProfileModified.get(0).getNewActive()), appScaleOutCreateResponseEntity.getResults().getContainers().size());
+
+        logger.info("New Cluster Profile Size after Scale Out displaying now : " +appScaleOutCreateResponseEntity.getResults().getContainers().size());
+
+       app = appService.findById(app.getId()).getResults();
 
         return  app;
     }

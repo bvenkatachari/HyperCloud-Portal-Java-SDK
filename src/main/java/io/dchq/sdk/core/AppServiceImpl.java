@@ -27,6 +27,8 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     };
     public static final ParameterizedTypeReference<ResponseEntity<App>> singleTypeReference = new ParameterizedTypeReference<ResponseEntity<App>>() {
     };
+    public static final ParameterizedTypeReference<ResponseEntity<AppScaleOutProfile>> scaleOutReference = new ParameterizedTypeReference<ResponseEntity<AppScaleOutProfile>>() {
+    };
 
     public static final String ENDPOINT = "apps/";
 
@@ -74,10 +76,10 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
         return findById(id + "/rollback");
     }
 
-    @Override
+  /*  @Override
     public ResponseEntity<App> findScaleOutCreate(String id) {
         return findById(id + "/scale-out-create");
-    }
+    }*/
 
     @Override
     public ResponseEntity<App> findScaleIn(String id) {
@@ -123,4 +125,12 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     public ResponseEntity<App> postScaleInRemoveNow(AppScaleInProfile appScaleInProfile, String appId){
         return super.doPost(appScaleInProfile, "/" + appId + "/scale-in-now");
     }
+
+    @Override
+    public ResponseEntity<AppScaleOutProfile> findScaleOutCreate(String id) {
+           ResponseEntity<AppScaleOutProfile> scaleOutProfileResponseEntity = (ResponseEntity<AppScaleOutProfile>) doGet(id + "/scale-out-create", scaleOutReference);
+           return scaleOutProfileResponseEntity;
+
+    }
+
 }

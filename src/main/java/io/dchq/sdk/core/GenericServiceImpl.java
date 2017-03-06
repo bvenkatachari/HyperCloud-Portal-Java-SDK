@@ -16,10 +16,12 @@
 
 package io.dchq.sdk.core;
 
+import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -39,7 +41,7 @@ import java.security.cert.X509Certificate;
  * @author Intesar Mohammed
  * @since 1.0
  */
-abstract class GenericServiceImpl<E, RL, RO> implements GenericService<E, RL, RO> {
+abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -378,6 +380,36 @@ abstract class GenericServiceImpl<E, RL, RO> implements GenericService<E, RL, RO
                         HttpMethod.POST,
                         requestEntity,
                         singleTypeReference
+                );
+
+        return res.getBody();
+    }
+
+    /**
+     * Executes GET request
+     *
+     * @param responseType - not null
+     * @return
+     */
+
+    @Override
+    public Object doGet(String urlPostfix, ParameterizedTypeReference responseType) {
+        String url = baseURI + endpoint + urlPostfix;
+        URI uri = getUri(url);
+
+        HttpHeaders map = getHttpHeaders();
+
+        String authHeader = buildAuth();
+        //set your entity to send
+        RequestEntity request = getBasicRequestEntity(authHeader, uri);
+
+
+        org.springframework.http.ResponseEntity<RO> res =
+                template.exchange(
+                        url,
+                        HttpMethod.GET,
+                        request,
+                        responseType
                 );
 
         return res.getBody();
