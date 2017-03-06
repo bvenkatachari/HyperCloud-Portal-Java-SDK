@@ -86,21 +86,19 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
-
 			}
 
-			DockerVolume dockerVolumeCreatefForFind = dockerVolumeService.findById(dockerVolumeCreated.getId())
-					.getResults();
+			response = dockerVolumeService.findById(dockerVolumeCreated.getId());
 
 			// Check for create
 			assertNotNull(response);
 			assertNotNull(response.isErrors());
-			assertNotNull(dockerVolumeCreatefForFind.getId());
-			assertEquals(dockerVolume.getName(), dockerVolumeCreatefForFind.getName());
-			assertEquals(dockerVolume.getOptionsText(), dockerVolumeCreatefForFind.getOptionsText());
-			assertEquals(dockerVolume.getEndpoint(), dockerVolumeCreatefForFind.getEndpoint());
-			assertEquals(dockerVolume.getCreatedOn(), dockerVolumeCreatefForFind.getCreatedOn());
-			assertEquals(dockerVolumeCreated.getId(), dockerVolumeCreatefForFind.getId());
+			assertNotNull(response.getResults().getId());
+			assertEquals(dockerVolumeCreated.getName(), response.getResults().getName());
+			assertEquals(dockerVolumeCreated.getOptionsText(), response.getResults().getOptionsText());
+			assertEquals(dockerVolumeCreated.getEndpoint(), response.getResults().getEndpoint());
+			assertEquals(dockerVolumeCreated.getCreatedOn(), response.getResults().getCreatedOn());
+			assertEquals(dockerVolumeCreated.getId(), response.getResults().getId());
 
 			// check for find
 

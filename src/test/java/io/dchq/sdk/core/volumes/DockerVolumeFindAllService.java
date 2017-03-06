@@ -1,6 +1,7 @@
 package io.dchq.sdk.core.volumes;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.blueprint.RegistryAccount;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -35,6 +37,9 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 	DockerVolume dockerVolumeCreated;
 	boolean error;
 	String validationMessage;
+	long startTime = System.currentTimeMillis();
+	private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
+	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
 	public DockerVolumeFindAllService(String createdOn, String volumeName, String provider, String server) {
 		// random user name
@@ -62,26 +67,33 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
 	}
 
-	private int findCount() {
-		logger.info("Find all docker volume ");
-		ResponseEntity<List<DockerVolume>> responsefindBefore = dockerVolumeService.findAll();
+	 public int testDockerVolumetPosition(String id) {
+	        ResponseEntity<List<DockerVolume>> response = dockerVolumeService.findAll(0, 500);
+	        for (Message message : response.getMessages()) {
+	            logger.warn("Error [{}]  " + message.getMessageText());
+	        }
+	        assertNotNull(response);
+	        assertNotNull(response.isErrors());
+	        assertEquals(false, response.isErrors());
+	        int position = 0;
+	        if (id != null) {
+	            for (DockerVolume obj : response.getResults()) {
+	                position++;
+	                if (obj.getId().equals(id)) {
+	                    logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
+	                    assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
+	                }
+	            }
+	        }
+	        logger.info(" Total Number of Objects :{}", response.getResults().size());
+	        return response.getResults().size();
+	    }
 
-		for (Message message : responsefindBefore.getMessages()) {
-			logger.warn("Error while find all request  [{}] ", message.getMessageText());
-		}
-		assertNotNull(responsefindBefore);
-		assertNotNull(responsefindBefore.isErrors());
-		Assert.assertEquals(error, responsefindBefore.isErrors());
-		return responsefindBefore.getResults().size();
-	}
-
-	@Ignore
 	@Test
 	public void findAll() {
 		try {
-			int countBeforCreate = findCount();
-
 			logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
+			countBeforeCreate =  testDockerVolumetPosition(null);
 			ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
 
 			for (Message message : response.getMessages()) {
@@ -89,15 +101,29 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 			}
 
 			if (response.getResults() != null && !response.isErrors()) {
+				this.dockerVolumeCreated = response.getResults();
 				logger.info("Create docker volumne Successful..");
 			}
 
-			int countAfterCreate = findCount();
-			Assert.assertNotEquals(countBeforCreate, countAfterCreate);
-			Assert.assertEquals(countBeforCreate, countAfterCreate - 1);
+			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+				try {
+					Thread.sleep(10000);
+					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+				} catch (InterruptedException e) {
+					// TODO: handling exception
+				}
+				assertNotNull(response.getResults());
+				assertNotNull(response.getResults().getId());
+				// getting Count of objects after creating Object
+				logger.info("FindAll User DockerVolume by Id [{}]", dockerVolumeCreated.getId());
+				this.countAfterCreate = testDockerVolumetPosition(dockerVolumeCreated.getId());
+				assertEquals(countBeforeCreate + 1, countAfterCreate);
+			}
 		} catch (Exception e) {
-			// ignore
+
 		}
+
 	}
 
 	@After
@@ -109,6 +135,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 			for (Message message : response.getMessages()) {
 				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
 			}
+			assertEquals(countBeforeCreate, countAfterCreate - 1);
 		}
 
 	}
