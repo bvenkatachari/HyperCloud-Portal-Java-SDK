@@ -28,9 +28,8 @@ import io.dchq.sdk.core.NetworkService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * @Author Saurabh Bhatia
- *
- */
+* @author Jagdeep Jain
+*/
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
