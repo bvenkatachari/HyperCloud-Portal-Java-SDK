@@ -52,7 +52,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	public NetworkCreateServiceTest(
 			String name, 
 			String driver,
-			String dockerServerId
+			String id
 			) 
 	{
 		// random user name
@@ -61,7 +61,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
-		network.setDockerServer(new NameEntityBase().withId(dockerServerId));
+		network.setDockerServer(new NameEntityBase().withId(id));
 	}
 
 	@Parameterized.Parameters
