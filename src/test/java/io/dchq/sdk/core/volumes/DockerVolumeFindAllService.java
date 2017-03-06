@@ -38,7 +38,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 	boolean error;
 	String validationMessage;
 	long startTime = System.currentTimeMillis();
-	private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
+	private int countBeforeCreate = 0, countAfterCreate = 0;
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
 	public DockerVolumeFindAllService(String createdOn, String volumeName, String provider, String server) {
@@ -67,27 +67,27 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
 	}
 
-	 public int testDockerVolumetPosition(String id) {
-	        ResponseEntity<List<DockerVolume>> response = dockerVolumeService.findAll(0, 500);
-	        for (Message message : response.getMessages()) {
-	            logger.warn("Error [{}]  " + message.getMessageText());
-	        }
-	        assertNotNull(response);
-	        assertNotNull(response.isErrors());
-	        assertEquals(false, response.isErrors());
-	        int position = 0;
-	        if (id != null) {
-	            for (DockerVolume obj : response.getResults()) {
-	                position++;
-	                if (obj.getId().equals(id)) {
-	                    logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-	                    assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-	                }
-	            }
-	        }
-	        logger.info(" Total Number of Objects :{}", response.getResults().size());
-	        return response.getResults().size();
-	    }
+	public int testDockerVolumetPosition(String id) {
+		ResponseEntity<List<DockerVolume>> response = dockerVolumeService.findAll(0, 500);
+		for (Message message : response.getMessages()) {
+			logger.warn("Error [{}]  " + message.getMessageText());
+		}
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		assertEquals(false, response.isErrors());
+		int position = 0;
+		if (id != null) {
+			for (DockerVolume obj : response.getResults()) {
+				position++;
+				if (obj.getId().equals(id)) {
+					logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
+					assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
+				}
+			}
+		}
+		logger.info(" Total Number of Objects :{}", response.getResults().size());
+		return response.getResults().size();
+	}
 
 	@Test
 	public void findAll() {

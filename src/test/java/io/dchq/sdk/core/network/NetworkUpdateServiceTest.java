@@ -10,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -45,6 +46,7 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 	DockerNetwork networkCreated;
 	boolean error;
 	String validationMessage;
+	String updatedName;
 
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50);
@@ -57,7 +59,9 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 	{
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
+		String prefix2 = RandomStringUtils.randomAlphabetic(3);
 		name = prefix + "-" + name;
+		updatedName = prefix2 + "-" + name;
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
@@ -69,6 +73,7 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
 	}
 
+	@Ignore
 	@Test
 	public void createTest() {
 		try {
@@ -94,13 +99,22 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 				}
 				assertNotNull(response);
 				assertNotNull(response.isErrors());
-				if (this.networkCreated != null) {
-					assertNotNull(response.getResults().getId());
-					assertNotNull(networkCreated.getId());
-					assertEquals(network.getName(), networkCreated.getName());
-					assertEquals(network.getDriver(), networkCreated.getDriver());
-					assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
+				// Set docker volume name
+				networkCreated.setName(updatedName);
+				logger.info("Update Request for Docker volume with Name [{}]", networkCreated.getName());
+				response = networkService.update(networkCreated);
+				
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while Update request  [{}] ", message.getMessageText());
 				}
+
+				assertNotNull(response);
+				assertNotNull(response.isErrors());
+				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
+				Assert.assertFalse(response.isErrors());
+				Assert.assertNotNull(response.getResults());
+
+				Assert.assertEquals(response.getResults().getName(), updatedName);
 			}
 		} catch (Exception e) {
 			// ignore

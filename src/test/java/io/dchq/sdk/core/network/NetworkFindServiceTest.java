@@ -92,14 +92,17 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
+				
+				response = networkService.findById(networkCreated.getId());
+				
 				assertNotNull(response);
 				assertNotNull(response.isErrors());
 				if (this.networkCreated != null) {
 					assertNotNull(response.getResults().getId());
 					assertNotNull(networkCreated.getId());
-					assertEquals(network.getName(), networkCreated.getName());
-					assertEquals(network.getDriver(), networkCreated.getDriver());
-					assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
+					assertEquals(network.getName(), response.getResults().getName());
+					assertEquals(network.getDriver(), response.getResults().getDriver());
+					assertEquals(network.getDockerServerName(), response.getResults().getDockerServerName());
 				}
 			}
 		} catch (Exception e) {

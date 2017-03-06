@@ -1,10 +1,12 @@
 package io.dchq.sdk.core.network;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -18,6 +20,7 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
+import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.network.DockerNetwork;
 import com.dchq.schema.beans.one.network.DockerNetworkStatus;
 
@@ -92,15 +95,23 @@ public class NetworkSearchServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
+				
+				ResponseEntity<List<DockerNetwork>> searchResponse = networkService.search(networkCreated.getName(), 0, 1);
+
+				for (Message message : searchResponse.getMessages()) {
+					logger.warn("Error while search docker volume request  [{}] ", message.getMessageText());
+					validationMessage = message.getMessageText();
+				}
+				assertNotNull(searchResponse);
+				assertNotNull(searchResponse.isErrors());
+				assertFalse(validationMessage, searchResponse.isErrors());
 				assertNotNull(response);
 				assertNotNull(response.isErrors());
-				if (this.networkCreated != null) {
-					assertNotNull(response.getResults().getId());
-					assertNotNull(networkCreated.getId());
-					assertEquals(network.getName(), networkCreated.getName());
-					assertEquals(network.getDriver(), networkCreated.getDriver());
-					assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
-				}
+				assertNotNull(response.getResults().getId());
+				assertNotNull(networkCreated.getId());
+				assertEquals(network.getName(), searchResponse.getResults().get(0).getName());
+				assertEquals(network.getDriver(), searchResponse.getResults().get(0).getDriver());
+				assertEquals(network.getDockerServerName(), searchResponse.getResults().get(0).getDockerServerName());
 			}
 		} catch (Exception e) {
 			// ignore
