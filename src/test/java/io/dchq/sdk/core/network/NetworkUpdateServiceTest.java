@@ -3,8 +3,10 @@ package io.dchq.sdk.core.network;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -19,8 +21,11 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
+import com.dchq.schema.beans.one.base.UsernameEntityBase;
+import com.dchq.schema.beans.one.blueprint.RegistryAccount;
 import com.dchq.schema.beans.one.network.DockerNetwork;
 import com.dchq.schema.beans.one.network.DockerNetworkStatus;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.NetworkService;
@@ -34,11 +39,12 @@ import io.dchq.sdk.core.ServiceFactory;
 @RunWith(Parameterized.class)
 public class NetworkUpdateServiceTest extends AbstractServiceTest {
 
-	private NetworkService networkService;
+	private NetworkService networkService, networkService2;
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkService = ServiceFactory.buildNetworkService(rootUrl, cloudadminusername, cloudadminpassword);
+		networkService = ServiceFactory.buildNetworkService(rootUrl, username, password);
+		networkService2 = ServiceFactory.buildNetworkService(rootUrl, username2, password2);
 	}
 
 	DockerNetwork network;
@@ -72,7 +78,6 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
 	}
 
-	@Ignore
 	@Test
 	public void createTest() {
 		try {
@@ -98,22 +103,32 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 				}
 				assertNotNull(response);
 				assertNotNull(response.isErrors());
-				// Set docker volume name
-				networkCreated.setName(updatedName);
-				logger.info("Update Request for Docker volume with Name [{}]", networkCreated.getName());
+				
+				// updating entitlement
+				UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId2);
+				List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+				entiledUsers.add(entitledUser);
+				networkCreated.setEntitlementType(EntitlementType.CUSTOM);
+				networkCreated.setEntitledUsers(entiledUsers);
+				
 				response = networkService.update(networkCreated);
 				
+				logger.info("Entitlement Type [{}] and First name [{}]", response.getResults().getEntitlementType(),
+						response.getResults().getEntitledUsers().get(0).getFirstname());
+
 				for (Message message : response.getMessages()) {
 					logger.warn("Error while Update request  [{}] ", message.getMessageText());
 				}
 
-				assertNotNull(response);
-				assertNotNull(response.isErrors());
-				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
-				Assert.assertFalse(response.isErrors());
-				Assert.assertNotNull(response.getResults());
-
-				Assert.assertEquals(response.getResults().getName(), updatedName);
+				if (networkCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+					ResponseEntity<DockerNetwork> searchResponse = networkService2.findById(networkCreated.getId());
+					assertNotNull(searchResponse);
+					assertNotNull(searchResponse.isErrors());
+					// TODO: add tests for testing error message
+					assertNotNull(searchResponse.getResults());
+					assertEquals(networkCreated.getName(), searchResponse.getResults().getName());
+				}
+				
 			}
 		} catch (Exception e) {
 			// ignore

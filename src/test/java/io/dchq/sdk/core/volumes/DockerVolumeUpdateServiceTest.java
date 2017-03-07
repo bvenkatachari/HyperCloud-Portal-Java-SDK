@@ -1,9 +1,12 @@
 package io.dchq.sdk.core.volumes;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -17,7 +20,10 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.base.UsernameEntityBase;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
+import com.dchq.schema.beans.one.network.DockerNetwork;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerVolumeService;
@@ -31,23 +37,28 @@ import io.dchq.sdk.core.ServiceFactory;
 @RunWith(Parameterized.class)
 public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 
-	private DockerVolumeService dockerVolumeService;
+	private DockerVolumeService dockerVolumeService, dockerVolumeService2;
 
 	DockerVolume dockerVolume;
 	DockerVolume dockerVolumeCreated;
 	boolean error;
 	String validationMessage;
-	String updatedName;
+	EntitlementType entitlementType;
 
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
-	public DockerVolumeUpdateServiceTest(String createdOn, String volumeName, String provider, String server) {
+	public DockerVolumeUpdateServiceTest(
+			String createdOn, 
+			String volumeName, 
+			String provider, 
+			String server
+			) 
+	{
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		volumeName = prefix + "-" + volumeName;
-		String prefix2 = RandomStringUtils.randomAlphabetic(3);
-		updatedName = prefix2 + "-" + volumeName;
+
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
@@ -67,6 +78,7 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 	@Before
 	public void setUp() {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
+		dockerVolumeService2 = ServiceFactory.buildDockerVolumeService(rootUrl, username2, password2);
 	}
 
 	@Test
@@ -107,21 +119,30 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 			assertNotNull(response.getResults().getId());
 			Assert.assertNotNull(dockerVolume.getName(), dockerVolumeCreated.getName());
 
-			// Set docker volume name
-			dockerVolumeCreated.setName(updatedName);
+			// updating entitlement
+			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId2);
+			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+			entiledUsers.add(entitledUser);
+			dockerVolumeCreated.setEntitlementType(EntitlementType.CUSTOM);
+			dockerVolumeCreated.setEntitledUsers(entiledUsers);
 
-			logger.info("Update Request for Docker volume with Name [{}]", dockerVolumeCreated.getName());
 			response = dockerVolumeService.update(dockerVolumeCreated);
+
+			logger.info("Entitlement Type [{}] and First name [{}]", response.getResults().getEntitlementType(),
+					response.getResults().getEntitledUsers().get(0).getFirstname());
 
 			for (Message message : response.getMessages()) {
 				logger.warn("Error while Update request  [{}] ", message.getMessageText());
 			}
-			assertNotNull(response);
-			assertNotNull(response.isErrors());
-			Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
-			Assert.assertFalse(response.isErrors());
-			Assert.assertNotNull(response.getResults());
-			Assert.assertEquals(response.getResults().getName(), updatedName);
+
+			if (dockerVolumeCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+				ResponseEntity<DockerVolume> searchResponse = dockerVolumeService2.findById(dockerVolumeCreated.getId());
+				assertNotNull(searchResponse);
+				assertNotNull(searchResponse.isErrors());
+				// TODO: add tests for testing error message
+				assertNotNull(searchResponse.getResults());
+				assertEquals(dockerVolumeCreated.getName(), searchResponse.getResults().getName());
+			}
 
 		}
 
