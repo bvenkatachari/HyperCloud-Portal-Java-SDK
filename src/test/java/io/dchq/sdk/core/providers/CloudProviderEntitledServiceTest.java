@@ -121,6 +121,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
         registryAccountService3 = ServiceFactory.buildRegistryAccountService(rootUrl, username3, password3);
     }
     
+    @Ignore
 	@Test
 	public void testEntitledSearch() {
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
