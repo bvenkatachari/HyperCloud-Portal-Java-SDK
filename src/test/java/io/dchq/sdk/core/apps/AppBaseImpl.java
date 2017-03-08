@@ -5,6 +5,7 @@ import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.container.Container;
+import com.dchq.schema.beans.one.container.ContainerState;
 import com.dchq.schema.beans.one.container.ContainerStatus;
 import com.dchq.schema.beans.one.provision.*;
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -127,6 +128,60 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
 
     }
 
+    public App startAppServiceAndWait (Blueprint blueprint, boolean error, String validationMessage) {
+
+        //Deploy App Service and Stop the Service Successfully.
+       App app = stopAppServiceAndWait(blueprint,error,validationMessage);
+
+        logger.info("Stopped App: " + app.getName() + "  , with no. of containers :  " + app.getContainers().size());
+        logger.info("Process to Start Service for App ID : " + app.getId() + " started");
+
+        //Get all Containers in Container object.
+        List<Container> con = app.getContainers();
+
+        AppLifecycleProfile appLifecycleProfile = new AppLifecycleProfile();
+        appLifecycleProfile.setAllSelected(true);
+        appLifecycleProfile.setContainers(con);
+
+        // Start above Stopped App
+        ResponseEntity<App> appStartResponseEntity = appService.start(appLifecycleProfile, app.getId());
+
+        if (appStartResponseEntity.isErrors()) {
+            for (Message m : appStartResponseEntity.getMessages()) {
+                logger.warn("[{}]", m.getMessageText());
+                validationMessage = m.getMessageText();
+            }
+            //check for errors
+            Assert.assertEquals(validationMessage, error, appStartResponseEntity.isErrors());
+        }
+        app = appStartResponseEntity.getResults();
+
+        ContainerStatus status = app.getContainers().get(0).getContainerStatus();
+
+        if (app != null) {
+            while(app.getProvisionState()!= ProvisionState.RUNNING && System.currentTimeMillis() < endTime) {
+                logger.info("Found Container with status: " +status+ " app with status: " +app.getProvisionState());
+                while (status != ContainerStatus.RUNNING && System.currentTimeMillis() < endTime) {
+                    logger.info("Container Status Showing : " +status);
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        logger.warn(e.getLocalizedMessage(), e);
+                    }
+                    app = appService.findById(app.getId()).getResults();
+                    status = app.getContainers().get(0).getContainerStatus();
+                }
+                app = appService.findById(app.getId()).getResults();
+            }
+        }
+
+        if (app.getProvisionState() != ProvisionState.RUNNING) {
+            Assert.fail("App Status doesn't get changed to RUNNING, still showing : " + app.getProvisionState());
+        }
+        logger.info("Action 'Start' Service Successfully Completed with App Status: " +app.getProvisionState()+  " and container status displaying : " +status);
+        return app;
+    }
+
     public App stopAppServiceAndWait(Blueprint blueprint, boolean error, String validationMessage) {
 
         //First Deploy the App and Check Status
@@ -135,10 +190,15 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         logger.info("Running App: " + app.getName() + "  , with no. of containers :  " + app.getContainers().size());
         logger.info("Process to Stop App ID : " + app.getId() + " started");
 
-        // Stop above deployed App
+       //Get all Containers in Container object.
         List<Container> con = app.getContainers();
 
-        ResponseEntity<App> appStopResponseEntity = appService.stop(app.getId());
+        AppLifecycleProfile appLifecycleProfile = new AppLifecycleProfile();
+        appLifecycleProfile.setAllSelected(true);
+        appLifecycleProfile.setContainers(con);
+
+        // Stop above deployed App
+        ResponseEntity<App> appStopResponseEntity = appService.stop(appLifecycleProfile, app.getId());
 
         if (appStopResponseEntity.isErrors()) {
             for (Message m : appStopResponseEntity.getMessages()) {
@@ -148,11 +208,31 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
             //check for errors
             Assert.assertEquals(validationMessage, error, appStopResponseEntity.isErrors());
         }
-
         app = appStopResponseEntity.getResults();
 
-        assertNotNull(appStopResponseEntity.getResults());
+        ContainerStatus status = app.getContainers().get(0).getContainerStatus();
 
+        if (app != null) {
+            while(app.getProvisionState()!= ProvisionState.STOPPED && System.currentTimeMillis() < endTime) {
+                logger.info("Found Container with status: " +status+ " app with status: " +app.getProvisionState());
+                   while (status != ContainerStatus.STOPPED && System.currentTimeMillis() < endTime) {
+                       logger.info("Container Status Showing : " +status);
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        logger.warn(e.getLocalizedMessage(), e);
+                    }
+                    app = appService.findById(app.getId()).getResults();
+                    status = app.getContainers().get(0).getContainerStatus();
+                }
+                app = appService.findById(app.getId()).getResults();
+            }
+        }
+
+        if (app.getProvisionState() != ProvisionState.STOPPED) {
+            Assert.fail("App Status doesn't get changed to STOPPED, still showing : " + app.getProvisionState());
+        }
+        logger.info("Action 'Stop' Successfully Completed with App Status: " +app.getProvisionState()+  " and container status displaying : " +status);
         return app;
     }
 

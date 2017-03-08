@@ -18,8 +18,6 @@ import java.util.Collection;
 /**
  * Created by Saurabh Bhatia on 3/1/2017.
  */
-
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class AppServiceStopTest extends AppBaseImpl {
@@ -27,7 +25,7 @@ public class AppServiceStopTest extends AppBaseImpl {
         private App app;
         private Blueprint blueprint;
         private String blueprintId;
-       private String bluePrintName;
+        private String bluePrintName;
         boolean error;
         private String validationMessage;
 
