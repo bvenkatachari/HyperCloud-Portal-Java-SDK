@@ -23,6 +23,7 @@ import org.springframework.core.ParameterizedTypeReference;
  * Abstracts and provides infrastructure to all API calls.
  *
  * @author Intesar Mohammed
+ * @Contributor Saurabh B.
  * @since 1.0
  */
 interface GenericService<E, RL, RO> {

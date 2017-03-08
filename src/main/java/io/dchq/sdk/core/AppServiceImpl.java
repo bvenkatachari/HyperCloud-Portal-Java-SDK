@@ -3,6 +3,7 @@ package io.dchq.sdk.core;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
 import com.dchq.schema.beans.one.provision.AppScaleInProfile;
 import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @author Atef Ahmed
  * @author Intesar Mohammed
+ * @Contributor Saurabh B.
  * @see <a href="https://dchq.readme.io/docs/applications">App endpoint</a>
  * @since 1.0
  */
@@ -110,13 +112,13 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     }
 
     @Override
-    public ResponseEntity<App> start(String appId) {
-        return super.doPost(new ArrayList<>(), "/" + appId +  "/start");
+    public ResponseEntity<App> start(AppLifecycleProfile appLifecycleProfile, String appId) {
+        return super.doPost(appLifecycleProfile, "/" + appId +  "/start");
     }
 
     @Override
-    public ResponseEntity<App> stop(String appId) {
-        return super.doPost("", "/" + appId +  "/stop");
+    public ResponseEntity<App> stop(AppLifecycleProfile appLifecycleProfile, String appId) {
+        return super.doPost(appLifecycleProfile, "/" + appId +  "/stop");
     }
 
     @Override

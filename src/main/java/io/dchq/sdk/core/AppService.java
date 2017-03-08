@@ -3,6 +3,7 @@ package io.dchq.sdk.core;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
 import com.dchq.schema.beans.one.provision.AppScaleInProfile;
 import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author Atef Ahmed
  * @author Intesar Mohammed
+ * @contributor Saurabh B.
  * @since 1.0
  */
 public interface AppService extends GenericService<App, ResponseEntity<List<App>>, ResponseEntity<App>> {
@@ -111,7 +113,7 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      * @param appId
      * @return
      */
-   ResponseEntity<App> stop(String appId);
+   ResponseEntity<App> stop(AppLifecycleProfile appLifecycleProfile, String appId);
 
     /**
      * Start App Service.
@@ -120,7 +122,7 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      * @return
      */
 
-    ResponseEntity<App> start(String appId);
+    ResponseEntity<App> start(AppLifecycleProfile appLifecycleProfile, String appId);
 
     /**
      * Create Scale Out Service.

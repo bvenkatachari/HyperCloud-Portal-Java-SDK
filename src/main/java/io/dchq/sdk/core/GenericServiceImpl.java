@@ -39,6 +39,7 @@ import java.security.cert.X509Certificate;
  * Abstracts low level rest calls.
  *
  * @author Intesar Mohammed
+ * @contributor Saurabh B.
  * @since 1.0
  */
 abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
