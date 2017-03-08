@@ -138,7 +138,7 @@ public class DockerVolumeBaseImpl extends AbstractServiceTest implements DockerV
         // Stop above deployed App
         List<Container> con = app.getContainers();
 
-        ResponseEntity<App> appStopResponseEntity = appService.stop(app.getId());
+       /* ResponseEntity<App> appStopResponseEntity = appService.stop(app.getId());
 
         if (appStopResponseEntity.isErrors()) {
             for (Message m : appStopResponseEntity.getMessages()) {
@@ -152,7 +152,7 @@ public class DockerVolumeBaseImpl extends AbstractServiceTest implements DockerV
         app = appStopResponseEntity.getResults();
 
         assertNotNull(appStopResponseEntity.getResults());
-
+*/
         return app;
     }
 
