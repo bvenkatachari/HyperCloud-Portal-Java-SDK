@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
  * Created by Saurabh Bhatia on 2/27/2017.
  */
 
-public class AppBaseImpl extends AbstractServiceTest implements AppBase {
+public class DockerVolumeBaseImpl extends AbstractServiceTest implements DockerVolumeBase {
 
     protected AppService appService;
     protected BlueprintService blueprintService;
