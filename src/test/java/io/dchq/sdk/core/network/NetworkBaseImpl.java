@@ -137,7 +137,7 @@ public class NetworkBaseImpl extends AbstractServiceTest implements NetworkBase 
 
         // Stop above deployed App
         List<Container> con = app.getContainers();
-
+/*
         ResponseEntity<App> appStopResponseEntity = appService.stop(app.getId());
 
         if (appStopResponseEntity.isErrors()) {
@@ -152,7 +152,7 @@ public class NetworkBaseImpl extends AbstractServiceTest implements NetworkBase 
         app = appStopResponseEntity.getResults();
 
         assertNotNull(appStopResponseEntity.getResults());
-
+*/
         return app;
     }
 
