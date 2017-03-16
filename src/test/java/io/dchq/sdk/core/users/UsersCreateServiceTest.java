@@ -194,10 +194,10 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     public void cleanUp() {
         if (userCreated != null) {
             logger.info("cleaning up...");
-            ResponseEntity<?> response = service.delete(userCreated.getId());
-            for (Message message : response.getMessages()) {
-                logger.warn("Error user deletion: [{}] ", message.getMessageText());
-            }
+//            ResponseEntity<?> response = service.delete(userCreated.getId());
+//            for (Message message : response.getMessages()) {
+//                logger.warn("Error user deletion: [{}] ", message.getMessageText());
+//            }
         }
     }
     
