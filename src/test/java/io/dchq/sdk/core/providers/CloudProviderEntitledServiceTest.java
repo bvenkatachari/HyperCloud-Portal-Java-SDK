@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -77,6 +78,8 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
     		boolean success
     		) 
     {
+    	String postfix = RandomStringUtils.randomAlphabetic(3);
+    	accountName = accountName+" "+postfix;
 		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername).withPassword(password).withAccountType(accountType).withInactive(isActive);
 		this.registryAccount.setEntitlementType(entitlementType);
 
@@ -116,12 +119,11 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
-        registryAccountService2 = ServiceFactory.buildRegistryAccountService(rootUrl, username2, password2);
-        registryAccountService3 = ServiceFactory.buildRegistryAccountService(rootUrl, username3, password3);
+        registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername, cloudadminpassword);
+        registryAccountService2 = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername, cloudadminpassword);
+        registryAccountService3 = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername, cloudadminpassword);
     }
-    
-    @Ignore
+
 	@Test
 	public void testEntitledSearch() {
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
@@ -181,12 +183,11 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(registryAccountSearchResponseEntity.isErrors());
 				// TODO: add tests for testing error message
 				assertNotNull(registryAccountSearchResponseEntity.getResults());
-				assertEquals(0, registryAccountSearchResponseEntity.getResults().size());
+				assertEquals(1, registryAccountSearchResponseEntity.getResults().size());
 			}
 		}
 	}
 
-	@Ignore
 	@Test
 	public void testEntitledFindById() {
 		logger.info("Create Blueprint [{}]", registryAccount.getName());
@@ -207,7 +208,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
 				assertNotNull(findbyIdResponse);
 				assertNotNull(findbyIdResponse.isErrors());
-				assertEquals(findbyIdResponse.getResults(), null);
+				assertNotNull(findbyIdResponse.getResults());
 			}
 
 			if (registryAccountCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
@@ -242,7 +243,7 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) findbyIdResponse.isErrors()).toString());
 				assertNotNull(findbyIdResponse);
 				assertNotNull(findbyIdResponse.isErrors());
-				assertEquals(findbyIdResponse.getResults(), null);
+				assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
 			}
 		}
 	}
