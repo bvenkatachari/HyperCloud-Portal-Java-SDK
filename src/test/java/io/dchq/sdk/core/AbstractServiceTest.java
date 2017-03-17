@@ -26,23 +26,24 @@ import java.util.Date;
  * Abstracts class for holding test credentials.
  *
  * @author Intesar Mohammed
+ * @Updater Saurabh B.
  * @since 1.0
  */
 public abstract class AbstractServiceTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected String cloudadminusername = "OoPqBdQgMV4OpNYALhQ3";   //access key of admin
-    protected String cloudadminpassword = "L0PnFJiAW0L2dcaTiXxUSPY6UMor0j33kHlscE6r"; //secret-key for admin
+    protected String cloudadminusername = "c1h4BvA5fInKaFURzvpc";   //access key of admin
+    protected String cloudadminpassword = "K03xguv1KhETAzlrYk1HRbgK1DTB8sb1KREVvnHe"; //secret-key for admin
 
     protected String rootUrl = "https://23.99.48.48:443/api/1.0/";
     protected String userId = "2c918086597e5d5f0159b00478420056";
-    protected String username = "iWQpNhAN8V3eskxohoYM";   // access-key for user1
-    protected String password = "A3FYox0MlhnJd6BmKHExVHKzpMlXWGAJn2xZevJA";  // secret-key for user1
+    protected String username = "EdJhTUaYkOkWIyLuOLPR";   // access-key for user1
+    protected String password = "BfSmyjhsJnNPWa2K9pVPv4AzY7UquxBmSWokc8pr";  // secret-key for user1
 
     // Create another user for entitlement check
     protected static String userId2 = "2c918086597e5d5f0159b005070e0057";
-    protected String username2 = "4QAcORxMse3d4yrKfmoV";// accesskey
-    protected String password2 = "anNkl5qSFupdUThrkJw473EUmFIFNl4Z1Bt6YCU7";//secret key
+    protected String username2 = "tE0sucqQ107hDMPmf4nT";// accesskey
+    protected String password2 = "8VJgEB2tTM4HI6Z5JQ4oKdnYjtQubEQLeUkOC8Jb";//secret key
 
     // UserGroup with userId2 entitled user
     protected static String USER_GROUP = "2c918086597e5d5f0159b00555450058";
