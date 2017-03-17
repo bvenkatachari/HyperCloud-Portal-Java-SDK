@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -54,70 +55,95 @@ import io.dchq.sdk.core.ServiceFactory;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
-	
-    private RegistryAccountService registryAccountService;
-    private RegistryAccount registryAccount;
-    private boolean success;
-    private RegistryAccount registryAccountCreated;
-    private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-				{ "Rackspace US 66 testAccount", "dchqinc", "7b1fa480664b4823b72abed54ebb9b0f", AccountType.RACKSPACE,
-						false }
-        });
-    }
+	private RegistryAccountService registryAccountService;
+	private RegistryAccount registryAccount;
+	private boolean success;
+	private RegistryAccount registryAccountCreated;
+	private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
 
-    public CloudProviderFindAllServiceTest (
-    		String name, 
-    		String testUsername,
-    		String apiKey,
-    		AccountType accountType,
-    		/*
-    		String rackspaceName, 
-    		Boolean isActive, 
-    		String Password, 
-    		String validationMssage, 
-    		*/
-    		boolean success
-    		) 
-	{
-		this.registryAccount = new RegistryAccount().withName(name).withUsername(testUsername).withPassword(apiKey)
-				.withAccountType(accountType);
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { { AccountType.RACKSPACE, "Rackspace US 2 testAccount", "dchqinc",
+				"apiKey", null, null, null, null, null, null, null, false } });
+	}
+
+	public CloudProviderFindAllServiceTest(
+			// below fields are for Rackspace, Amazon, Digital Ocean, Google
+			// Cloud, Aliyun
+			AccountType accountType, String accountName, String testUsername, // also corresponds to application client id on UI
+			String apiKey, // also corresponds to password, application client
+							// secret id on UI
+
+			// additional fields for Microsoft Azure
+			String subscriptionId, // corresponds to email in API call
+			String TenantId, // corresponds to region in API call
+
+			// additional field for IBM Softlayer
+			String domainName, // corresponds to groupName in API call
+
+			// additional fields for private cloud
+			String vmDestination, // corresponds to hardwareId in API call
+			String template, // corresponds to imageId in API call
+
+			// additional field for volume provider
+			String opts, Integer size,
+
+			boolean success) {
+		String postfix = RandomStringUtils.randomAlphabetic(3);
+    	accountName = accountName+" "+postfix;
+		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
+				.withPassword(apiKey).withAccountType(accountType);
+		this.registryAccount.setRegion(TenantId);
+		this.registryAccount.setEmail(subscriptionId);
+		this.registryAccount.setGroupName(domainName);
+		this.registryAccount.setHardwareId(vmDestination);
+		this.registryAccount.setImageId(template);
+		this.registryAccount.setOpts(opts);
+		this.registryAccount.setSizeLimit(size);
 		this.success = success;
 	}
 
-    public int testRegistryAccountPosition(String id) {
-        ResponseEntity<List<RegistryAccount>> response = registryAccountService.findAll(0, 5000);
-        for (Message message : response.getMessages()) {
-            logger.warn("Error [{}]  " + message.getMessageText());
-        }
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        assertEquals(false, response.isErrors());
-        int position = 0;
-        if (id != null) {
-            for (RegistryAccount obj : response.getResults()) {
-                position++;
-                if (obj.getId().equals(id)) {
-                    logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-                    assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-                }
-            }
-        }
-        logger.info(" Total Number of Objects :{}", response.getResults().size());
-        return response.getResults().size();
-    }
-    
-    @Before
-    public void setUp() throws Exception {
-        registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
-    }
+	public int testRegistryAccountPosition(String id) {
+		// TODO report a bug findAll if nothing found do not throw an exception
+		// instead it should return zero
+		ResponseEntity<List<RegistryAccount>> response = null;
+		try {
+			response = registryAccountService.findAll(0, 1);
+			for (Message message : response.getMessages()) {
+				logger.warn("Error [{}]  " + message.getMessageText());
+			}
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
+			assertEquals(false, response.isErrors());
+			int position = 0;
+			if (id != null) {
+				for (RegistryAccount obj : response.getResults()) {
+					position++;
+					if (obj.getId().equals(id)) {
+						logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
+						assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
+					}
+				}
+			}
+			logger.info(" Total Number of Objects :{}", response.getResults().size());
+		} catch (Exception e) {
 
-    @Ignore
-    @Test
-    public void testFindAll() throws Exception {
+		}
+		if (response == null)
+			return 0;
+		else
+			return response.getResults().size();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername,
+				cloudadminpassword);
+	}
+
+	@Test
+	public void testFindAll() throws Exception {
 		logger.info("Count of Cloud Provider before Create Cloudprovider with  Account with Name [{}]",
 				registryAccount.getName());
 		countBeforeCreate = testRegistryAccountPosition(null);
@@ -153,9 +179,9 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 							+ registryAccountCreated.getId(),
 					countBeforeCreate + 1, countAfterCreate);
 		}
-    }
+	}
 
-    @After
+	@After
 	public void cleanUp() {
 		if (registryAccountCreated != null) {
 			logger.info("cleaning up...");
