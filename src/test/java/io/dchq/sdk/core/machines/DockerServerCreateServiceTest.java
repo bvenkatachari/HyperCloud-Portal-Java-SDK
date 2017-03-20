@@ -21,6 +21,8 @@ import com.dchq.schema.beans.one.provider.DataCenter;
 import com.dchq.schema.beans.one.provider.DockerServer;
 import com.dchq.schema.beans.one.security.EntitlementType;
 import io.dchq.sdk.core.ServiceFactory;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -33,10 +35,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Created by Abedeen on 04/05/16.
@@ -68,6 +66,8 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
 
 
     public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, int size, String endpoint, String endpointTpe, int tinout, String clusterName, boolean success) {
+    	String postfix = RandomStringUtils.randomAlphabetic(3);
+    	clusterName = clusterName+"-"+postfix;
         datacenterCreated = getDataCenter(clusterName, Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
         Assert.assertNotNull(datacenterCreated);
         this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
