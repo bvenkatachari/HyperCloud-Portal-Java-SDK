@@ -61,8 +61,8 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
         appService = ServiceFactory.buildPluginService(rootUrl, username, password);
     }
 
-    private static Plugin plugin;
-    private Plugin pluginCreated;
+    private Plugin plugin;
+    private Plugin pluginUpdated;
     private String messageText;
     private Boolean isEntitlementTypeUser;
     private boolean errors;
@@ -141,8 +141,6 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
         });
     }
 
-    private static int count = 0;
-
     public PluginUpdateServiceTest(String pluginName, String version, String description, String pluginScript, String scriptType, String license,
                                    Integer timeout, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId,
                                    String scriptArgs, Set<Env> envs, Boolean inactive, boolean errors) {
@@ -159,13 +157,11 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
             pluginName = org.apache.commons.lang3.StringUtils.lowerCase(pluginName);
         }
 
-        if (count == 0) {
-            plugin = new Plugin();
-        }
+        this.plugin = new Plugin();
 
-        plugin.setName(pluginName);
-        plugin.setVersion(version);
-        plugin.setDescription(description);
+        this.plugin.setName(pluginName);
+        this.plugin.setVersion(version);
+        this.plugin.setDescription(description);
 
         this.plugin.setBaseScript(pluginScript);
         this.plugin.setScriptLang(scriptType);
@@ -193,25 +189,13 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
 
     @Ignore
     @org.junit.Test
-    public void testUpdate() throws Exception {
+	public void testUpdate() throws Exception {
 
-         ResponseEntity<Plugin> response = null;
-        if (count++ == 0) {
-            response = this.appService.create(this.plugin);
-            this.plugin = response.getResults();
-            logger.info("Skipping test bed...");
-            return;
-        } else {
-            logger.info("Updating Plugin with Name [{}]", this.plugin.getName());
-            response = appService.update(plugin);
-            count = 0;
-        }
-
-
-        for (Message message : response.getMessages()){
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-            messageText = message.getMessageText();
-        }
+		ResponseEntity<Plugin> response = this.appService.create(this.plugin);
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Create request  [{}] ", message.getMessageText());
+			messageText = message.getMessageText();
+		}
 
         //Check for response
         assertNotNull(response);
@@ -221,59 +205,66 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
         Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
         //check for errors
         Assert.assertFalse(messageText , response.isErrors());
-
-
+        
+        this.plugin = response.getResults();
+        
         if (!response.isErrors()) {
-            pluginCreated = response.getResults();
+        	
+        	String updatedName = this.plugin.getName()+"_updated";
+        	this.plugin.setName(updatedName);
+        	
+        	response = appService.update(this.plugin);
+        	
+            pluginUpdated = response.getResults();
             assertNotNull(response.getResults());
             assertNotNull(response.getResults().getId());
 
             // name
-            assertEquals(plugin.getName(), pluginCreated.getName());
+            assertEquals(plugin.getName(), pluginUpdated.getName());
 
             // version
             if (StringUtils.isEmpty(plugin.getVersion())) {
-                assertEquals("1.0", pluginCreated.getVersion());
+                assertEquals("1.0", pluginUpdated.getVersion());
             } else {
-                assertEquals(plugin.getVersion(), pluginCreated.getVersion());
+                assertEquals(plugin.getVersion(), pluginUpdated.getVersion());
             }
 
-            assertEquals(plugin.getDescription(), pluginCreated.getDescription());
-            assertEquals(plugin.getBaseScript(), pluginCreated.getBaseScript());
+            assertEquals(plugin.getDescription(), pluginUpdated.getDescription());
+            assertEquals(plugin.getBaseScript(), pluginUpdated.getBaseScript());
 
             // license
             if (StringUtils.isEmpty(plugin.getLicense())) {
-                assertEquals("EULA", pluginCreated.getLicense());
+                assertEquals("EULA", pluginUpdated.getLicense());
             } else {
-                assertEquals(plugin.getLicense(), pluginCreated.getLicense());
+                assertEquals(plugin.getLicense(), pluginUpdated.getLicense());
             }
 
             // timeout
             if (StringUtils.isEmpty(plugin.getTimeout())) {
-                assertEquals("30", pluginCreated.getTimeout());
+                assertEquals("30", pluginUpdated.getTimeout());
             } else {
-                assertEquals(plugin.getTimeout(), pluginCreated.getTimeout());
+                assertEquals(plugin.getTimeout(), pluginUpdated.getTimeout());
             }
 
-            assertEquals(plugin.getBaseScript(), pluginCreated.getBaseScript());
+            assertEquals(plugin.getBaseScript(), pluginUpdated.getBaseScript());
             // script-lang
             if (StringUtils.isEmpty(plugin.getScriptLang())) {
-                assertEquals("SHELL", pluginCreated.getScriptLang());
+                assertEquals("SHELL", pluginUpdated.getScriptLang());
             } else {
-                assertEquals(plugin.getScriptLang(), pluginCreated.getScriptLang());
+                assertEquals(plugin.getScriptLang(), pluginUpdated.getScriptLang());
             }
-            assertEquals(plugin.getEnvs(), pluginCreated.getEnvs());
-            assertEquals(plugin.getScriptArgs(), pluginCreated.getScriptArgs());
+            assertEquals(plugin.getEnvs(), pluginUpdated.getEnvs());
+            assertEquals(plugin.getScriptArgs(), pluginUpdated.getScriptArgs());
 
-            assertEquals(plugin.getEntitlementType(), pluginCreated.getEntitlementType());
+            assertEquals(plugin.getEntitlementType(), pluginUpdated.getEntitlementType());
 
-            assertEquals(plugin.getInactive(), pluginCreated.getInactive());
+            assertEquals(plugin.getInactive(), pluginUpdated.getInactive());
 
-            assertEquals(plugin.getEntitlementType(), pluginCreated.getEntitlementType());
+            assertEquals(plugin.getEntitlementType(), pluginUpdated.getEntitlementType());
             if (EntitlementType.CUSTOM == plugin.getEntitlementType() && isEntitlementTypeUser) {
-                assertEquals(plugin.getEntitledUsers(), pluginCreated.getEntitledUsers());
+                assertEquals(plugin.getEntitledUsers(), pluginUpdated.getEntitledUsers());
             } else if (EntitlementType.CUSTOM == plugin.getEntitlementType() && !isEntitlementTypeUser) {
-                assertEquals(plugin.getEntitledUserGroups(), pluginCreated.getEntitledUserGroups());
+                assertEquals(plugin.getEntitledUserGroups(), pluginUpdated.getEntitledUserGroups());
             }
 
 
@@ -285,15 +276,15 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
     public void cleanUp() {
         logger.info("cleaning up...");
 
-        if (pluginCreated != null) {
-            ResponseEntity<Plugin> deleteResponse  =   appService.delete(pluginCreated.getId());
+        if (this.plugin != null) {
+            ResponseEntity<Plugin> deleteResponse  =   appService.delete(this.plugin.getId());
             for (Message m : deleteResponse.getMessages()){
                 logger.warn("[{}]", m.getMessageText());
                 messageText = m.getMessageText();}
 
             //check for errors
             Assert.assertFalse(messageText ,deleteResponse.isErrors());
-            logger.info("Deleted Object Successfully  with  ID [{}]", this.pluginCreated.getId());
+            logger.info("Deleted Object Successfully  with  ID [{}]", this.pluginUpdated.getId());
         }
     }
 }
