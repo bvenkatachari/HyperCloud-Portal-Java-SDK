@@ -52,7 +52,8 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	public NetworkCreateServiceTest(
 			String name, 
 			String driver,
-			String id
+			String id,
+			boolean error
 			) 
 	{
 		// random user name
@@ -62,11 +63,16 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 		network.setName(name);
 		network.setDriver(driver);
 		network.setDockerServer(new NameEntityBase().withId(id));
+		this.error = error;
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
+		return Arrays.asList(new Object[][] { 
+			{ "testnetwork", "bridge", dockerServerId, true},
+			{ "qw@@@@@kkkk123", "bridge", dockerServerId, true },
+			{ "teasasasDASDASDASDASDADASDASDASDASDASDASDADSstnetwork3", "bridge", dockerServerId , true},
+			{ "", "bridge", dockerServerId , false} });
 	}
 
 	@Test
@@ -75,32 +81,41 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 			logger.info("Create network name as [{}] driver [{}] server [{}]", network.getName(), network.getDriver(),
 					network.getDockerServer());
 			ResponseEntity<DockerNetwork> response = networkService.create(network);
-			for (Message message : response.getMessages()) {
-				logger.warn("Error while Create request  [{}] ", message.getMessageText());
-			}
-
-			if (response.getResults() != null && !response.isErrors()) {
-				this.networkCreated = response.getResults();
-				logger.info("Create docker network Successful..");
-			}
-
-			while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
-				try {
-					Thread.sleep(5000);
-					networkCreated = networkService.findById(networkCreated.getId()).getResults();
-					logger.info("Network Status is [{}]", networkCreated.getStatus());
-				} catch (InterruptedException e) {
-					// TODO: handling exception
+			if(error)
+			{
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while Create request  [{}] ", message.getMessageText());
 				}
-				assertNotNull(response);
-				assertNotNull(response.isErrors());
-				if (this.networkCreated != null) {
-					assertNotNull(response.getResults().getId());
-					assertNotNull(networkCreated.getId());
-					assertEquals(network.getName(), networkCreated.getName());
-					assertEquals(network.getDriver(), networkCreated.getDriver());
-					assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
+
+				if (response.getResults() != null && !response.isErrors()) {
+					this.networkCreated = response.getResults();
+					logger.info("Create docker network Successful..");
 				}
+
+				while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
+					try {
+						Thread.sleep(5000);
+						networkCreated = networkService.findById(networkCreated.getId()).getResults();
+						logger.info("Network Status is [{}]", networkCreated.getStatus());
+					} catch (InterruptedException e) {
+						// TODO: handling exception
+					}
+					assertNotNull(response);
+					assertNotNull(response.isErrors());
+					if (this.networkCreated != null) {
+						assertNotNull(response.getResults().getId());
+						assertNotNull(networkCreated.getId());
+						assertNotNull("It shloud not be null or empty", network.getName());
+						assertEquals(network.getName(), networkCreated.getName());
+						assertEquals(network.getDriver(), networkCreated.getDriver());
+						assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
+					}
+				}
+			}
+			else
+			{
+				assertEquals(null, response.getResults());
+				assertEquals(true, response.isErrors());
 			}
 		} catch (Exception e) {
 			// ignore
