@@ -44,6 +44,7 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 
 	DockerNetwork network;
 	DockerNetwork networkCreated;
+	DockerNetwork networkDeleted;
 	boolean error;
 	String validationMessage;
 	private int countBeforeCreate = 0, countAfterCreate = 0;
@@ -67,7 +68,11 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
+		return Arrays.asList(new Object[][] { 
+			{ "testnetwork", "bridge", dockerServerId },
+			{ "testnetwork21", "bridge", dockerServerId },
+			{ "testnetwork31", "bridge", dockerServerId },
+			{ "testnetwork41", "bridge", dockerServerId }});
 	}
 	
 
@@ -135,11 +140,24 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 	public void cleanUp() {
 		if (this.networkCreated != null) {
 			logger.info("cleaning up...");
-			ResponseEntity<?> response = networkService.delete(this.networkCreated.getId());
+			ResponseEntity<DockerNetwork> response = networkService.delete(this.networkCreated.getId());
+			networkDeleted = response.getResults();
 			for (Message message : response.getMessages()) {
 				logger.warn("Error network deletion: [{}] ", message.getMessageText());
 			}
 			assertEquals(countBeforeCreate, countAfterCreate - 1);
+
+			while (networkDeleted!=null && networkDeleted.getStatus() != DockerNetworkStatus.REMOVED
+					&& (System.currentTimeMillis() < endTime)) {
+				response = networkService.findById(this.networkCreated.getId());
+				networkDeleted = response.getResults();
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
