@@ -120,7 +120,7 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				{ AccountType.DIGITALOCEAN, "Digital Ociean testAccount", "dchqinc", "apiKey", null, null, null, null,
 						null, null, null, false },
 				//TODO: This seems to be a bug, need to verify
-				//{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null, null, null, null, null, null, false },
+				{ AccountType.GOOGLE_COMPUTE_ENGINE, "Google Cloud testAccount", "dchqinc", "password", null, null, null, null, null, null, null, false },
 				
 				{ AccountType.ALICLOUD, "Biggest ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,
 						null, null, false },
@@ -162,12 +162,12 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				//{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "     ", "apiKey", null, null, null, null,  null, null, null, false },
 				//{ AccountType.RACKSPACE, "Rackspace US 1 testAccount", "dchqinc", "     ", null, null, null, null,  null, null, null, false },
 				//TODO : Failing
-				//{ null, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,  null, null, null, false },
+				{ null, "Rackspace US 1 testAccount", "dchqinc", "apiKey", null, null, null, null,  null, null, null, true },
 
 
 
 				{ AccountType.AWS_EC2, "Amazon EC2 1 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
-				{ AccountType.AWS_EC2, "   ", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
+				{ AccountType.AWS_EC2, "   ", "dchqinc", "apiKey", null, null, null, null, null, null, null, true},
 				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "   ", "apiKey", null, null, null, null, null, null, null, false},
 				{ AccountType.AWS_EC2, "Amazon EC2 testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false},
 				//{ null, "Amazon EC2 testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false},
@@ -175,33 +175,33 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 
 
 				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
-				{ AccountType.DIGITALOCEAN, "    ", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
+				{ AccountType.DIGITALOCEAN, "    ", "dchqinc", "apiKey", null, null, null, null, null, null, null, true },
 				{ AccountType.DIGITALOCEAN, "Digital Ocean testAccount", "  ", "apiKey", null, null, null, null, null, null, null, false },
 				{ AccountType.DIGITALOCEAN, "Duplicate Digital Ocean testAccount", "dchqinc", "   ", null, null, null, null, null, null, null, false },
 				//{ null, "Digital Ocean testAccount", "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
 
 
 				{ AccountType.ALICLOUD, "A ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
-				{ AccountType.ALICLOUD, "   ", "dchqinc", "password", null, null, null, null, null,null, null, false },
+				{ AccountType.ALICLOUD, "   ", "dchqinc", "password", null, null, null, null, null,null, null, true },
 				{ AccountType.ALICLOUD, "B ALICLOUD testAccount", "  ", "password", null, null, null, null, null,null, null, false },
 				{ AccountType.ALICLOUD, "C ALICLOUD testAccount", "dchqinc", "   ", null, null, null, null, null,null, null, false },
 				//{ null, "ALICLOUD testAccount", "dchqinc", "password", null, null, null, null, null,null, null, false },
 
 
 				{ AccountType.MICROSOFT_AZURE, "Microsoft 11 Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "     ", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft 12 Azure testAccount", "  ", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft 13 Azure testAccount", "dchqinc", "   ", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "  ",  "tenantId", null, null, null, null, null, false },
-				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "    ", null, null, null, null, null, false },
+				{ AccountType.MICROSOFT_AZURE, "     ", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, true },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 12 Azure testAccount", "  ", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, true },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft 13 Azure testAccount", "dchqinc", "   ", "user@dchq.io",  "tenantId", null, null, null, null, null, false},
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "  ",  "tenantId", null, null, null, null, null, true },
+				{ AccountType.MICROSOFT_AZURE, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "    ", null, null, null, null, null, true },
 				//{ null, "Microsoft Azure testAccount", "dchqinc", "password", "user@dchq.io",  "tenantId", null, null, null, null, null, false },
 
 
 				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
-				{ AccountType.SOFTLAYER, "    ", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
-				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "   ", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
-				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "   ", null, null,  "http://dchq.co.in", null, null, null, null, false },
-				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "   ", null, null, null, null, false },
+				{ AccountType.SOFTLAYER, "    ", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "   ", "password", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "   ", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				{ AccountType.SOFTLAYER, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "   ", null, null, null, null, true },
 				//{ null, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
 
 
@@ -217,24 +217,24 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
     public void testCreate() throws Exception {
 		boolean tempSuccess = success;
 		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
-		logger.info("Create Registry Account with Name [{}]", registryAccount.getName());
-		if (success) {
-			logger.info("Expecting Error while Create Registry Account with Name [{}]", registryAccount.getName());
-		}
-		if (response.isErrors()) {
-			logger.warn("Message from Server... {}", response.getMessages().get(0).getMessageText());
-		}
-		if (success && !response.isErrors()) {
-			success = false;
-			this.registryAccountCreated = response.getResults();
-		}
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
 		if (!tempSuccess) {
+			logger.info("Create Registry Account with Name [{}]", registryAccount.getName());
+			if (success) {
+				logger.info("Expecting Error while Create Registry Account with Name [{}]", registryAccount.getName());
+			}
+			if (response.isErrors()) {
+				logger.warn("Message from Server... {}", response.getMessages().get(0).getMessageText());
+			}
+			if (success && !response.isErrors()) {
+				success = false;
+				this.registryAccountCreated = response.getResults();
+			}
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
 			this.registryAccountCreated = response.getResults();
-			logger.info(" Registry Account Created with Name [{}] and ID [{}]", registryAccountCreated.getName(), registryAccountCreated.getId());
 			assertNotNull(response.getResults());
 			assertNotNull(response.getResults().getId());
+			logger.info(" Registry Account Created with Name [{}] and ID [{}]", registryAccountCreated.getName(), registryAccountCreated.getId());
 			assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
 			assertEquals(registryAccount.getName(), registryAccountCreated.getName());
 			assertEquals(registryAccount.getUsername(), registryAccountCreated.getUsername());
@@ -247,7 +247,12 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 			assertEquals(registryAccount.getImageId(), registryAccountCreated.getImageId());
 			assertEquals(registryAccount.getOpts(), registryAccountCreated.getOpts());
 			assertEquals(registryAccount.getSizeLimit(), registryAccountCreated.getSizeLimit());
-		} 
+		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
+		}
     }
 
     @After
