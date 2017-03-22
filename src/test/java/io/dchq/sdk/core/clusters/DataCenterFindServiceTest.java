@@ -72,6 +72,9 @@ public class DataCenterFindServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Cluster AA4", "Weave", "ABC", EntitlementType.ALL_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g", false, false, 4, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"Cluster AA4", "Docker Network", "Network", EntitlementType.MY_BLUEPRINTS, EntitlementType.ALL_PLUGINS, "Approval", "Advanced", 5, "1g", false, false, 4, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"Cluster AA4", "Docker Swarm", "Swarm", EntitlementType.MY_BLUEPRINTS, EntitlementType.MY_PLUGINS, "Approval", "Advanced", 5, "1g", false, false, 4, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"Cluster AA4", "Docker - UCP", "UCP", EntitlementType.ALL_BLUEPRINTS, EntitlementType.MY_PLUGINS, "Approval", "Advanced", 5, "1g", false, false, 4, "\nAll Input Values are normal. Malfunction in SDK", false},
 
         });
     }

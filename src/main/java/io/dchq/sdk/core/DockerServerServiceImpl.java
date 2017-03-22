@@ -1,6 +1,7 @@
 package io.dchq.sdk.core;
 
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.provider.DockerServer;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -54,5 +55,10 @@ public class DockerServerServiceImpl extends GenericServiceImpl<DockerServer, Re
 
 //        return findById(id + "/monitor?{'start' : '"+startDate+"', 'end':'"+endDate+"'}");
         return findById(id + "/monitor?start=2015-08-19T03:58:57.138Z&end=2015-08-19T04:58:57.138Z");
+    }
+
+    @Override
+    public ResponseEntity<DockerServer> deploy(Blueprint blueprint) {
+        return super.doPost(blueprint, "/sdi");
     }
 }
