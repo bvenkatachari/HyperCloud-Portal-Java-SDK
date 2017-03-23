@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -67,7 +68,7 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 	public void setUp() {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
-
+    @Ignore
 	@Test
 	public void updateTest() throws Exception {
 		// Creating new Docker Volume
