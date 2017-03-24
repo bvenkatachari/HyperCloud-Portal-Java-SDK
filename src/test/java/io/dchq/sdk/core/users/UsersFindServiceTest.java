@@ -82,7 +82,22 @@ public class UsersFindServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
-				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false }, });
+				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false },
+                        { "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "    ", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "@#@#@", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "Hyper", "User", null, "00000", "pass", false},
+                        { "_Hyper", "1234", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "Hyper", "User", "hyperuser", "user@hyperuser.com", "fail", false},
+                        { "12345", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", false},
+                        { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { "Hyper", null, null, null, "pass", false},
+                        { "Hyper", null, "1234", "user@hyperuser.com", "pass", false},
+                        { "Hyper", "User", "hyperuser", "   ", "pass", false},
+                        { "Hyper", "User", "hyperuser", null, "pass", false},
+                        { "Hyper", "User", null, "user@hyperuser.com", "pass", false},
+        });
 	}
 
     @Before

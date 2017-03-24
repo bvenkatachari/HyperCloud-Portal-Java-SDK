@@ -93,9 +93,17 @@ public class BlueprintSearchServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{      
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
-						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null,
-						EntitlementType.NONE, false},
+
+                { "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { "Docker Blueprint ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { " Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "ShortDescription",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { "@@Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "  ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { "Docker Blueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { "Docker_Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, null,false },
+                { "DockerBlueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
+                { "12345", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
+
         });
     }
     

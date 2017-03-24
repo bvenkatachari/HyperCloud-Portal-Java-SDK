@@ -67,9 +67,23 @@ public class BlueprintUpdateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-				{ "Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n",
-						Visibility.EDITABLE, "", true }       
-				});
+                { "Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", true },
+                { "Docker-Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "test", true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "ABC", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, " ", true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0", "  ", Visibility.EDITABLE, null, true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "!@3", true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "@@@", "LB:\n image: nginx:latest\n", Visibility.READABLE, "123", true },
+                { "Docker Blueprint", null, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "test!@", true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0", null, Visibility.EDITABLE, "", true },
+                { "Docker Blueprint", null, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", true },
+                { "Docker Blueprint12345", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", true },
+                { " ", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", true },
+                { "@#@#", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", true },
+                { "   ", null, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, " ", true },
+                { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0", " ", Visibility.EDITABLE, " ", true },
+
+
+        });
     }
 
     public BlueprintUpdateServiceTest(

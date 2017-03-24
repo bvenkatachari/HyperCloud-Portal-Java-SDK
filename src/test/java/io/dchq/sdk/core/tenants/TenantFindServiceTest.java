@@ -80,6 +80,15 @@ public class TenantFindServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                {"TenantFindService", false},
+                {"TenantFindService", false},
+                {" ", false},
+                {null, false},
+                {"TenantFindService", true},
+                {"12345", false},
+                {"@#@#", false},
+                {"Tenant_FindService", false},
+                {" ", true},
+
                 // Passing Empty string as tenant Name
                 //      {"", false}
         });

@@ -91,7 +91,24 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
 				// TODO: Add more test data for all sorts of validations and modification
-				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false }, });
+				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false },
+						{ "Hyper", "User", "hyperuser", "user@hyperuser1.com", "pass", "Hyper1", "User1", false },
+						{ "12345", "User", "hyperuser", "user@hyperuser.com", "pass", "123451", "User1", false },
+						{ "@@@@", "User", "hyperuser", "user@hyperuser.com", "pass", "@@@@1", "User1", false },
+						{ "Hyper", "User", "12345", "user@hyperuser.com", "pass", "Hyper1", "User1", false },
+						{ " ", "User", "hyperuser", "user@hyperuser.com", "pass", "User1", "Hyper1", false },
+						{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "00000", "User1", "Hyper1", false },
+						{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", "12345", "Hyper1", false },
+						{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", "User1", "12345", false },
+						{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", "Hyper1", "User1", false },
+						{ "Hyper", "User", "hyperuser", null, "fail", "Hyper1", "User1", false },
+						{ null, null, "hyperuser", "user@hyperuser.com", "pass", null, "User1", false },
+						{ "Hyper", null, "hyperuser", "user@hyperuser.com", "pass", "Hyper1", null, false },
+						{ "Hyper", "User", "   ", "0000@hyperuser.com", "pass", "Hyper1", "User1", false },
+						{ "  ", "User", "hyperuser", "  ", "pass", "Hyper1", "User1", false },
+						{ "Hyper", "User", "   ", "0000@hyperuser.com", "pass", "Hyper1", "User1", false },
+						{ "  ", "User", "hyperuser", "  ", "pass", "Hyper1", "User1", false }
+				});
 	}
 
 	@Before

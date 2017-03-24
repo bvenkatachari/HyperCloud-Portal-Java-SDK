@@ -78,6 +78,12 @@ public class TenantSearchServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"TenantSearchTest", false},
+                {" ", false},
+                {null, false},
+                {"Tenant_SearchTest", false},
+                {"@#@#", false},
+                {"12345", false},
+
         });
     }
 

@@ -79,7 +79,11 @@ public class UpdateTenantServiceTest extends AbstractServiceTest {
         return Arrays.asList(new Object[][]{
                 //positive case
                {"TenantCreation", "Update", false},
-               // Updating with Empty group names
+                {" ", "Update", false},
+                {"12345", "Update", false},
+                {null, "Update", false},
+
+                // Updating with Empty group names
              //    {"Test for Updating with Empty", "", false}
 
         });

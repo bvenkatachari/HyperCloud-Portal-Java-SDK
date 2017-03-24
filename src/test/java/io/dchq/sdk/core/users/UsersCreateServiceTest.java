@@ -103,8 +103,7 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws Exception {
         return Arrays.asList(new Object[][]{
-                // TODO: add more test data for all sorts of validations
-				{ "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, null,
+                { "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, null,
 						"pass1234", true, "comments", false },
 				{ "Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, null,
 						"pass", true, "NoComments", false },
@@ -136,6 +135,20 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
 						"pass", false, "Comments", false },
 				{ "@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, true, null,
 						"pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "Hyper User", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "Hyper_Hyper", "User", "hyperuser", "user@hyperuser.com", "Hyper User", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "     ", "QA", "ABC", null, false, null,  "pass", true, "     ", false },
+                { "12345", "&&&&", "hyperuser", "user@hyperuser.com", null, "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "Hyper User", "QA", "9999999", null, true, null,   "pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "Hyper User", "QA", "9999999", null, true, null,  "fail", true, null, false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "12345", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "user@hyperuser.com", "Hyper User", "0000000", "9999999", null, false, null, "pass", true, "Comments", false },
+                { "Hyper", null, null, null, "Hyper User", "QA", "9999999", null, false, null, "pass", true, "Comments", false },
+                { "Hyper1234", "    ", "&&&&", "user@hyperuser.com", "Hyper User", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "  ", "User", "12345", null, "Hyper User", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
+                { "#####", "2020", "    ", "user@hyperuser.com", "Hyper User", "100", "XYZ", null, false, null,   "pass", true, "Comments", false },
+                { "Hyper", "User", "hyperuser", "00000", null, "QA", "9999999", null, false, null,   "pass", true, "    ", false },
+                { "123_123Hyper", "User-New", null, "user@hyperuser.com", "Hyper User", "QA", "9999999", null, false, null,   "pass", true, "Comments", false },
 				// TODO: This is a failing
                 //{ "@@@@", "Malhotra", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "@@@@@@@", null, false, null,
 						//"fail", true, "Comments", true },
