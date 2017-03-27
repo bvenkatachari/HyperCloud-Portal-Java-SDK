@@ -70,8 +70,26 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
     
     @Parameterized.Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0",
-				"LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE } });
+		return Arrays.asList(new Object[][]{{"Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0",
+				"LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
+
+				{"Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", null},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "10.0", null, Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", null, Visibility.READABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", null, "10.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"Docker-Blueprint", BlueprintType.DOCKER_COMPOSE, "ABC", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
+				{null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.READABLE, "", EntitlementType.NONE},
+				{"@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
+				{"DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
+				{"12345", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
+
+		});
 	}
 
     public BlueprintFindAllServiceTest(

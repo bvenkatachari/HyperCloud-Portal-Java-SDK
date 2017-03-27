@@ -86,7 +86,20 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
     
     @Parameterized.Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false }, });
+		return Arrays.asList(new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false },
+
+				{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "    ", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "@#@#@", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "Hyper", "User", null, "00000", "pass", false},
+				{ "_Hyper", "1234", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "Hyper", "User", "hyperuser", "user@hyperuser.com", "fail", false},
+				{ "  ", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "12345", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", false},
+				{ "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
+
+		});
 	}
 
 	public int testGetUserFromFindAll(String id) {

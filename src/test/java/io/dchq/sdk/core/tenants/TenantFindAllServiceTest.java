@@ -78,7 +78,20 @@ public class TenantFindAllServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
+
                 {"TenantFindAllService", false},
+                {"TenantFindAllService", true},
+                {"Tenant_FindAllService", false},
+                {"12345", false},
+                {"@#@#", false},
+                {" ", false},
+                {null, false},
+                {" ", true},
+                {null, null},
+
+
+
+
         });
     }
 
