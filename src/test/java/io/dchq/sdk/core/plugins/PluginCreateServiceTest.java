@@ -134,6 +134,11 @@ this.errors = errors;
                 // Positive Test-Cases
                 // Script-Lang
 
+
+				{ "@Test_Plugin1", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30,
+						EntitlementType.CUSTOM, true, userId2, null,
+						new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true, false },
+
 				{ "TestPlugin11", "1.0", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30,
 						EntitlementType.CUSTOM, true, userId2, null,
 						new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true, false },
@@ -267,6 +272,7 @@ this.errors = errors;
     }
 
     @org.junit.Test
+
     public void testCreate() throws Exception {
 
         logger.info("Creating Plugin with name [{}]", this.plugin.getName());
