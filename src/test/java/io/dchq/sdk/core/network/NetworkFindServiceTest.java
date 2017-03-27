@@ -10,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -74,7 +75,7 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 			{ "as", "bridge", "", false },
 			{ "", "bridge", dockerServerId, false }});
 	}
-
+	@Ignore
 	@Test
 	public void createTest() {
 		try {
