@@ -104,16 +104,29 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 
 				{ AccountType.HYPER_V, "Microsoft 5 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, true, userId2, false },
+				
+				// Negative cases
+				// TODO failing due to null value of EntitlementType
+				//{ AccountType.HYPER_V, "Microsoft 5 Hyper-V testAccount", "dchqinc", false, "password",	"http://dchq.co.in", "hardwareId", "templateId", null, true, userId2, true },
+        		// TODO failing due to blank user id
+				//{ AccountType.HYPER_V, "Microsoft 5 Hyper-V testAccount", "dchqinc", false, "password",	"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, true, "", true },
+				// TODO failing due to wrong userid
+				//{ AccountType.HYPER_V, "Microsoft 5 Hyper-V testAccount", "dchqinc", false, "password",	"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.OWNER, true, "sadasda", true },
+        	   
 
 				{ AccountType.HYPER_V, "Microsoft 6 Hyper-V testAccount", "dchqinc", false, "password",
-						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, true, userId2, false },
-
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.PUBLIC, true, userId2, false },				
 				{ AccountType.HYPER_V, "Microsoft 7 Hyper-V testAccount", "dchqinc", false, "password",
 						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, true, userId2, false },
 
 				{ AccountType.HYPER_V, "Microsoft 8 Hyper-V testAccount", "dchqinc", false, "password",
-						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, USER_GROUP,
-						false }
+						"http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, USER_GROUP, false },
+				// TODO failing due to blank group id
+        	    //{ AccountType.HYPER_V, "Microsoft 8 Hyper-V testAccount", "dchqinc", false, "password", "http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, null, true },
+				// TODO failing due to wrong user group
+        	    //{ AccountType.HYPER_V, "Microsoft 8 Hyper-V testAccount", "dchqinc", false, "password", "http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, "sadasdasd", true },
+				// TODO failing due to blank user group
+				//{ AccountType.HYPER_V, "Microsoft 8 Hyper-V testAccount", "dchqinc", false, "password", "http://dchq.co.in", "hardwareId", "templateId", EntitlementType.CUSTOM, false, "", true }
         });
     }
 
@@ -186,6 +199,11 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				assertEquals(1, registryAccountSearchResponseEntity.getResults().size());
 			}
 		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
+		}
 	}
 
 	@Test
@@ -245,6 +263,11 @@ public class CloudProviderEntitledServiceTest extends AbstractServiceTest {
 				assertNotNull(findbyIdResponse.isErrors());
 				assertEquals(registryAccountCreated.getId(), findbyIdResponse.getResults().getId());
 			}
+		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
 		}
 	}
     
