@@ -68,10 +68,31 @@ public class PluginEntitleServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin1", "1.1", "Dummy Script", "SHELL", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin2", "1.1", "Dummy Script", "POWERSHELL", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin3", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin4", "1.1", "Dummy Script", "PYTHON", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+                {"TestPlugin5", "1.1", "Dummy Script", "RUBY", "Apache License 2.0", EntitlementType.OWNER, true, userId2, false},
+
+                {"TestPlugin1111", "1.1", "Dummy Script", "SHELL", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "POWERSHELL", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
                 {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "PYTHON", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "RUBY", "Apache License 2.0", EntitlementType.PUBLIC, true, userId2, false},
+
+                {"TestPlugin1111", "1.1", "Dummy Script", "SHELL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "POWERSHELL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
                 {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "PYTHON", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "RUBY", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false},
+
+                {"TestPlugin1111", "1.1", "Dummy Script", "SHELL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "POWERSHELL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
                 {"TestPlugin1111", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "PYTHON", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
+                {"TestPlugin1111", "1.1", "Dummy Script", "RUBY", "Apache License 2.0", EntitlementType.CUSTOM, false, USER_GROUP, false},
+
+
         });
     }
 
