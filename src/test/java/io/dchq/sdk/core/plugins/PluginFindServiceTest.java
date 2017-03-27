@@ -68,7 +68,12 @@ public class PluginFindServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TestPlugin11", "1.1", "Dummy Script", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
+
+                {"TestPlugin11", "1.3", "DummyScript", "SHELL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
+                {"TestPlugin11", "1.3", "DummyScript", "POWERSHELL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
+                {"TestPlugin11", "1.3", "DummyScript", "PERL", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
+                {"TestPlugin11", "1.3", "DummyScript", "PYTHON", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
+                {"TestPlugin11", "1.3", "DummyScript", "RUBY", "Apache License 2.0", EntitlementType.CUSTOM, true, userId2, false, false},
         });
     }
 
