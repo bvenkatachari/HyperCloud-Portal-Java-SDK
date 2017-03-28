@@ -88,7 +88,6 @@ public class UsersFindServiceTest extends AbstractServiceTest {
                         { "@#@#@", "User", "hyperuser", "user@hyperuser.com", "pass", false},
                         { "Hyper", "User", null, "00000", "pass", false},
                         { "_Hyper", "1234", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "Hyper", "User", "hyperuser", "user@hyperuser.com", "fail", false},
                         { "12345", "User", "hyperuser", "user@hyperuser.com", "pass", false},
                         { "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", false},
                         { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
@@ -97,7 +96,18 @@ public class UsersFindServiceTest extends AbstractServiceTest {
                         { "Hyper", "User", "hyperuser", "   ", "pass", false},
                         { "Hyper", "User", "hyperuser", null, "pass", false},
                         { "Hyper", "User", null, "user@hyperuser.com", "pass", false},
-        });
+                        { "12345", "12345", "hyperuser", "user@hyperuser.com", "pass", false},
+                        { null, null, "hyperuser", "user@hyperuser.com", "pass", false},
+                        { null, null, null, "user@hyperuser.com", "pass", false},
+                        { "Hyper", "  ", " ", "user@hyperuser.com", "pass", false},
+                        { "Hyper", "User", " ", "  ", "pass", false},
+                        { " ", "User", "hyperuser", " ", "pass", false},
+                        { " ", "User", "12345", "user@hyperuser.com", "pass", false},
+                        { null, null, "hyperuser", "12345", "pass", false},
+                        { "Hyper", null, "hyperuser", null, "pass", false},
+                        { "Hyper", "User", "12345", "12345", "pass", false},
+
+                });
 	}
 
     @Before

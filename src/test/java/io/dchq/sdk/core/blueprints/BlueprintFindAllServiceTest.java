@@ -73,7 +73,6 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][]{{"Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0",
 				"LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
 
-				{"Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
 				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
 				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", null},
 				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
@@ -88,6 +87,16 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
 				{"@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
 				{"DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
 				{"12345", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
+
+				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
+				{ "Docker Blueprint", null, " ", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
+				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE },
+				{ null, null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
+				{ null, BlueprintType.DOCKER_COMPOSE, null, "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
+				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", null, Visibility.READABLE, "", EntitlementType.NONE },
+				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE },
+				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null },
+				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null },
 
 		});
 	}

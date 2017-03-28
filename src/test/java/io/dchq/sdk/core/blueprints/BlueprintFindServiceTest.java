@@ -97,7 +97,12 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
                 { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
                 { "12345", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
 
-        });
+                { " ", BlueprintType.DOCKER_COMPOSE, null, "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  null, Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+
+
+                         });
     }
 
     @Before

@@ -91,13 +91,23 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "", false },
                 { "Hyper ", "User", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
                 { "@@@@", "1234", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
-                { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
+                { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", " ", false },
                 { "12345", "00000", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
                 { "Hyper", null, null, "user@hyperuser.com", "pass", "  ", false },
                 { "  ", "   ", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
                 { " Hyper ", "User", "hyperuser", "12345", " ", "  ", false },
                 { "_Hyper", "User", "hyperuser", null, "pass", "  ", false },
                 { "Hyper", null, null, null, "pass", "  ", false },
+                { "Hyper", null, "hyperuser", null, "pass", "  ", false },
+                { "Hyper", "12345", "12345", "user@hyperuser.com", "pass", "  ", false },
+                { "Hyper", "12345", "hyperuser", "12345", "pass", "  ", false },
+                { "12345", "12345", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
+                { null, null, null, "user@hyperuser.com", "pass", "  ", false },
+                { null, null, "hyperuser", null, "pass", "  ", false },
+                { "12345", "User", "hyperuser", "12345", "pass", "  ", false },
+                { "Hyper", "User", null, null, "pass", "  ", false },
+                { " ", "12345", "hyperuser", null, "pass", "  ", false },
+
         });
 	}
 

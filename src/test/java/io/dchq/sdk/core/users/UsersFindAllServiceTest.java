@@ -99,6 +99,16 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
 				{ "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", false},
 				{ "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
 
+				{ " ", " ", "hyperuser", "user@hyperuser.com", "pass", false},
+				{ " ", "User", null, "user@hyperuser.com", "pass", false},
+				{ "Hyper", " ", " ", "user@hyperuser.com", "pass", false},
+				{ "12345", "User",  null, "user@hyperuser.com", "pass", false},
+				{ "12345", "User", "12345", "user@hyperuser.com", "pass", false},
+				{ "Hyper", "12345", "hyperuser", "12345", "pass", false},
+				{ " ", "User", "hyperuser", null, "pass", false},
+				{ "12345", "User", "hyperuser", "12345", "pass", false},
+				{ " ", " ", "12345", "user@hyperuser.com", "pass", false},
+
 		});
 	}
 
