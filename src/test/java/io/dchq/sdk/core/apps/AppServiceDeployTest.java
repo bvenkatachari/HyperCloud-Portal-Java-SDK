@@ -50,7 +50,12 @@ public class AppServiceDeployTest extends AppBaseImpl {
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws Exception {
         return Arrays.asList(new Object[][]{
-                {"2c9180865a4a48d9015a52b610c8080c", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false}
+                {"2c9180865a4a48d9015a52b610c8080c", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"2c9180865a4a48d9015a52b610c8080c", "", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"2c9180865a4a48d9015a52b610c8080c", " ", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"2c9180865a4a48d9015a52b610c8080c", null, EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+
+
         });
     }
 
