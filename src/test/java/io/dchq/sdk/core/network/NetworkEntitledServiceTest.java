@@ -48,12 +48,10 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50);
+	static String prefix = RandomStringUtils.randomAlphabetic(3);
 
 	public NetworkEntitledServiceTest(String name, String driver, String dockerServer, EntitlementType entitlementType,
 			boolean isEntitlementTypeUser, String entitledUserId, boolean error) {
-		// random user name
-		String prefix = RandomStringUtils.randomAlphabetic(3);
-		name = prefix + "-" + name;
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
@@ -78,11 +76,33 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
-				{ "testnetwork", "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, false },
+				{ "testnetwork"+prefix, "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, false },
+				
+				// TODO failing due to blank name
+				//{ "", "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, true },
+				//TODO failing due to null userid
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, EntitlementType.PUBLIC, true, null, true },
+				// TODO failing due to null EntitlementType
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, null, true, userId2, true },
+				
 				{ "testnetwork2", "bridge", dockerServerId, EntitlementType.CUSTOM, false, USER_GROUP, false },
-				{ "testnetwork3", "bridge", dockerServerId, EntitlementType.OWNER, false, userId2, false }});
+				// TODO failing due to blank name
+				//{ "", "bridge", dockerServerId, EntitlementType.CUSTOM, false, USER_GROUP, true },
+				//TODO failing due to null userid
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, EntitlementType.CUSTOM, false, null, true },
+				// TODO failing due to null EntitlementType
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, null, false, USER_GROUP, true },
+				
+				{ "testnetwork3", "bridge", dockerServerId, EntitlementType.OWNER, true, userId2, false },
+				// TODO failing due to blank name
+				//{ "", "bridge", dockerServerId, EntitlementType.OWNER, true, userId2, true },
+				//TODO failing due to null userid
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, EntitlementType.CUSTOM, true, null, true },
+				// TODO failing due to null EntitlementType
+				//{ "testnetwork"+prefix, "bridge", dockerServerId, null, true, userId2, true },
+				});
 	}
-	@Ignore
+	
 	@Test
 	public void testEntitledFindById() {
 		ResponseEntity<DockerNetwork> response = networkService.create(network);
