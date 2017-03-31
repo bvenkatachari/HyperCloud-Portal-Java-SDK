@@ -62,9 +62,20 @@ public class UserGroupFindServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"Find Group", false},
+
+                {"Find_Group", false},
+                {"(Find-Group)", false},
+                {"Find Group123", false},
+                {"123", false},
+                {"Find Group!@#", false},
+                {"    Find Group", false},
+                {"%Find Group%", false},
+                {"12345678gROUP", false},
+                {"   ", false},
+                {"@Test321$_@Group$", false},
+                {"  @Find   -Group_", false},
                 //check with Empty Group Name
-                {"test", false}
+                {"", true}
         });
     }
 

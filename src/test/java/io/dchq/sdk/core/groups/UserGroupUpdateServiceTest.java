@@ -62,11 +62,14 @@ public class UserGroupUpdateServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 //positive case
-               {"My Group12", " Group Updated12", false},
+                {"My Group12", " Group Updated12", false},
+                {"My Group", "001", false},
+                {"001", "   ", false},
+                {"Mygroup", "Mygroup", false},
                 //Updating with Special chars
                 {"Test for SpecialChars", "@#$%^", true},
                 // Updating with Empty group names
-     //           {"Test for Updating with Empty", "", true}
+                {"Test for Updating with Empty", "", true}
 
         });
     }

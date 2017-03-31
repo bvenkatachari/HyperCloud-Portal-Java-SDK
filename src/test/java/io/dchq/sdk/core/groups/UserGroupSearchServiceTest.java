@@ -58,7 +58,20 @@ public class UserGroupSearchServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TGSearch", false}
+                {"TEXTSEARCH", false},
+                {"    Search1213", false},
+                {"001search_1", false},
+                {"Test_Search001", false},
+                {"(Test-Search)", false},
+                {"TestSearch", false},
+                {"  ", false},
+                //{"/Test_Search001/", false},
+                //{"\\Test_Search001\\", true},
+
+                //Negative test
+                //TODO Tests are getting failed
+                //{"", true},
+                //{"Search!@#$%^&*", true},  //Not Supporting the special chars
         });
     }
 
