@@ -78,4 +78,12 @@ public class ServiceFactory {
     public static final DockerVolumeService buildDockerVolumeService(String baseURI, String username, String password) {
         return new DockerVolumeServiceImpl(baseURI, username, password);
     }
+    
+    public static final CostPoliciesService buildCostPoliciesService(String baseURI, String username, String password) {
+        return new CostPoliciesServiceImpl(baseURI, username, password);
+    }
+    
+    public static final QuotaPolicyService  buildQuotaPolicyService(String baseURI, String username, String password) {
+        return new QuotaPolicyServiceImpl(baseURI, username, password);
+    }
 }
