@@ -33,14 +33,11 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.price.PriceProfile;
-import com.dchq.schema.beans.one.price.PriceUnit;
 import com.dchq.schema.beans.one.quotapolicy.QuotaEntitlementType;
 import com.dchq.schema.beans.one.quotapolicy.QuotaPolicy;
 import com.dchq.schema.beans.one.quotapolicy.QuotaType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.CostPoliciesService;
 import io.dchq.sdk.core.QuotaPolicyService;
 import io.dchq.sdk.core.ServiceFactory;
 
