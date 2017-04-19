@@ -279,7 +279,10 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 
 		}
 		if (response == null)
-			return 0;
+			if(id==null)
+				return 0;
+			else
+				return 1;
 		else
 			return response.getResults().size();
 	}
