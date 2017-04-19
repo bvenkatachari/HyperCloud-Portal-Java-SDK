@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -69,7 +70,6 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     private Blueprint bluePrint;
     private boolean error;
     private Blueprint bluePrintCreated;
-    
     public  BlueprintEntitledServiceTest (
     		String blueprintName, 
     		BlueprintType blueprintType,
@@ -86,6 +86,8 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     		boolean success
             )
     {
+    	 String prefix = RandomStringUtils.randomAlphabetic(3);
+    	 blueprintName = blueprintName +" "+prefix ;
 		this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version)
 				.withDescription(description).withVisibility(visible).withUserName(username);
 		this.bluePrint.setYml(yaml);
@@ -112,13 +114,9 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 
-				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null,
-						false, false },
+				{ "User Visiblity By Owner ", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",	Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null,	false, false },
 				
-				//{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
-				//		Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null,
-				//		false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
 				
 				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",
 						Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2,
@@ -185,6 +183,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 			bluePrintCreated = response.getResults();
 		}
 		if (!error) {
+			assertEquals(false, response.isErrors());
 			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
 				ResponseEntity<List<Blueprint>> blueprintSearchResponseEntity1 = blueprintService2
 						.search(bluePrint.getName(), 0, 1);
@@ -247,7 +246,10 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 		if (response.getResults() != null) {
 			bluePrintCreated = response.getResults();
 		}
+		
 		if (!error) {
+			assertEquals(false, response.isErrors());
+			
 			if (bluePrintCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
 				ResponseEntity<Blueprint> findbyIdResponse = blueprintService2.findById(bluePrint.getId());
 				for (Message message : findbyIdResponse.getMessages()) {
