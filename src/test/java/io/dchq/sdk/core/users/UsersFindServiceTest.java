@@ -84,28 +84,39 @@ public class UsersFindServiceTest extends AbstractServiceTest {
 		return Arrays.asList(
 				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", false },
                         { "Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "    ", "User", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "@#@#@", "User", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "Hyper", "User", null, "00000", "pass", false},
-                        { "_Hyper", "1234", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "12345", "User", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", false},
-                        { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { "Hyper", null, null, null, "pass", false},
-                        { "Hyper", null, "1234", "user@hyperuser.com", "pass", false},
-                        { "Hyper", "User", "hyperuser", "   ", "pass", false},
-                        { "Hyper", "User", "hyperuser", null, "pass", false},
-                        { "Hyper", "User", null, "user@hyperuser.com", "pass", false},
-                        { "12345", "12345", "hyperuser", "user@hyperuser.com", "pass", false},
-                        { null, null, "hyperuser", "user@hyperuser.com", "pass", false},
-                        { null, null, null, "user@hyperuser.com", "pass", false},
-                        { "Hyper", "  ", " ", "user@hyperuser.com", "pass", false},
-                        { "Hyper", "User", " ", "  ", "pass", false},
-                        { " ", "User", "hyperuser", " ", "pass", false},
-                        { " ", "User", "12345", "user@hyperuser.com", "pass", false},
-                        { null, null, "hyperuser", "12345", "pass", false},
-                        { "Hyper", null, "hyperuser", null, "pass", false},
-                        { "Hyper", "User", "12345", "12345", "pass", false},
+                        
+                        // TODO first name should not contains blank space 
+                        //{ "    ", "User", "hyperuser", "user@hyperuser.com", "pass", true},
+                        // TODO first name should not contains special characters 
+                        //{ "@#@#@", "User", "hyperuser", "user@hyperuser.com", "pass", true},
+                        // TODO username should not be null 
+                        //{ "Hyper", "User", null, "00000", "pass", true},
+                        // TODO first name should not contains special characters 
+                        //{ "_Hyper", "1234", "hyperuser", "user@hyperuser.com", "pass", true},
+                        // TODO first name should not contains numeric values
+                        //{ "12345", "User", "hyperuser", "user@hyperuser.com", "pass", true},
+                        // TODO password should not be blank 
+                        //{ "Hyper", "User", "hyperuser", "user@hyperuser.com", " ", true},
+                        // TODO first name should not contains special characters 
+                        //{ "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", true},
+                        // TODO null values not accepted for last name, username and emailid 
+                        //{ "Hyper", null, null, null, "pass", true},
+                        // TODO last name should not be null
+                        //{ "Hyper", null, "1234", "user@hyperuser.com", "pass", true},
+                        //TODO email id should not be blank
+                        //{ "Hyper", "User", "hyperuser", "   ", "pass", true},
+                        //{ "Hyper", "User", "hyperuser", null, "pass", true},
+                        //{ "Hyper", "User", null, "user@hyperuser.com", "pass", true},
+                        //{ "12345", "12345", "hyperuser", "user@hyperuser.com", "pass", true},
+                        //{ null, null, "hyperuser", "user@hyperuser.com", "pass", true},
+                        //{ null, null, null, "user@hyperuser.com", "pass", true},
+                        //{ "Hyper", "  ", " ", "user@hyperuser.com", "pass", true},
+                        //{ "Hyper", "User", " ", "  ", "pass", true},
+                        //{ " ", "User", "hyperuser", " ", "pass", true},
+                        //{ " ", "User", "12345", "user@hyperuser.com", "pass", true},
+                        //{ null, null, "hyperuser", "12345", "pass", true},
+                        //{ "Hyper", null, "hyperuser", null, "pass", true},
+                        //{ "Hyper", "User", "12345", "12345", "pass", true},
 
                 });
 	}
@@ -161,6 +172,11 @@ public class UsersFindServiceTest extends AbstractServiceTest {
                 // password should always be empty
                 assertThat("", is(userFind.getPassword()));
             }
+        }
+        else
+        {
+        	assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
         }
     }
 
