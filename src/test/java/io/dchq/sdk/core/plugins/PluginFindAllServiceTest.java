@@ -105,7 +105,7 @@ public class PluginFindAllServiceTest extends AbstractServiceTest {
     }
     public int testPluginPosition(String id) {
 
-        ResponseEntity<List<Plugin>> response = appService.findAll(0, 100);
+        ResponseEntity<List<Plugin>> response = appService.findAll(0, 1000);
 
         assertNotNull(response);
         assertNotNull(response.isErrors());
