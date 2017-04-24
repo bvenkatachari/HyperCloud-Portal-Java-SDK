@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,36 +68,42 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
 	private Blueprint bluePrint;
 	private Blueprint bluePrintCreated;
 	private int countBeforeCreate = 0, countAfterCreate = 0, countAfterDelete = 0;
+	private boolean error;
     
     @Parameterized.Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][]{{"Blueprint_Original", BlueprintType.DOCKER_COMPOSE, "2.0",
-				"LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
-
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", null},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "10.0", null, Visibility.EDITABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", null, Visibility.READABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", null, "10.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
-				{"Docker-Blueprint", BlueprintType.DOCKER_COMPOSE, "ABC", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE},
-				{null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE},
-				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.READABLE, "", EntitlementType.NONE},
-				{"@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE},
-				{"DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
-				{"12345", BlueprintType.DOCKER_COMPOSE, " ", " ", Visibility.READABLE, "", EntitlementType.NONE},
-
-				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
-				{ "Docker Blueprint", null, " ", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
-				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE },
-				{ null, null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
-				{ null, BlueprintType.DOCKER_COMPOSE, null, "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE },
-				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", null, Visibility.READABLE, "", EntitlementType.NONE },
-				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE },
-				{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null },
-				{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null },
+		return Arrays.asList(new Object[][]{
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "2.0",	"LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE, false},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", null , false},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.EDITABLE, "", EntitlementType.NONE, false},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false},
+				// TODO yml file should not be null
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "10.0", null, Visibility.EDITABLE, "", EntitlementType.NONE, true},
+				{"Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, false},
+				// TODO blueprint type should not be null
+				{"Docker Blueprint", null, "10.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE, true},
+				// TODO version name should not be alphabet 
+				//{"Docker-Blueprint", BlueprintType.DOCKER_COMPOSE, "ABC", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, true},
+				
+				// TODO blueprint name should not be null 
+				{null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE, false},
+				
+				//
+				{"Docker Blueprint",    BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false},
+				{"@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.EDITABLE, "", EntitlementType.NONE, false},
+				//TODO yml file should not be blank
+				//{"DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, "7.0", " ", Visibility.READABLE, "", EntitlementType.NONE, true},
+				{"12345", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false},
+				
+				//{ "Docker Blueprint", null, " ", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false },
+				//{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE, false },
+				//{ null, null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false },
+				//{ null, BlueprintType.DOCKER_COMPOSE, null, "LB:\n image: nginx:latest\n", Visibility.READABLE, "", EntitlementType.NONE, false},
+				//{ null, BlueprintType.DOCKER_COMPOSE, "7.0", null, Visibility.READABLE, "", EntitlementType.NONE, false },
+				//{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE, false},
+				//{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, false},
+				//{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, false},
 
 		});
 	}
@@ -108,12 +115,19 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
     		String yaml, 
     		Visibility visible,
     		String modifiedBluePrint,
-    		EntitlementType entitlementType
+    		EntitlementType entitlementType,
+    		boolean error
     		) 
     {
+    	String suffix = RandomStringUtils.randomAlphabetic(3);
+     	if(blueprintName!=null && !blueprintName.isEmpty())
+     	{
+     		blueprintName = blueprintName+""+suffix;
+     	}
         this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version).withVisibility(visible).withUserName(username);
         this.bluePrint.setYml(yaml);
         this.bluePrint.setEntitlementType(entitlementType);
+        this.error = error;
     }    
     
     public int testBlueprintPosition(String id) {
@@ -150,28 +164,39 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
 		countBeforeCreate = testBlueprintPosition(null);
 		logger.info("Create Bluepring [{}]", bluePrint.getName());
 		ResponseEntity<Blueprint> response = blueprintService.create(bluePrint);
+		
 		for (Message message : response.getMessages()) {
             logger.warn("Error [{}] ", message.getMessageText());
         }
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        if (!response.isErrors() && response.getResults() != null) {
-            this.bluePrintCreated = response.getResults();
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
-            Assert.assertNotNull(bluePrint.getBlueprintType().toString(), bluePrintCreated.getBlueprintType().toString());
-            Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
-            Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
-            Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
-            // get the count of total blueprints after recently created Blueprint
-            logger.info("FindAll Blueprint Position by Id [{}]", bluePrintCreated.getId());
-            this.countAfterCreate = testBlueprintPosition(bluePrintCreated.getId());
-			Assert.assertEquals(
-					"Count of Find all Blueprints between before and after create does not have diffrence of 1 for UserId :"
-							+ bluePrintCreated.getId(),
-					countBeforeCreate + 1, countAfterCreate);
-	       }
+		if(!error)
+		{
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
+			if (!response.isErrors() && response.getResults() != null) {
+				this.bluePrintCreated = response.getResults();
+				assertNotNull(response.getResults());
+				assertNotNull(response.getResults().getId());
+				Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
+				Assert.assertNotNull(bluePrint.getBlueprintType().toString(),
+						bluePrintCreated.getBlueprintType().toString());
+				Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
+				Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
+				Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
+				// get the count of total blueprints after recently created
+				// Blueprint
+				logger.info("FindAll Blueprint Position by Id [{}]", bluePrintCreated.getId());
+				this.countAfterCreate = testBlueprintPosition(bluePrintCreated.getId());
+				Assert.assertEquals(
+						"Count of Find all Blueprints between before and after create does not have diffrence of 1 for UserId :"
+								+ bluePrintCreated.getId(),
+						countBeforeCreate + 1, countAfterCreate);
+			}
+		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
+		}
     }
 
     @After

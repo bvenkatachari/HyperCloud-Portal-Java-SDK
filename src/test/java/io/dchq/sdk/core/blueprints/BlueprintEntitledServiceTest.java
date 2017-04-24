@@ -86,8 +86,12 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
     		boolean success
             )
     {
-    	 String prefix = RandomStringUtils.randomAlphabetic(3);
-    	 blueprintName = blueprintName +" "+prefix ;
+    	 
+    	String suffix = RandomStringUtils.randomAlphabetic(3);
+     	if(blueprintName!=null && !blueprintName.isEmpty())
+     	{
+     		blueprintName = blueprintName+""+suffix;
+     	}
 		this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version)
 				.withDescription(description).withVisibility(visible).withUserName(username);
 		this.bluePrint.setYml(yaml);

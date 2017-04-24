@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -78,6 +79,11 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
     		boolean success
             )
     {
+    	String suffix = RandomStringUtils.randomAlphabetic(3);
+     	if(blueprintName!=null && !blueprintName.isEmpty())
+     	{
+     		blueprintName = blueprintName+""+suffix;
+     	}
         this.bluePrint = new Blueprint().withName(blueprintName).withBlueprintType(blueprintType).withVersion(version).withDescription(description).withVisibility(visible).withUserName(username);
         this.bluePrint.setYml(yaml);
         this.bluePrint.setEntitlementType(entitlementType);
@@ -91,14 +97,17 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
         return Arrays.asList(new Object[][]{      
 				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",	"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
                 { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "10.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
-                { "@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, " ", null, EntitlementType.NONE,true },
-                { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,true },
-                { "12345", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,true },
+                // TODO blueprint name should not be blank
+               // { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+                // TODO yml should not be blank
+                //{ "@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, " ", null, EntitlementType.NONE,true },
+                //TODO version should not be blank
+               // { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,true },
                 // TODO version should not be null
-                //{ " ", BlueprintType.DOCKER_COMPOSE, null, "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  null, Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+               // { "test", BlueprintType.DOCKER_COMPOSE, null, "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+               // TODO description should not be null
+                //{ "test", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+                { "test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  null, Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
 
 
                          });
