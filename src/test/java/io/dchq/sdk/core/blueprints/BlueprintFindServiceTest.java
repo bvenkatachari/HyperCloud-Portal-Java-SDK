@@ -17,6 +17,7 @@
 package io.dchq.sdk.core.blueprints;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -88,18 +89,16 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{      
-				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
-						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null,
-						EntitlementType.NONE, false},
+				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, "7.0", "description",	"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
                 { "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "10.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-                { "@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,false },
-                { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
-                { "12345", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
-
-                { " ", BlueprintType.DOCKER_COMPOSE, null, "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  null, Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+                { "@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, " ", null, EntitlementType.NONE,true },
+                { "DockerBlueprint1234", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,true },
+                { "12345", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,true },
+                // TODO version should not be null
+                //{ " ", BlueprintType.DOCKER_COMPOSE, null, "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+                { " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  null, Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
 
 
                          });
@@ -121,37 +120,45 @@ public class BlueprintFindServiceTest extends AbstractServiceTest {
         
         assertNotNull(response);
         assertNotNull(response.isErrors());
-        
-        if (!response.isErrors() && response.getResults() != null) {
-            bluePrintCreated = response.getResults();
-            logger.info("Create Blueprint completed Successfully [{}]", bluePrintCreated.getName());
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
-            Assert.assertNotNull(bluePrint.getBlueprintType().toString(), bluePrintCreated.getBlueprintType().toString());
-            Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
-            Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
-            Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
-        }
-        
-        logger.info("Find Blueprint for ID {} ",bluePrintCreated.getId());
-        response = blueprintService.findById(bluePrintCreated.getId());
-        
-        for (Message message : response.getMessages()) {
-            logger.warn("Error while Find request  [{}] ", message.getMessageText());
-        }
-        
-        Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        
-        if (!response.isErrors() && response.getResults() != null) {
-            bluePrintFind = response.getResults();
-            logger.info("Find Blueprint completed Successfully [{}]", bluePrintCreated.getId());
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            Assert.assertNotNull(bluePrintCreated.getId(), bluePrintFind.getId());
-        }
+        if(!success)
+		{
+			if (!response.isErrors() && response.getResults() != null) {
+				bluePrintCreated = response.getResults();
+				logger.info("Create Blueprint completed Successfully [{}]", bluePrintCreated.getName());
+				assertNotNull(response.getResults());
+				assertNotNull(response.getResults().getId());
+				Assert.assertNotNull(bluePrint.getName(), bluePrintCreated.getName());
+				Assert.assertNotNull(bluePrint.getBlueprintType().toString(),
+						bluePrintCreated.getBlueprintType().toString());
+				Assert.assertNotNull(bluePrint.getVersion(), bluePrintCreated.getVersion());
+				Assert.assertNotNull(bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
+				Assert.assertNotNull(bluePrint.getUserName(), bluePrintCreated.getUserName());
+			}
+
+			logger.info("Find Blueprint for ID {} ", bluePrintCreated.getId());
+			response = blueprintService.findById(bluePrintCreated.getId());
+
+			for (Message message : response.getMessages()) {
+				logger.warn("Error while Find request  [{}] ", message.getMessageText());
+			}
+
+			Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
+
+			if (!response.isErrors() && response.getResults() != null) {
+				bluePrintFind = response.getResults();
+				logger.info("Find Blueprint completed Successfully [{}]", bluePrintCreated.getId());
+				assertNotNull(response.getResults());
+				assertNotNull(response.getResults().getId());
+				Assert.assertNotNull(bluePrintCreated.getId(), bluePrintFind.getId());
+			}
+		}
+        else
+		{
+        	assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
+		}
     }
 
     @After
