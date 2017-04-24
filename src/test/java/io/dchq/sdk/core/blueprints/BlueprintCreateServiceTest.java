@@ -170,8 +170,9 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
 				{ "Docker-Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+				
 				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
-						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
 				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,false },
 				{ "@@DockerBlueprint@@", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
@@ -192,13 +193,14 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", " ",
 						"https://dchq.io", Visibility.READABLE, " ", null, EntitlementType.NONE,false },
 				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
-						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+						"https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, true },
 				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
 						"https://dchq.io", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,false },
 
- 				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-				{ " ", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
+ 				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+ 				//TODO version should not blank
+				//{ " ", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+				{ " ", BlueprintType.DOCKER_COMPOSE, "7.0", null,  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
 				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
 				{  "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
 
@@ -320,6 +322,11 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
             Assert.assertEquals(" Blueprint version", bluePrint.getVersion(), bluePrintCreated.getVersion());
             Assert.assertEquals(" Blueprint visiblity",bluePrint.getVisibility().toString(), bluePrintCreated.getVisibility().toString());
             // Assert.assertEquals(" Blueprint created by user", bluePrint.getUserName(), bluePrintCreated.getUserName());
+        }
+        else
+        {
+        	assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
         }
     }
 
