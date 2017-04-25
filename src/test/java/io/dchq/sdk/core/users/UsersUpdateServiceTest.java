@@ -76,8 +76,14 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 	{
         // random user name
         String prefix = RandomStringUtils.randomAlphabetic(3);
-        username = prefix + "-" + username;
-        email = prefix + "-" + email;
+        if(username!=null && !username.isEmpty())
+        {
+        	username = prefix + "-" + username;
+        }
+        if(email !=null && !email.isEmpty())
+        {
+        	email = prefix + "-" + email;
+        }
         // lower case
         username = org.apache.commons.lang3.StringUtils.lowerCase(username);
         email = org.apache.commons.lang3.StringUtils.lowerCase(email);
