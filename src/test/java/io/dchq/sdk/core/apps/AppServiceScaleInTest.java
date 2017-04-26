@@ -53,7 +53,7 @@ public class AppServiceScaleInTest extends AppBaseImpl {
     public static Collection<Object[]> data() throws Exception {
         return Arrays.asList(new Object[][]{
                 {"2c9180865a4a48d9015a52b610c8080c", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
-                {"402881864e1a36cc014e1a399cf90108", "2TierApp", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+             //   {"402881864e1a36cc014e1a399cf90108", "2TierApp", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
                 //To-Do Add 3-Tier
         });
     }
