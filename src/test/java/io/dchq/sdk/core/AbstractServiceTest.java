@@ -32,31 +32,31 @@ import java.util.Date;
 public abstract class AbstractServiceTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected String cloudadminusername = "c1h4BvA5fInKaFURzvpc";   //access key of admin
-    protected String cloudadminpassword = "K03xguv1KhETAzlrYk1HRbgK1DTB8sb1KREVvnHe"; //secret-key for admin
+    protected String cloudadminusername = "yKhpphZvZ4drSSrJldxr";   //access key of admin
+    protected String cloudadminpassword = "giTS8ShvYUEw2R1bFSgZrd4qGDUouhJZqM4gD6sT"; //secret-key for admin
 
-    protected String rootUrl = "https://23.99.48.48:443/api/1.0/";
-    protected String userId = "2c918086597e5d5f0159b00478420056";
-    protected String username = "EdJhTUaYkOkWIyLuOLPR";   // access-key for user1
-    protected String password = "BfSmyjhsJnNPWa2K9pVPv4AzY7UquxBmSWokc8pr";  // secret-key for user1
+    protected String rootUrl = "https://172.16.1.30:443/api/1.0/";
+    protected String userId = "2c9180865bb2559a015bc2dd7c0c0004";
+    protected String username = "rIGR06TD3NmK55SbJHs9";   // access-key for user1 <QEAutomation1@dchq.io>
+    protected String password = "iJ5ablMJEmZ4b2G6cEdT2yC8yue65e25djLSzowO";  // secret-key for user1
 
-    // Create another user for entitlement check
-    protected static String userId2 = "2c918086597e5d5f0159b005070e0057";
-    protected String username2 = "tE0sucqQ107hDMPmf4nT";// accesskey
-    protected String password2 = "8VJgEB2tTM4HI6Z5JQ4oKdnYjtQubEQLeUkOC8Jb";//secret key
+    // Create another user  for entitlement check
+    protected static String userId2 = "2c9180865bb2559a015bc2df60f90007";
+    protected String username2 = "6y8ZJbSZVdeRuKNxh86S";// accesskey <QEAutomation2@dchq.io>
+    protected String password2 = "KzlVq51XHVCfUd1cuWaLCjULIGf3aHQVbHanEKya";//secret key
 
     // UserGroup with userId2 entitled user
-    protected static String USER_GROUP = "2c918086597e5d5f0159b00555450058";
+    protected static String USER_GROUP = "2c9180865bb2559a015bc2fa6b39000a";
     
     // new tenant user 
-    // login: jagdeeptenant@tenants.hyerform.io
-    // password: vjBcGk8mgl6L
-    protected static String userId3 = "2c9180865a17fdac015a3b2697e34349";
-    protected static String username3 = "iH1PyWSLlUqZXHO7ZK9M";
-    protected static String password3 = "76uaiditpbij8vLi8KVWYALBliaIxaS98cIntUhv";
+    // login: qeautomationtenant@hypercloud.local
+    // password: y5faa22Of1r5
+    protected static String userId3 = "2c9180865bb2559a015bc3adaf430029";
+    protected static String username3 = "N5yXTZLIviWJkmBvFwdm";
+    protected static String password3 = "WF302EMKekBFh3Sirmsu2LEyIfVwaFdTPiKekrWw";
 
   //  protected  static String bluePrintID = "2c9180865a4a48d9015a52b610c8080c"; //App & Machines Blueprints Test
-    protected  static String clusterID = "2c9180865a6421f0015a646b0ff40684";   //Cluster name : Docker-Engine
+    protected  static String clusterID = "2c9180865bb2559a015bc3adaf62002a";   //Cluster name : Docker-Engine
     
     protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
 
