@@ -64,6 +64,31 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"Sam_D",  false},
+                {"Find_Group", false},
+                //TODO Group name should not start with special character 
+               // {"(Find-Group)", true},
+                {"Find Group123", false},
+                {"123", false},
+                // TODO Group name should contains special characters
+                //{"Find Group!@#", true},
+                {"    Find Group", false},
+                // TODO Group name should contains special characters
+                //{"%Find Group%", true},
+                {"12345678gROUP", false},
+                // TODO Group name should be blank
+                //{"   ", true},
+               // TODO Group name should contains special characters
+               // {"@Test321$_@Group$", true},
+                // TODO Group name should contains special characters
+               // {"  @Find   -Group_", true},
+                //check with Empty Group Name
+                {"", true},
+                
+              //TODO Group name should not be blank spaces. 
+                //{"    ", false, true},
+        		
+                // Group Name Length 256.
+                {"tQ9ukuIEBiYsSGkM1cRfES7DctIaE1W3GJ3K4WCQQxwYcNPy6NArpf2RFCEUXfmmmRkMVsvkh3TDQwWdxcyuWbbzX8xgxcfX6XwvCqVkbLE7rQ348EInhBNkIupRSvsMKaR51KFrVS7cNMi1WmJsNxWA3vEaKczJ2EHSauHx7Rs3Ln8UiEcjazU2qluzdaoQCTNBayw4VFJAAPVFHLG3wNV9OPjRUj39mNjCZBsZQJI1g2NYw6gQ1qkhqNOcWeFw", true},
 
         });
     }
@@ -127,22 +152,22 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
         logger.info("Create Group with Group Name [{}]", userGroup.getName());
         ResponseEntity<UserGroup> response = service.create(userGroup);
 
-        for (Message message : response.getMessages()){
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-
-        messageText = message.getMessageText();}
-
-        // check response is not null
-        // check response has no errors
-        // check response has user entity with ID
-        // check all data send
-
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        assertEquals(messageText, error, response.isErrors());
-
         if (!error) {
 
+        	for (Message message : response.getMessages()){
+                logger.warn("Error while Create request  [{}] ", message.getMessageText());
+
+            messageText = message.getMessageText();}
+
+            // check response is not null
+            // check response has no errors
+            // check response has user entity with ID
+            // check all data send
+
+            assertNotNull(response);
+            assertNotNull(response.isErrors());
+            assertEquals(messageText, error, response.isErrors());
+            
             assertNotNull(response.getResults());
             assertNotNull(response.getResults().getId());
             this.userGroupCreated = response.getResults();
@@ -152,6 +177,11 @@ public class UserGroupFindAllServiceTest extends AbstractServiceTest {
             logger.info("FindAll User Group by Id [{}]", userGroupCreated.getId());
             this.countAfterCreate = testGroupPosition(userGroupCreated.getId());
             assertEquals("Count of FInd all user between before and after create does not have diffrence of 1 for UserId :"+userGroupCreated.getId(),countBeforeCreate, countAfterCreate-1);
+        }
+        else
+        {
+        	assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
         }
 
     }
