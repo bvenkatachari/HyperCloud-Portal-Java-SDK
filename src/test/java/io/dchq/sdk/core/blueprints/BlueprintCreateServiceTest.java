@@ -206,7 +206,50 @@ public class BlueprintCreateServiceTest extends AbstractServiceTest {
 				//{ "Docker blueprint", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
 				{ "App & Machines Blueprints Test", BlueprintType.DOCKER_COMPOSE, " ", "description",  "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
 				{  "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,false },
-
+				// TODO blueprint name should have max length length
+				
+//				{  "Docker Blueprintddddddddddddddddddddddzzzzzzzzzzzzzzzzz"
+//						+ "zzzzzzzzzzzzzzzzddddddddddddddddd"
+//						+ "dddddddddsaaaaasssssssssssssssss"
+//						+ "ssssssssssssaaaaaaaaaaaaaaaaaaddddddd"
+//						+ "dddddddddddddddddddddddddddddd", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, true},
+				{  "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",  " ", 
+							Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE, false},
+				
+				// TODO version name should not be negative
+				//{  "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "-7.0", "description",  " ", 
+				//				Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+				// TODO description length should be defined		
+//				{  "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "descriaasdasdasdasdsfsdfasfdafdfdssfsfsdfsdfsdfsdfsdfsdf"
+//						+ "sdfsdfsfsdfsdfsdfsdfdsfsdfdsfsdfsdfsdf"
+//						+ "sdfsdfsdfdsfsdffffffffffffffffffffffffffffffffffffffffffffffffffddddddddddddddddddddddddddddddddd"
+//						+ "sdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffddddddddddddddddddddddddddddddddddd"
+//						+ "sdfffffffffffffffffffffffffffffffffffffffffffffffffffffffddddddddddddddddddddddddddddddddddddd"
+//						+ "sdfffffffffffffffffffffffffffffffffffffffffffffffffffdddddddddddddddddddddddddddddd"
+//						+ "sdfffffffffffffffffffffffffffffffffffffff"
+//						+ "sdffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+//						+ "ssssserrrrrrrrrrrrrrrrrrrrrrrrrr"
+//						+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+//						+ "5555555555555555555555555555555555555555555555"
+//						+ "5555555555555555555555555555555555555555555555555"
+//						+ "5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555"
+//						+ "ercqwrqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqweweeeeeeeeeeeeeeeeeeeeeeeeeertccccccccccccccccccccccccc"
+//						+ "sdffffffffffffffffffffffffffffawwwwwwwwwwwwwwwwwwwwer   vttttttttttttttttttttttttttttttttttttttt"
+//						+ "dption sdsdsdddddddddddddddddddddddddddddddddddsddddddddddddddddddddddssssssssssssssssssssssssssssswwwwwwwwww",  " ", 
+//									Visibility.EDITABLE, "LB:\n image: nginx:latest", null, EntitlementType.NONE,true },
+			// TODO wrong external link 	
+//				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "description",
+//										"https://dchq.iosasasasasasaasas", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,true },
+//				//TODO BlueprintType.CODE_RUN not supported, please check
+//				{ "Docker Blueprint", BlueprintType.CODE_RUN, "asdasdasd", "description",
+//											"https://dchq.io", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,true },
+				// TODO wrong external link
+//				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "asdasdasd", "description",
+//												"https://dchq.com", Visibility.EDITABLE, "  ", null, EntitlementType.NONE,true },
+				
+				{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "asdasdasd", "description",
+													"https://dchq.io", Visibility.EDITABLE, "  ", null, EntitlementType.GROUPS, false }
+											
 		});
     }
 

@@ -104,6 +104,28 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
 				//{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", null, "", EntitlementType.NONE, false},
 				//{ null, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, false},
 				//{ "Docker Blueprint", null, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, false},
+				
+				// TODO blueprint name length 
+//				{ "Docker Blueprint Docker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker Blueprint"
+//						+ "Docker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker Blueprint"
+//						+ "Docker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker Blueprint"
+//						+ "Docker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker Blueprint"
+//						+ "Docker BlueprintDocker BlueprintDocker BlueprintDocker BlueprintDocker Blueprint"
+//						, BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				// TODO wrong version value
+				//{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "-7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				//{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "+7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				// TODO version name should be only numeric value
+				//{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0@@@@", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				//{ "Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "PLB:\n imagess: nginx:latest\n", Visibility.READABLE, "", null, true},
+				// TODO Blueprint name should not be start with such characters
+				//{ "++++Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				//{ "+++++++=====Docker Blueprint", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				// TODO blueprint name length more then 3 characters
+				//{ "g", BlueprintType.DOCKER_COMPOSE, "7.0", "LB:\n image: nginx:latest\n", Visibility.READABLE, "", null, true},
+				
+				
+				
 
 		});
 	}
