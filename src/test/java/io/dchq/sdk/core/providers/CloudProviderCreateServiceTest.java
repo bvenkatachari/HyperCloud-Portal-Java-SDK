@@ -215,6 +215,36 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 				// TODO Failing due to blank url
 				//{ AccountType.SOFTLAYER, "IBM Softlayer testAccount"+prefix, "dchqinc", "password", null, null,  "   ", null, null, null, null, true },
 				{ null, "IBM Softlayer testAccount", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				
+				{ AccountType.RACKSPACE, "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "
+						+ "Rackspace US 2 testAccount Rackspace US 2 testAccount Rackspace US 2 testAccount "+prefix, "dchqinc", "apiKey", null, null, null, null,
+					null, null, null, true },
+				
+				{ AccountType.SOFTLAYER, "....................................", "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				
+				{ AccountType.SOFTLAYER , "IBM Softlayer tstAccount"+prefix, "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, null, false },
+				
+				// TODO wrong URL
+				//{ AccountType.SOFTLAYER , "IBM Softlayer tount"+prefix, "dchqinc", "password", null, null,  "http://dchq.co..com", null, null, null, null, true },
+				
+				// TODO wrong URL
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAcco"+prefix, "dchqinc", "password", null, null,  "http://dchq.co.innnn", null, null, null, null, true },
+				// TODO wrong url
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAccounta"+prefix, "dchqinc", "password", null, null,  "asdasdadasdasdas", null, null, null, null, true },
+				// TODO password length should be more then 6 characters
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAccounts"+prefix, "dchqinc", "p", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				// TODO username null should not be accepted 
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAccountd"+prefix, null, "password", null, null,  "http://dchq.co.in", null, null, null, null, true },
+				//TODO limit size should not be negative or float
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAccountk"+prefix, "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, 0.1, true },
+				//{ AccountType.SOFTLAYER , "IBM Softlayer testAccountk"+prefix, "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, -1, true },
+				{ AccountType.SOFTLAYER , "IBM Softlayer testAccountk"+prefix, "dchqinc", "password", null, null,  "http://dchq.co.in", null, null, null, 1, false },
 
 
 		});
