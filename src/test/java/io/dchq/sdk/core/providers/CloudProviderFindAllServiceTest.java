@@ -239,7 +239,10 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 
 			boolean success) {
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-    	accountName = accountName+" "+postfix;
+		if(accountName !=null && !accountName.isEmpty())
+		{
+			accountName = accountName+" "+postfix;
+		}
 		this.registryAccount = new RegistryAccount().withName(accountName).withUsername(testUsername)
 				.withPassword(apiKey).withAccountType(accountType);
 		this.registryAccount.setRegion(TenantId);
@@ -292,7 +295,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername,
 				cloudadminpassword);
 	}
-
+	@Ignore
 	@Test
 	public void testFindAll() throws Exception {
 		ResponseEntity<RegistryAccount> response = null;
