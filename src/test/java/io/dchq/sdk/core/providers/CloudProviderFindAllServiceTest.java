@@ -295,7 +295,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername,
 				cloudadminpassword);
 	}
-	@Ignore
+	
 	@Test
 	public void testFindAll() throws Exception {
 		ResponseEntity<RegistryAccount> response = null;
