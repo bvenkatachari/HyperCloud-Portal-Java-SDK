@@ -45,16 +45,19 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
-	public DockerVolumeFindAllService(String createdOn, String volumeName, String provider, String server) {
+	public DockerVolumeFindAllService(String volumeName, String provider, String server, boolean isPrefix, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		volumeName = prefix + "-" + volumeName;
+		if(isPrefix)
+		{
+			volumeName = prefix.toLowerCase() + "-" + volumeName;
+		}
 
 		this.dockerVolume = new DockerVolume();
-		this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
 		this.dockerVolume.setHostIp(server);
+		this.error = error;
 	}
 
 	@Before
@@ -67,8 +70,24 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
-				// passing Id of createdOn, Local Volume Provider
-				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
+			 { "testvalumn", "2c9180865bb2559a015bd99819254459", "qe-100", true , false},
+		     { "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+			
+			// TODO volume name should not be blank
+		   //{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+				
+			// TODO not accept only special characters
+		   //{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+			 { "test21111", null,	"qe-100", true, true},
+			 { "test21111", "",	"qe-100", true, true},
+			 { null , null,	"qe-100", false, true },
+			 
+			 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+			
+		});
 	}
 
 	public int testDockerVolumetPosition(String id) {
@@ -93,10 +112,9 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 		return response.getResults().size();
 	}
 
-	@Ignore
 	@Test
 	public void findAll() {
-		try {
+
 			logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
 			countBeforeCreate =  testDockerVolumetPosition(null);
 			ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
@@ -104,19 +122,23 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 			for (Message message : response.getMessages()) {
 				logger.warn("Error while Create request  [{}] ", message.getMessageText());
 			}
+			if(!error)
+			{
+				if (response.getResults() != null && !response.isErrors()) {
+					this.dockerVolumeCreated = response.getResults();
+					logger.info("Create docker volumne Successful..");
+				}
 
-			if (response.getResults() != null && !response.isErrors()) {
-				this.dockerVolumeCreated = response.getResults();
-				logger.info("Create docker volumne Successful..");
-			}
-
-			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
-				try {
-					Thread.sleep(10000);
-					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-				} catch (InterruptedException e) {
-					// TODO: handling exception
+				while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+					try {
+						Thread.sleep(10000);
+						dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+						
+						assertNotNull(dockerVolumeCreated);
+						logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+					} catch (InterruptedException e) {
+						// TODO: handling exception
+					}
 				}
 				assertNotNull(response.getResults());
 				assertNotNull(response.getResults().getId());
@@ -125,9 +147,11 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 				this.countAfterCreate = testDockerVolumetPosition(dockerVolumeCreated.getId());
 				assertEquals(countBeforeCreate + 1, countAfterCreate);
 			}
-		} catch (Exception e) {
-
-		}
+			else
+			{
+				assertEquals(null, response.getResults());
+				assertEquals(true, response.isErrors());
+			}
 
 	}
 

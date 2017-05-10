@@ -2,6 +2,7 @@ package io.dchq.sdk.core.volumes;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,31 +45,50 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 	String errorMsg;
 
-	public DockerVolumeSearchServiceTest(String createdOn, String volumeName, String provider, String server) {
+	public DockerVolumeSearchServiceTest(String volumeName, String provider, String server, boolean isPrefix, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		volumeName = prefix + "-" + volumeName;
+		if(isPrefix)
+		{
+			volumeName = prefix.toLowerCase() + "-" + volumeName;
+		}
 		this.dockerVolume = new DockerVolume();
-		this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
 		this.dockerVolume.setHostIp(server);
+		this.error = error;
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-				// TODO: add more test data for all sorts of validations
-				// passing Id of createdOn, Local Volume Provider
-				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9", "qe-100" } });
+			// TODO: add more test data for all sorts of validations
+		   { "testvalumn", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+		   { "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+			
+			// TODO volume name should not be blank
+		   //{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+				
+			// TODO not accept only special characters
+		   //{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+			 { "test21111", null,	"qe-100", true, true},
+			 { "test21111", "",	"qe-100", true, true},
+			 { null , null,	"qe-100", false, true },
+			 
+			 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+		
+		});
 	}
 
 	@Before
 	public void setUp() {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
-    @Ignore
+    
 	@Test
 	public void updateTest() throws Exception {
 		// Creating new Docker Volume
@@ -95,22 +115,22 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 			try {
 				Thread.sleep(10000);
 				dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+				assertNotNull(dockerVolumeCreated);
 				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 			} catch (InterruptedException e) {
 				// TODO: handling exception
 			}
 		}
 
-		if (!response.isErrors() && response.getResults() != null) {
-			dockerVolumeCreated = response.getResults();
+		if(!error)
+		{
 			assertNotNull(response.getResults());
 			assertNotNull(response.getResults().getId());
 			Assert.assertNotNull(dockerVolume.getName(), dockerVolumeCreated.getName());
 
 			// Updating User Group
 			logger.info("Search for Request for Docker volume with Name [{}]", dockerVolumeCreated.getName());
-			ResponseEntity<List<DockerVolume>> searchResponse = dockerVolumeService
-					.search(dockerVolumeCreated.getName(), 0, 1);
+			ResponseEntity<List<DockerVolume>> searchResponse = dockerVolumeService.search(dockerVolumeCreated.getName(), 0, 1);
 
 			for (Message message : searchResponse.getMessages()) {
 				logger.warn("Error while search docker volume request  [{}] ", message.getMessageText());
@@ -127,6 +147,11 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 			DockerVolume searchedEntity = searchResponse.getResults().get(0);
 			Assert.assertEquals(dockerVolumeCreated.getId(), searchedEntity.getId());
 
+		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
 		}
 
 	}

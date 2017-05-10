@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,16 +47,18 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 
-	public DockerVolumeCreateServiceTest(String createdOn, String volumeName, String provider, String server) {
+	public DockerVolumeCreateServiceTest(String volumeName, String provider, String server, boolean isPrefix, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		volumeName = prefix + "-" + volumeName;
-
+		if(isPrefix)
+		{
+			volumeName = prefix.toLowerCase() + "-" + volumeName;
+		}
 		this.dockerVolume = new DockerVolume();
-		this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
 		this.dockerVolume.setHostIp(server);
+		this.error = error;
 	}
 
 	@Parameterized.Parameters
@@ -65,14 +66,31 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
-				// passing Id of createdOn, Local Volume Provider
-				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9",
-						"qe-100" } });
+			
+				{ "testvalumn", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+				{ "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+			
+				// TODO volume name should not be blank
+				//{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+				
+				// TODO not accept only special characters
+				//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+				
+				 { "test21111", null,	"qe-100", true, true },
+				 { "test21111", "",	"qe-100", true, true },
+				 { null , null,	"qe-100", false, true },
+				 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+				 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+				 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+				 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+								
+		});
+		
 	}
 
 	@Test
 	public void testCreate() {
-		try {
+	
 			logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
 			ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
 
@@ -80,18 +98,22 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 				logger.warn("Error while Create request  [{}] ", message.getMessageText());
 			}
 
-			if (response.getResults() != null && !response.isErrors()) {
-				this.dockerVolumeCreated = response.getResults();
-				logger.info("Create docker volumne Successful..");
-			}
+			if(!error)
+			{
+				if (response.getResults() != null && !response.isErrors()) {
+					this.dockerVolumeCreated = response.getResults();
+					logger.info("Create docker volumne Successful..");
+				}
 
-			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
-				try {
-					Thread.sleep(10000);
-					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-				} catch (InterruptedException e) {
-					// TODO: handling exception
+				while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+					try {
+						Thread.sleep(10000);
+						dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+						assertNotNull(dockerVolumeCreated);
+						logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+					} catch (InterruptedException e) {
+						// TODO: handling exception
+					}
 				}
 
 				assertNotNull(response);
@@ -103,9 +125,11 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 					assertEquals(dockerVolume.getOptionsText(), dockerVolumeCreated.getOptionsText());
 				}
 			}
-		} catch (Exception e) {
-
-		}
+			else
+			{
+				assertEquals(null, response.getResults());
+				assertEquals(true, response.isErrors());
+			}		
 	}
 
 	@After

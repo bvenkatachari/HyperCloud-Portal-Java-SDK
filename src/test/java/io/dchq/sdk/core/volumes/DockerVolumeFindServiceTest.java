@@ -46,37 +46,55 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 	
-	public DockerVolumeFindServiceTest(String createdOn, String volumeName, String provider, String server) {
+	public DockerVolumeFindServiceTest(String createdOn, String volumeName, String provider, String server, boolean isPrefix, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		volumeName = prefix + "-" + volumeName;
-
+		if(isPrefix)
+		{
+			volumeName = prefix.toLowerCase() + "-" + volumeName;
+		}
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
 		this.dockerVolume.setHostIp(server);
+		this.error = error;
 	}
 	
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-				// passing Id of createdOn, Local Volume Provider
-				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9",
-						"qe-100" } });
+			// TODO: add more test data for all sorts of validations
+		   { "testvalumn", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+		   { "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
+			
+			// TODO volume name should not be blank
+		   //{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+				
+			// TODO not accept only special characters
+		   //{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
+			 { "test21111", null,	"qe-100", true, true},
+			 { "test21111", "",	"qe-100", true, true},
+			 { null , null,	"qe-100", false, true },
+			 
+			 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+		
+		});
 	}
 	@Test
 	public void findTest() {
 
-		try {
-			logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
-			ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
+		logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
+		ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
 
-			for (Message message : response.getMessages()) {
-				logger.warn("Error while Create request  [{}] ", message.getMessageText());
-			}
-
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Create request  [{}] ", message.getMessageText());
+		}
+		if (!error) {
 			if (response.getResults() != null && !response.isErrors()) {
 				this.dockerVolumeCreated = response.getResults();
 				logger.info("Create docker volumne Successful..");
@@ -86,6 +104,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 				try {
 					Thread.sleep(10000);
 					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+					assertNotNull(dockerVolumeCreated);
 					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 				} catch (InterruptedException e) {
 					// TODO: handling exception
@@ -103,11 +122,11 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 			assertEquals(dockerVolumeCreated.getEndpoint(), response.getResults().getEndpoint());
 			assertEquals(dockerVolumeCreated.getCreatedOn(), response.getResults().getCreatedOn());
 			assertEquals(dockerVolumeCreated.getId(), response.getResults().getId());
-
-			// check for find
-
-		} catch (Exception e) {
-			// ignore
+		}
+		else
+		{
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
 		}
 
 	}
