@@ -47,8 +47,7 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
-	public DockerVolumeUpdateServiceTest(
-			String createdOn, 
+	public DockerVolumeUpdateServiceTest( 
 			String volumeName, 
 			String provider, 
 			String server,
