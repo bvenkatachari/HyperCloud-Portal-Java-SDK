@@ -100,11 +100,6 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
 		}
 
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
-		Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
-		Assert.assertFalse(response.isErrors());
-
 		if (response.getResults() != null && !response.isErrors()) {
 			this.dockerVolumeCreated = response.getResults();
 			logger.info("Create docker volumne Successful..");
@@ -124,6 +119,8 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 
 		if(!error)
 		{
+			assertNotNull(response);
+			Assert.assertFalse(response.isErrors());
 			assertNotNull(response.getResults());
 			assertNotNull(response.getResults().getId());
 			Assert.assertNotNull(dockerVolume.getName(), dockerVolumeCreated.getName());
