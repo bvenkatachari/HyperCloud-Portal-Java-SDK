@@ -46,7 +46,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 	
-	public DockerVolumeFindServiceTest(String createdOn, String volumeName, String provider, String server, boolean isPrefix, boolean error) {
+	public DockerVolumeFindServiceTest(String volumeName, String provider, String server, boolean isPrefix, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		if(isPrefix)
@@ -54,7 +54,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 			volumeName = prefix.toLowerCase() + "-" + volumeName;
 		}
 		this.dockerVolume = new DockerVolume();
-		this.dockerVolume.setCreatedOn(createdOn);
+		//this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
 		this.dockerVolume.setHostIp(server);
