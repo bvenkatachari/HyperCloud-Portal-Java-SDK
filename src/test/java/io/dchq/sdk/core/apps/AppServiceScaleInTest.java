@@ -63,23 +63,28 @@ public class AppServiceScaleInTest extends AppBaseImpl {
     public void testScaleInNow() throws InterruptedException {
 
         ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
-        blueprint = blueprintResponseEntity.getResults();
+        if(blueprintResponseEntity !=null && blueprintResponseEntity.isErrors())
+        {
+        	blueprint = blueprintResponseEntity.getResults();
+        }
+        if(blueprint !=null )
+		{
+			// Override existing blueprint name
+			blueprint.setName(bluePrintName);
 
-        //Override existing blueprint name
-        blueprint.setName(bluePrintName);
-
-        //call Scale In remove Service
-        app = scaleInRemoveService(blueprint, error, validationMessage);
-        System.out.println("App Provision State we get it : " + app.getProvisionState());
-
+			// call Scale In remove Service
+			app = scaleInRemoveService(blueprint, error, validationMessage);
+			System.out.println("App Provision State we get it : " + app.getProvisionState());
+        }
         //To-Do Validation of removal is left.
     }
 
     // Destroy above created app
     @After
     public void testDestroyAppAndWait() {
-
-        destroyAndWait(app);
-
+    	if(app!=null)
+    	{
+    		destroyAndWait(app);
+    	}
     }
 }

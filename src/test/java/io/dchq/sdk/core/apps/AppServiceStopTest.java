@@ -61,22 +61,27 @@ public class AppServiceStopTest extends AppBaseImpl {
         public void testStopDeployedAppAndWait() {
 
             ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
-            blueprint = blueprintResponseEntity.getResults();
-
+            if(blueprintResponseEntity !=null && !blueprintResponseEntity.isErrors())
+            {
+            	blueprint = blueprintResponseEntity.getResults();
+            }
+            if(blueprint !=null)
+            {
             //Override existing blueprint name
-            blueprint.setName(bluePrintName);
+            	blueprint.setName(bluePrintName);
 
-            app = stopAppServiceAndWait(blueprint, error, validationMessage);
-            System.out.println("App Provision State we get it : " + app.getProvisionState());
-
+            	app = stopAppServiceAndWait(blueprint, error, validationMessage);
+            	System.out.println("App Provision State we get it : " + app.getProvisionState());
+            }
         }
 
         // Destroy above created app
         @After
         public void testDestroyAppAndWait() {
-
-            destroyAndWait(app);
-
+        	if(app !=null)
+        	{
+        		destroyAndWait(app);
+        	}
         }
 
 }

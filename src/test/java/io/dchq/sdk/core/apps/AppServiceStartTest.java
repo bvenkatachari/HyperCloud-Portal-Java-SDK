@@ -61,22 +61,26 @@ public class AppServiceStartTest extends  AppBaseImpl{
         public void testStartDeployedAppAndWait() {
 
             ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
-            blueprint = blueprintResponseEntity.getResults();
-
-            //Override existing blueprint name
-            blueprint.setName(bluePrintName);
-
-            app = startAppServiceAndWait(blueprint, error, validationMessage);
-            System.out.println("App Provision State we get it : " + app.getProvisionState());
-
+            if(blueprintResponseEntity != null && !blueprintResponseEntity.isErrors())
+            {
+            	blueprint = blueprintResponseEntity.getResults();
+            }
+            if(blueprint !=null)
+            {
+            	//Override existing blueprint name
+            	blueprint.setName(bluePrintName);
+            	app = startAppServiceAndWait(blueprint, error, validationMessage);
+            	System.out.println("App Provision State we get it : " + app.getProvisionState());
+            }
         }
 
        // Destroy above created app
         @After
         public void testDestroyAppAndWait() {
-
-            destroyAndWait(app);
-
+        	if(app!=null)
+        	{
+        		destroyAndWait(app);
+        	}
         }
 
     }

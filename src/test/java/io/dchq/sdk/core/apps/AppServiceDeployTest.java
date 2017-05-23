@@ -50,7 +50,7 @@ public class AppServiceDeployTest extends AppBaseImpl {
     @Parameterized.Parameters
     public static Collection<Object[]> data() throws Exception {
         return Arrays.asList(new Object[][]{
-                {"2c9180865a4a48d9015a52b610c8080c", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
+                {"2c9180855c15b227015c15d3a5b5001d", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
                 {"2c9180865a4a48d9015a52b610c8080c", "", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
                 {"2c9180865a4a48d9015a52b610c8080c", " ", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
                 {"2c9180865a4a48d9015a52b610c8080c", null, EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false},
@@ -65,19 +65,28 @@ public class AppServiceDeployTest extends AppBaseImpl {
     public void testDeployAppAndWait() {
 
         ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
-        blueprint = blueprintResponseEntity.getResults();
-
-        //Override existing blueprint name
-        blueprint.setName(blueprintName);
-
-        app = deployAndWait(blueprint, error, validationMessage);
-        System.out.println("App Provision State we get it : " + app.getProvisionState());
+        
+        if(blueprintResponseEntity !=null && !blueprintResponseEntity.isErrors())
+        {
+        	blueprint = blueprintResponseEntity.getResults();
+        }
+        
+        if(blueprint !=null)
+        {
+        	//Override existing blueprint name
+        	blueprint.setName(blueprintName);
+        	app = deployAndWait(blueprint, error, validationMessage);
+            System.out.println("App Provision State we get it : " + app.getProvisionState());
+        }
     }
 
     // Destroy above created app
     @After
     public void testDestroyAppAndWait() {
-        destroyAndWait(app);
+    	if(app !=null)
+    	{
+    		destroyAndWait(app);
+    	}
     }
 
 }
