@@ -63,7 +63,7 @@ public class AppServiceScaleInTest extends AppBaseImpl {
     public void testScaleInNow() throws InterruptedException {
 
         ResponseEntity<Blueprint> blueprintResponseEntity = blueprintService.findById(blueprintId);
-        if(blueprintResponseEntity !=null && blueprintResponseEntity.isErrors())
+        if(blueprintResponseEntity !=null && !blueprintResponseEntity.isErrors())
         {
         	blueprint = blueprintResponseEntity.getResults();
         }
