@@ -31,7 +31,7 @@ public class ProfileServiceTest extends AbstractServiceTest {
 ////        logger.info(responseEntity.getResults());
 //    }
 
-    @Ignore
+    
     @org.junit.Test
     public void testGet() throws Exception {
         ResponseEntity<List<Profile>> responseEntity = profileService.findAll();

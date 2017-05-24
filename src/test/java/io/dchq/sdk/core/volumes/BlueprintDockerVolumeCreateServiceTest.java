@@ -73,7 +73,7 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 						"qe-100" } });
 	}
 
-	@Ignore
+	
 	@Test
 	public void testCreate() {
 		try {
