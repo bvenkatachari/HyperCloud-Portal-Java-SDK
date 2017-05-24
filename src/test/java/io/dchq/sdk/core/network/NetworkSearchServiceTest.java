@@ -77,7 +77,7 @@ public class NetworkSearchServiceTest extends AbstractServiceTest {
 			{ "t@@@########@@@@@@@estnetwork33", "bridge", dockerServerId, true },
 			{ "", "bridge", dockerServerId, false }});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {
