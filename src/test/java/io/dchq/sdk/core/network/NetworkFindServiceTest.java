@@ -75,7 +75,7 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 			{ "as", "bridge", "", false },
 			{ "", "bridge", dockerServerId, false }});
 	}
-	
+	@Ignore
 	@Test
 	public void createTest() {
 		try {
@@ -92,8 +92,10 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 					this.networkCreated = response.getResults();
 					logger.info("Create docker network Successful..");
 				}
-
-				while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE)
+				assertNotNull(response);
+				assertEquals(false, response.isErrors());
+				
+				while ((networkCreated != null && networkCreated.getStatus() != DockerNetworkStatus.LIVE)
 						&& (System.currentTimeMillis() < endTime)) {
 					try {
 						Thread.sleep(5000);
@@ -102,19 +104,19 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 					} catch (InterruptedException e) {
 						// TODO: handling exception
 					}
-
-					response = networkService.findById(networkCreated.getId());
-
-					assertNotNull(response);
-					assertNotNull(response.isErrors());
-					if (this.networkCreated != null) {
-						assertNotNull(response.getResults().getId());
-						assertNotNull(networkCreated.getId());
-						assertEquals(network.getName(), response.getResults().getName());
-						assertEquals(network.getDriver(), response.getResults().getDriver());
-						assertEquals(network.getDockerServerName(), response.getResults().getDockerServerName());
-					}
 				}
+				response = networkService.findById(networkCreated.getId());
+				assertNotNull(response);
+				assertNotNull(response.isErrors());
+				assertEquals(false, response.isErrors());
+				if (this.networkCreated != null) {
+					assertNotNull(response.getResults().getId());
+					assertNotNull(networkCreated.getId());
+					assertEquals(network.getName(), response.getResults().getName());
+					assertEquals(network.getDriver(), response.getResults().getDriver());
+					assertEquals(network.getDockerServerName(), response.getResults().getDockerServerName());
+				}
+				
 			}
 			else
 			{

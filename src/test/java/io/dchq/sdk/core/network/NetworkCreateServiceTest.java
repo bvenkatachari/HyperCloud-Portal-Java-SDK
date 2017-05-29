@@ -76,7 +76,7 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 			{ "", "bridge", dockerServerId , false} });
 	}
 
-	
+	@Ignore
 	@Test
 	public void createTest() {
 		try {
@@ -88,13 +88,16 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 				for (Message message : response.getMessages()) {
 					logger.warn("Error while Create request  [{}] ", message.getMessageText());
 				}
+				
+				assertNotNull(response);
+				assertEquals(false, response.isErrors());
 
 				if (response.getResults() != null && !response.isErrors()) {
 					this.networkCreated = response.getResults();
 					logger.info("Create docker network Successful..");
 				}
 
-				while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
+				while ((networkCreated!=null && networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
 					try {
 						Thread.sleep(5000);
 						networkCreated = networkService.findById(networkCreated.getId()).getResults();
@@ -102,17 +105,18 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 					} catch (InterruptedException e) {
 						// TODO: handling exception
 					}
-					assertNotNull(response);
-					assertNotNull(response.isErrors());
-					if (this.networkCreated != null) {
-						assertNotNull(response.getResults().getId());
-						assertNotNull(networkCreated.getId());
-						assertNotNull("It shloud not be null or empty", network.getName());
-						assertEquals(network.getName(), networkCreated.getName());
-						assertEquals(network.getDriver(), networkCreated.getDriver());
-						assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
-					}
 				}
+				assertNotNull(response);
+				assertNotNull(response.isErrors());
+				if (this.networkCreated != null) {
+					assertNotNull(response.getResults().getId());
+					assertNotNull(networkCreated.getId());
+					assertNotNull("It shloud not be null or empty", network.getName());
+					assertEquals(network.getName(), networkCreated.getName());
+					assertEquals(network.getDriver(), networkCreated.getDriver());
+					assertEquals(network.getDockerServerName(), networkCreated.getDockerServerName());
+				}
+				
 			}
 			else
 			{

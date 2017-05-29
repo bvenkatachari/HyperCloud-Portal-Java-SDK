@@ -29,8 +29,8 @@ import io.dchq.sdk.core.NetworkService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
-* @author Jagdeep Jain
-*/
+ * @author Jagdeep Jain
+ */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
@@ -52,16 +52,12 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50);
 
-	public NetworkFindAllServiceTest(
-			String name, 
-			String driver,
-			String id,
-			boolean error
-			) 
-	{
+	public NetworkFindAllServiceTest(String name, String driver, String id, boolean error) {
 		// random user name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		name = prefix + "-" + name;
+		if (name != null && !name.isEmpty()) {
+			name = prefix + "-" + name;
+		}
 		network = new DockerNetwork();
 		network.setName(name);
 		network.setDriver(driver);
@@ -71,13 +67,10 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { 
-			{ "testnetwork", "bridge", dockerServerId , true},
-			{ "##############$WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", "bridge", dockerServerId , true},
-			{ "a", "bridge", dockerServerId, true },
-			{ "", "bridge", dockerServerId, false }});
+		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId, true },
+				{ "##############$WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW", "bridge", dockerServerId, true },
+				{ "a", "bridge", dockerServerId, true }, { "", "bridge", dockerServerId, false } });
 	}
-	
 
 	public int testNetworktPosition(String id) {
 		ResponseEntity<List<DockerNetwork>> response = networkService.findAll(0, 500);
@@ -113,12 +106,15 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 					logger.warn("Error while Create request  [{}] ", message.getMessageText());
 				}
 
+				assertEquals(false, response.isErrors());
+				assertNotNull(response);
+				assertNotNull(response.getResults());
 				if (response.getResults() != null && !response.isErrors()) {
 					this.networkCreated = response.getResults();
 					logger.info("Create docker network Successful..");
 				}
 
-				while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE)
+				while ((networkCreated != null && networkCreated.getStatus() != DockerNetworkStatus.LIVE)
 						&& (System.currentTimeMillis() < endTime)) {
 					try {
 						Thread.sleep(5000);
@@ -127,14 +123,15 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 					} catch (InterruptedException e) {
 						// TODO: handling exception
 					}
-					assertNotNull(response);
-					assertNotNull(response.getResults());
-					assertNotNull(response.getResults().getId());
-					// getting Count of objects after creating Object
-					logger.info("FindAll User Network by Id [{}]", networkCreated.getId());
-					this.countAfterCreate = testNetworktPosition(networkCreated.getId());
-					assertEquals(countBeforeCreate + 1, countAfterCreate);
 				}
+				assertNotNull(response);
+				assertNotNull(response.getResults());
+				assertNotNull(response.getResults().getId());
+				// getting Count of objects after creating Object
+				logger.info("FindAll User Network by Id [{}]", networkCreated.getId());
+				this.countAfterCreate = testNetworktPosition(networkCreated.getId());
+				assertEquals(countBeforeCreate + 1, countAfterCreate);
+
 			} else {
 				assertEquals(null, response.getResults());
 				assertEquals(true, response.isErrors());
@@ -156,7 +153,7 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 			}
 			assertEquals(countBeforeCreate, countAfterCreate - 1);
 
-			while (networkDeleted!=null && networkDeleted.getStatus() != DockerNetworkStatus.REMOVED
+			while (networkDeleted != null && networkDeleted.getStatus() != DockerNetworkStatus.REMOVED
 					&& (System.currentTimeMillis() < endTime)) {
 				response = networkService.findById(this.networkCreated.getId());
 				networkDeleted = response.getResults();

@@ -77,7 +77,7 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
 	}
-
+	@Ignore
 	@Test
 	public void createTest() {
 		try {
@@ -93,7 +93,7 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 				logger.info("Create docker network Successful..");
 			}
 
-			while ((networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
+			while ((networkCreated!=null && networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
 				try {
 					Thread.sleep(5000);
 					networkCreated = networkService.findById(networkCreated.getId()).getResults();
@@ -101,34 +101,33 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
-				assertNotNull(response);
-				assertNotNull(response.isErrors());
-				
-				// updating entitlement
-				UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId2);
-				List<UsernameEntityBase> entiledUsers = new ArrayList<>();
-				entiledUsers.add(entitledUser);
-				networkCreated.setEntitlementType(EntitlementType.CUSTOM);
-				networkCreated.setEntitledUsers(entiledUsers);
-				
-				response = networkService.update(networkCreated);
-				
-				logger.info("Entitlement Type [{}] and First name [{}]", response.getResults().getEntitlementType(),
-						response.getResults().getEntitledUsers().get(0).getFirstname());
+			}
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
 
-				for (Message message : response.getMessages()) {
-					logger.warn("Error while Update request  [{}] ", message.getMessageText());
-				}
+			// updating entitlement
+			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId2);
+			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+			entiledUsers.add(entitledUser);
+			networkCreated.setEntitlementType(EntitlementType.CUSTOM);
+			networkCreated.setEntitledUsers(entiledUsers);
 
-				if (networkCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-					ResponseEntity<DockerNetwork> searchResponse = networkService2.findById(networkCreated.getId());
-					assertNotNull(searchResponse);
-					assertNotNull(searchResponse.isErrors());
-					// TODO: add tests for testing error message
-					assertNotNull(searchResponse.getResults());
-					assertEquals(networkCreated.getName(), searchResponse.getResults().getName());
-				}
-				
+			response = networkService.update(networkCreated);
+
+			logger.info("Entitlement Type [{}] and First name [{}]", response.getResults().getEntitlementType(),
+					response.getResults().getEntitledUsers().get(0).getFirstname());
+
+			for (Message message : response.getMessages()) {
+				logger.warn("Error while Update request  [{}] ", message.getMessageText());
+			}
+
+			if (networkCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+				ResponseEntity<DockerNetwork> searchResponse = networkService2.findById(networkCreated.getId());
+				assertNotNull(searchResponse);
+				assertNotNull(searchResponse.isErrors());
+				// TODO: add tests for testing error message
+				assertNotNull(searchResponse.getResults());
+				assertEquals(networkCreated.getName(), searchResponse.getResults().getName());
 			}
 		} catch (Exception e) {
 			// ignore
