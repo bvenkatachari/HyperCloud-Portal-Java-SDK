@@ -51,80 +51,31 @@ import static org.junit.Assert.assertFalse;
 @RunWith(Parameterized.class)
 public class DockerServerCreateServiceTest extends DockerServerTest {
 
-	DockerServer result = null;
 
     @org.junit.Before
     public void setUp() {
-        dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, cloudadminusername, cloudadminpassword);
+        dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, username, password);
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-       		{"mytest21",Boolean.FALSE, "cpu=4,memory=8GB,disk=40GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx",
-       			"Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", "LINUX", 30000, "VHG01-N03" , false},
+                {"Test_RACKSPACE_SERVER2 ", Boolean.FALSE, "HKG", "general1-4", "HKG/d6a7813f-235e-4c05-a108-d0f9e316ba50", 1, "ff8081815428f7f80154290f1e64000b", "RACKSPACE", 300000, "Cluster_Create_Server_Test", false},
+
         });
     }
 
-    public DockerServerCreateServiceTest
-    (String name, Boolean activeFlage, String hardwareId, String imageId, String networkId, int size, String endpoint, String operatingSystem , int timeout, String region, boolean success)
-    {
-    	dockerServer = new DockerServer();
-    	if(name!=null && !name.isEmpty())
-    	{
-    		dockerServer.setName(name);
-    		dockerServer.setGroup(name);
-    	}
-    	dockerServer.setInactive(activeFlage);
-    	dockerServer.setRegion(region);
-    	dockerServer.setHardwareId(hardwareId);
-    	dockerServer.setImageId(imageId);
-    	dockerServer.setNetworkId(networkId);
-    	dockerServer.setOperatingSystem(operatingSystem);
-    	dockerServer.setEndpoint(endpoint);
-    	
-    	dockerServer.setSize(size);
-    	this.createError = success;
+
+    public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, int size, String endpoint, String endpointTpe, int tinout, String clusterName, boolean success) {
+    	String postfix = RandomStringUtils.randomAlphabetic(3);
+    	clusterName = clusterName+"-"+postfix;
+        datacenterCreated = getDataCenter(clusterName, Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
+        Assert.assertNotNull(datacenterCreated);
+        this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
+                .withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size).withEndpoint(endpoint).withEndpointType(endpointTpe).withHardwareId(hardwareID);
+        maxWaitTime = tinout;
+        this.createError = success;
     }
-//    public DockerServerCreateServiceTest(
-//    		String serverName, 
-//    		Boolean activeFlag, 
-//    		String hardwareID,
-//    		String imageId, 
-//    		String networkId,
-//    		int size, 
-//    		String endpoint,
-//    		String os,
-//    		int tinout, 
-//    		String clusterName,
-//			boolean success) {
-//
-//		String postfix = RandomStringUtils.randomAlphabetic(3);
-//		
-//		if(serverName!=null && !serverName.isEmpty())
-//		{
-//			serverName = serverName + "-" + postfix;
-//		}
-//		// datacenterCreated = getDataCenter(clusterName, Boolean.FALSE,
-//		// EntitlementType.ALL_BLUEPRINTS);
-//		// Assert.assertNotNull(datacenterCreated);
-//
-//		dockerServer = new DockerServer();
-//		dockerServer.setName(serverName);
-//		dockerServer.setInactive(activeFlag);
-//		dockerServer.setHardwareId(hardwareID);
-//		dockerServer.setImageId(imageId);
-//		dockerServer.setNetworkId(networkId);
-//		dockerServer.setOperatingSystem(os);
-//		dockerServer.setEndpoint(endpoint);
-//		dockerServer.setSize(1);
-//
-//		// this.dockerServer = new
-//		// DockerServer().withDatacenter(datacenterCreated).withName(serverName)
-//		// .withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size).withEndpoint(endpoint).withEndpointType(endpointTpe).withHardwareId(hardwareID);
-//		maxWaitTime = tinout;
-//		this.createError = success;
-//	}
 
 
     @Ignore
@@ -139,50 +90,48 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
             logger.warn("Error while Create request  [{}] ", message.getMessageText());
             errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
         }
-        
-        if(!createError)
-		{
-        	assertFalse(response.isErrors());
-			Assert.assertFalse("Machine Creation Replied with Error." + errorMessage, response.isErrors());
+        Assert.assertFalse("Machine Creation Replied with Error." + errorMessage, response.isErrors());
 
-			if (response.getResults() != null) {
-				result = response.getResults();
-			}
-			if (response.getTotalElements() == null) {
-				logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
+        if (response.getTotalElements() == null) {
+            logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
 
-				// assertNotNull(response.getTotalElements());
+//            assertNotNull(response.getTotalElements());
 
-				ResponseEntity<DockerServer> dockerServer = dockerServerService.findById(result.getId());
-				errorMessage = "";
-				for (Message message : dockerServer.getMessages()) {
-					logger.warn("Error while Create request  [{}] ", message.getMessageText());
-					errorMessage += message.getMessageText() + "\n";
-				}
+            dockerServerResponseEntity = dockerServerService.search(dockerServer.getName(), 0, 1);
+            errorMessage = "";
+            for (Message message : dockerServerResponseEntity.getMessages()) {
+                logger.warn("Error while Create request  [{}] ", message.getMessageText());
+                errorMessage += message.getMessageText() + "\n";
+            }
 
-				assertNotNull(errorMessage, dockerServer.getResults());
-				assertFalse(dockerServer.isErrors());
+            assertNotNull(errorMessage, dockerServerResponseEntity.getResults());
+            assertFalse(dockerServerResponseEntity.isErrors());
 
-				if (dockerServer.getResults() != null) {
-					dockerServerProvisioning = dockerServer.getResults();
-					Assert.assertNotNull("Machine Provision not started...", dockerServerProvisioning);
-					dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
-					Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
-					if (dockerServerCreated != null) {
+            if (dockerServerResponseEntity.getResults() != null) {
 
-						Assert.assertEquals(result.getInactive(), dockerServerCreated.getInactive());
-						Assert.assertEquals(result.getRegion(), dockerServerCreated.getRegion());
-						// Assert.assertEquals(dockerServer.getSize(),
-						// dockerServerCreated.getSize());
-						Assert.assertEquals(result.getEndpoint(), dockerServerCreated.getEndpoint());
-						Assert.assertEquals(result.getEndpointType(), dockerServerCreated.getEndpointType());
+                String serverStatus = "";
+                for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
+                    dockerServerProvisioning = searchDocker;
+                }
+                Assert.assertNotNull("Machine Provision not started...", dockerServerProvisioning);
+                dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
+                Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
+                if (dockerServerCreated != null) {
 
-					}
+                    Assert.assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
+                    Assert.assertEquals(dockerServer.getRegion(), dockerServerCreated.getRegion());
+//                    Assert.assertEquals(dockerServer.getSize(), dockerServerCreated.getSize());
+                    Assert.assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
+                    Assert.assertEquals(dockerServer.getEndpointType(), dockerServerCreated.getEndpointType());
 
-				}
 
-			}
-		}
+                }
+
+            }
+
+
+        }
+
 
     }
 
