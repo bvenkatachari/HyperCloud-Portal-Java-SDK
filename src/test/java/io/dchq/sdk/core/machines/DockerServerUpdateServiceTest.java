@@ -20,6 +20,8 @@ import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.provider.DockerServer;
 import com.dchq.schema.beans.one.security.EntitlementType;
 import io.dchq.sdk.core.ServiceFactory;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -62,20 +64,38 @@ public class DockerServerUpdateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"Test_RACKSPACE_SERVER2 ", Boolean.FALSE, "HKG", "general1-4", "HKG/d6a7813f-235e-4c05-a108-d0f9e316ba50", 1, "ff8081815428f7f80154290f1e64000b", "RACKSPACE", 300000, true, false},
+        	{"test", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 300000, "", false},
 
         });
     }
 
 
-    public DockerServerUpdateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, int size, String endpoint, String endpointTpe, int tinout, boolean dockerNameUpdated, boolean success) {
-        this.inActiveUpdated = dockerNameUpdated;
-        datacenterCreated = getDataCenter("Test_Cluster_" + (new Date().toString()), Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
-        Assert.assertNotNull(datacenterCreated);
-
-        this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
-                .withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size).withEndpoint(endpoint).withEndpointType(endpointTpe).withHardwareId(hardwareID);
-
+    public DockerServerUpdateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
+    	String postfix = RandomStringUtils.randomAlphabetic(3);
+    	if(clusterName !=null && !clusterName.isEmpty())
+		{
+			clusterName = clusterName + "-" + postfix;
+			datacenterCreated = getDataCenter(clusterName, Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
+			
+			Assert.assertNotNull(datacenterCreated);
+			// TODO removed withEndpointType and added network id, it is required field.
+			this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
+					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
+		}
+    	else
+    	{
+    		// TODO cluster not mandatory field 
+    		if(serverName!=null && !serverName.isEmpty())
+    		{
+    			serverName = serverName +"-"+ postfix;
+    		}
+    		
+    		this.dockerServer = new DockerServer().withName(serverName)
+					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
+    		
+    	}
         maxWaitTime = tinout;
         this.createError = success;
     }

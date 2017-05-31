@@ -57,7 +57,7 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
     private DockerServerCreateServiceTest dockerServerCreateService;
 
     public DataCenter getDataCenter() throws Exception {
-        dockerServerCreateService = new DockerServerCreateServiceTest("TEST_BUILD_RACK ("+getDateSuffix(null)+")", Boolean.FALSE, "HKG", "general1-1", "HKG/d6a7813f-235e-4c05-a108-d0f9e316ba50", 1, "ff8081815428f7f80154290f1e64000b", "RACKSPACE", 360000,"Build_Cluster("+getDateSuffix(null)+")", false);
+        dockerServerCreateService = new DockerServerCreateServiceTest("TEST_BUILD_RACK ("+getDateSuffix(null)+")", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 360000,"Build_Cluster("+getDateSuffix(null)+")", false);
         dockerServerCreateService.setUp();
 
 return dockerServerCreateService.getDataCenter();
