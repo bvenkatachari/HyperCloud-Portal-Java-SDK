@@ -116,4 +116,7 @@ dependencies {
 
 
 }
+test {
+    systemProperty "url",System.getProperty("url")
+}
 
