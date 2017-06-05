@@ -61,6 +61,16 @@ public abstract class AbstractServiceTest {
     protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
 
     protected int waitTime = 0, maxWaitTime = 0;
+    
+    public AbstractServiceTest()
+    {
+    	String url = System.getProperty("url");
+    	if(url != null && !url.isEmpty())
+    	{
+    		rootUrl = url;
+    	}
+    	
+    }
 
     public boolean isNullOrEmpty(Object inObj) {
         if (inObj == null) {
