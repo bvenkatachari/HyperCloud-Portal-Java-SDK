@@ -164,6 +164,44 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, null, userId2, true, false },
 				{ "123", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
 				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, " ", "description", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, userId2, true, false },
+
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+				{ "User Visiblity By PUBLIC", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.PUBLIC, null, false, false },
+
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By OWNER", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", " ", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "12345", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+				{ "User Visiblity By NONE", BlueprintType.DOCKER_COMPOSE, "6.0", "@#@#@", "https://dchq.io",Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.NONE, null, false, false },
+
+        //TODO suppose to fail
+				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, "6.0", "description", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, userId2, true, false },
 
 
 		});
