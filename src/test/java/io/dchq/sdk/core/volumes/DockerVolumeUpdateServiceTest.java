@@ -72,24 +72,25 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
+
 			// TODO: add more test data for all sorts of validations
-		   { "testvalumn", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
-		   { "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
-			
-			// TODO volume name should not be blank
-		   //{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
-				
-			// TODO not accept only special characters
-		   //{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
-			 { "test21111", null,	"qe-100", true, true},
-			 { "test21111", "",	"qe-100", true, true},
-			 { null , null,	"qe-100", false, true },
-			 // TODO
-			 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
-			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+			{ "testvalume", "2c9180865bb2559a015bd99819254459",	"5", EntitlementType.OWNER, false },
+			{ "test21111", "2c9180865bb2559a015bd99819254459",	"2", EntitlementType.PUBLIC, false },
 		
+			{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
+			// TODO volume name should not be blank
+			//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
+			// TODO not accept only special characters
+			//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
+			// TODO Should not accept negative volume
+			//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
+		
+			{"sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+		 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+		 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"2", EntitlementType.CUSTOM, true }
+		
+	
 		});
 	}
 
@@ -105,7 +106,7 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 
 		logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
 		ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
-
+		assertNotNull(response);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
 		}
@@ -116,7 +117,7 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 			assertNotNull(response.isErrors());
 			Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) response.isErrors()).toString());
 			Assert.assertFalse(response.isErrors());
-
+			assertNotNull(response.getResults());
 			if (response.getResults() != null && !response.isErrors()) {
 				this.dockerVolumeCreated = response.getResults();
 				logger.info("Create docker volumne Successful..");

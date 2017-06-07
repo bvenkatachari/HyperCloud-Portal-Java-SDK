@@ -18,6 +18,7 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerVolumeService;
@@ -46,18 +47,17 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 	
-	public DockerVolumeFindServiceTest(String volumeName, String provider, String server, boolean isPrefix, boolean error) {
-		// random user name
+	public DockerVolumeFindServiceTest(String volumeName, String provider, String size, EntitlementType type, boolean error) {
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		if(isPrefix)
+		if(volumeName!=null )
 		{
 			volumeName = prefix.toLowerCase() + "-" + volumeName;
 		}
 		this.dockerVolume = new DockerVolume();
-		//this.dockerVolume.setCreatedOn(createdOn);
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
-		this.dockerVolume.setHostIp(server);
+		this.dockerVolume.setSize(size);
+		this.dockerVolume.setEntitlementType(type);
 		this.error = error;
 	}
 	
@@ -65,24 +65,25 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
+
 			// TODO: add more test data for all sorts of validations
-		   { "testvalumn", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
-		   { "test21111", "2c9180865bb2559a015bd99819254459",	"qe-100", true, false },
-			
-			// TODO volume name should not be blank
-		   //{ "", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
-				
-			// TODO not accept only special characters
-		   //{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459",	"qe-100", false, true }
-			 { "test21111", null,	"qe-100", true, true},
-			 { "test21111", "",	"qe-100", true, true},
-			 { null , null,	"qe-100", false, true },
-			 
-			 { "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
-			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"qe-100", true, true }
+		{ "testvalume", "2c9180865bb2559a015bd99819254459",	"5", EntitlementType.OWNER, false },
+		{ "test21111", "2c9180865bb2559a015bd99819254459",	"2", EntitlementType.PUBLIC, false },
 		
+		{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
+		// TODO volume name should not be blank
+		//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
+		// TODO not accept only special characters
+		//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
+		// TODO Should not accept negative volume
+		//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
+		
+		{ "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
+		 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+		 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865bb2559a015bd99819254459",	"2", EntitlementType.CUSTOM, true }
+		
+	
 		});
 	}
 	@Test
@@ -90,11 +91,13 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 
 		logger.info("Create docker volumne name[{}] ", dockerVolume.getName());
 		ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
-
+		assertNotNull(response);
+		
 		for (Message message : response.getMessages()) {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
 		}
 		if (!error) {
+			assertNotNull(response.getResults());
 			if (response.getResults() != null && !response.isErrors()) {
 				this.dockerVolumeCreated = response.getResults();
 				logger.info("Create docker volumne Successful..");
