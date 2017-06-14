@@ -47,24 +47,17 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
 
-	public DockerVolumeUpdateServiceTest( 
-			String volumeName, 
-			String provider, 
-			String server,
-			boolean isPrefix,
-			boolean error
-			) 
-	{
-		// random user name
+	public DockerVolumeUpdateServiceTest(String volumeName, String provider, String size, EntitlementType type, boolean error) {
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		if(isPrefix)
+		if(volumeName!=null )
 		{
 			volumeName = prefix.toLowerCase() + "-" + volumeName;
 		}
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setName(volumeName);
 		this.dockerVolume.setEndpoint(provider);
-		this.dockerVolume.setHostIp(server);
+		this.dockerVolume.setSize(size);
+		this.dockerVolume.setEntitlementType(type);
 		this.error = error;
 	}
 
