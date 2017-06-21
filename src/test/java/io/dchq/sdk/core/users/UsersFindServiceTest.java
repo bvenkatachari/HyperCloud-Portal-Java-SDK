@@ -131,7 +131,7 @@ public class UsersFindServiceTest extends AbstractServiceTest {
     public void setUp() throws Exception {
         service = ServiceFactory.buildUserService(rootUrl, username, password);
     }
-
+@Ignore
     @Test
     public void testFind() {
         logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());
