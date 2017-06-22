@@ -31,6 +31,7 @@ import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
+
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.security.Users;
 
@@ -119,7 +120,7 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 	public void setUp() throws Exception {
 		service = ServiceFactory.buildUserService(rootUrl, username, password);
 	}
-	@Ignore
+
 	@Test
 	public void testUpdate() {
 		logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());

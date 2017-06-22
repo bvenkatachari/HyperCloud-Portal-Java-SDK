@@ -27,10 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -119,8 +116,10 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
         return Arrays.asList(new Object[][]{
 
                	{ "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, authorities, "pass1234", true, "comments", false , true, true },
+
+              //  { "fname", "lname", "user", "user" + "@dchq.io", "ABC", "Engg", "123-1231-121", null, false, "pass1234", true, "comments", false , true, true },
         	
-			  	{ "Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "passwqeqweq", true, "NoComments", false , true, true },
+			//  	{ "Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "passwqeqweq", true, "NoComments", false , true, true },
                 // TODO: This is a BUG
 				//{ "  ", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "pass1234", true, "NoComments", true , true, true },
 			  	
@@ -187,7 +186,7 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
 				//{ "Rahul", "Khanna", "Rahul", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "pass1234567", true, "NoComments", true , false, true },
 				
 				// duplicate emailId testing
-				{ "Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "pass212345", true, "NoComments", true , true, false },
+				// -----{ "Rahul", "Khanna", "RahulKhanna", "rahul@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "pass212345", true, "NoComments", true , true, false },
 				
 				// TODO password length should not be less then 8 
 				//{ "Rahul", "Khanna", "RahulKhanna", "rahulddd@bmw.com", "BMW", "ENGG", "9848098480", null, false, authorities, "passwww222", true, "NoComments", true , true, true }
@@ -212,9 +211,9 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        service = ServiceFactory.buildUserService(rootUrl, username, password);
+        service = ServiceFactory.buildUserService(rootUrl, cloudadminusername, cloudadminpassword);
     }
-    
+
     @Test
     public void testCreate() {
         logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());
