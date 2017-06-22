@@ -87,7 +87,7 @@ public class ServiceFactory {
         return new QuotaPolicyServiceImpl(baseURI, username, password);
     }
     
-    public static final VirtualMachineService buildVirtualMachineService(String baseURL, String username, String password){
-    	return null;
+    public static final VPCService buildVPCService(String baseURL, String endpoint, String username, String password){
+    	return new VPCServiceImpl(baseURL, endpoint, username, password);
     }
 }
