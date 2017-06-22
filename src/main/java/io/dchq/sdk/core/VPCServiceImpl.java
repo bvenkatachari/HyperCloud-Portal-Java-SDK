@@ -10,10 +10,18 @@ import com.dchq.schema.beans.one.vpc.VirtualPrivateCloud;
 public class VPCServiceImpl extends
 		GenericServiceImpl<VirtualPrivateCloud, ResponseEntity<List<VirtualPrivateCloud>>, ResponseEntity<VirtualPrivateCloud>>
 		implements VPCService {
+	
+	public static final String ENDPOINT = "virtualprivatecloud/";
 
-	protected VPCServiceImpl(String baseURI, String endpoint, String username, String password) {
+	    /**
+	     * @param baseURI  - e.g. https://dchq.io/api/1.0/
+	     * @param username - registered username with DCHQ.io
+	     * @param password - password used with the username
+	     */
 
-		super(baseURI, endpoint, username, password,
+	protected VPCServiceImpl(String baseURI, String username, String password) {
+
+		super(baseURI, ENDPOINT, username, password,
 				new ParameterizedTypeReference<ResponseEntity<List<VirtualPrivateCloud>>>() {
 				}, new ParameterizedTypeReference<ResponseEntity<VirtualPrivateCloud>>() {
 				});
