@@ -38,7 +38,7 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	boolean sussess;
 	
 	
-	VPCCreateServiceTest(String vpcName, boolean success)
+	public VPCCreateServiceTest(String vpcName, boolean success)
 	{
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 

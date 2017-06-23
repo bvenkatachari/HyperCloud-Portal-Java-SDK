@@ -41,7 +41,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 	
 	boolean sussess;
 	
-	VPCSearchServiceTest(String vpcName, boolean success) {
+	public VPCSearchServiceTest(String vpcName, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (vpcName != null && !vpcName.isEmpty()) {
