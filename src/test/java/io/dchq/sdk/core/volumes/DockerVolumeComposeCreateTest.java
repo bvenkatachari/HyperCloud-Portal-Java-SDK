@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -54,6 +51,7 @@ public class DockerVolumeComposeCreateTest extends AbstractServiceTest {
 	}
 
 	// create volume compose
+	@Ignore
 	@Test
 	public void testVolumeCompose() {
 

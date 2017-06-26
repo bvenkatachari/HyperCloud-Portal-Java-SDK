@@ -39,6 +39,7 @@ public abstract class AbstractServiceTest {
   //  protected String cloudadminpassword = "0qFRkf0GIV54gpgBgaRtTUrxzLyQPL1ST7vu8JYp"; //secret-key for admin
 
    protected String rootUrl = "https://172.16.1.30:443/api/1.0/";
+    protected String rootUrl1 = "https://172.16.1.30:443/api/";
   // protected String rootUrl = "https://hcdevtest.skygrid.cloud:443/api/1.0/";
   protected String userId = "2c9180865ccf117a015ccf2ae8530013";
     protected String username = "DJ9abOmanIMmoOYIlB2O";   // access-key for user1 <QEAutomation1@dchq.io>

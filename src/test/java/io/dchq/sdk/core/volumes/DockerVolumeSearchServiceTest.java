@@ -106,21 +106,22 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 			this.dockerVolumeCreated = response.getResults();
 			logger.info("Create docker volumne Successful..");
 		}
-		assertNotNull(response.getResults());
-		// wait till status change to Live
-		while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
-			try {
-				Thread.sleep(10000);
-				dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-				assertNotNull(dockerVolumeCreated);
-				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-			} catch (InterruptedException e) {
-				// TODO: handling exception
-			}
-		}
+//		assertNotNull(response.getResults());
+
 
 		if(!error)
 		{
+			// wait till status change to Live
+			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+				try {
+					Thread.sleep(10000);
+					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+					assertNotNull(dockerVolumeCreated);
+					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+				} catch (InterruptedException e) {
+					// TODO: handling exception
+				}
+			}
 			assertNotNull(response);
 			Assert.assertFalse(response.isErrors());
 			assertNotNull(response.getResults());

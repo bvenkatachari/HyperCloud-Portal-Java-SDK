@@ -85,7 +85,7 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
         String prefix = RandomStringUtils.randomAlphabetic(3);
         if(isUsernamePrefix)
         {
-        	username = prefix + "-" + username;
+        	username = prefix + username;
         }
         if(isEmailIdPrefix)
         {

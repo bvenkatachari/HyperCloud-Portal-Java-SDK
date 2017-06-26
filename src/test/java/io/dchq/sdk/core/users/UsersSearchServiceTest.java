@@ -74,7 +74,7 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
         String prefix = RandomStringUtils.randomAlphabetic(3);
         if(username!=null && !username.isEmpty())
         {
-        	username = prefix + "-" + username;
+        	username = prefix + username;
         }
         if(email !=null && !email.isEmpty())
         {
@@ -91,8 +91,10 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
     
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "", false },
-                { "Hyper ", "User", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
+		return Arrays.asList(new Object[][] {
+
+				{ "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "", false },
+               { "Hyper ", "User", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
                 // TODO all negative test cases are failing. 
 //                { "@@@@", "1234", "hyperuser", "user@hyperuser.com", "pass", "  ", true },
 //                { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", " ", true },

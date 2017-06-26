@@ -76,7 +76,7 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
         String prefix = RandomStringUtils.randomAlphabetic(3);
         if(username!=null && !username.isEmpty())
         {
-        	username = prefix + "-" + username;
+        	username = prefix + username;
         }
         if(email !=null && !email.isEmpty())
         {
@@ -95,7 +95,8 @@ public class UsersUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
 				// TODO: Add more test data for all sorts of validations and modification
-				new Object[][] { { "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false },
+				new Object[][] {
+						{ "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "fn1", "fn2", false },
 						{ "Hyper", "User", "hyperuser", "user@hyperuser1.com", "pass", "Hyper1", "User1", false },
 						// TODO all negative test cases are failing
 //						{ "12345", "User", "hyperuser", "user@hyperuser.com", "pass", "123451", "User1", false },

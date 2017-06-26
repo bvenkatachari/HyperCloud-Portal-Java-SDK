@@ -69,7 +69,8 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 
 			// public clouds
 			{ AccountType.RACKSPACE, "Rackspace US 2 testAccount"+prefix, "dchqinc", "apiKey", null, null, null, null, null, null, null, false },
-			// Negative test cases 
+
+				// Negative test cases
 			
 			// TODO failing due to blank account name
 			//{ AccountType.RACKSPACE, " ", "dchqinc", "apiKey", null, null, null, null, null, null, null, true },
@@ -213,6 +214,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 			//{ AccountType.VOLUME_PROVIDER, "Volume Provider testAccount"+prefix, "dchqinc", "password", null, null, "http://dchq.co.in", "hardwareId", "", "opts", 10, true },
 			//TODO failing due to blank opts
 			//{ AccountType.VOLUME_PROVIDER, "Volume Provider testAccount"+prefix, "dchqinc", "password", null, null, "http://dchq.co.in", "hardwareId", "templateId", "", 10, true }
+
     });
 	}
 
@@ -292,7 +294,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername,
+		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl1, cloudadminusername,
 				cloudadminpassword);
 	}
 	

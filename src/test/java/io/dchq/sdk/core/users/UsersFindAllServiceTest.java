@@ -73,7 +73,7 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
         String prefix = RandomStringUtils.randomAlphabetic(3);
         if(username!=null && !username.isEmpty())
         {
-        	username = prefix + "-" + username;
+        	username = prefix + username;
         }
         if(email !=null && !email.isEmpty())
         {
@@ -180,7 +180,6 @@ public class UsersFindAllServiceTest extends AbstractServiceTest {
     public void setUp() throws Exception {
         service = ServiceFactory.buildUserService(rootUrl, username, password);
     }
-    @Ignore
     @Test
     public void testFindAll() {
         countBeforeCreate=testGetUserFromFindAll(null);
