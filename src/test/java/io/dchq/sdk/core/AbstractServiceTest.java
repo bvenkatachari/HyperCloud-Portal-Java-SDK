@@ -32,8 +32,8 @@ import java.util.Date;
 public abstract class AbstractServiceTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-  protected String cloudadminusername = "9dQ8xJARSXVUH0Uk8AxK";   //access key of admin
-  protected String cloudadminpassword = "PgPrFnYB2AlxFJNlvkZRlySgM8pyFnOhSpJqR2za"; //secret-key for admin
+  protected String cloudadminusername = "rWzlzFyqCIGiVtecFmpo";   //access key of admin
+  protected String cloudadminpassword = "XsRs7kKpHiTQcqhUr7xLwYNPAnElfR8HP75FQg0M"; //secret-key for admin
 
     //protected String cloudadminusername = "TALK2q22oB8j2EOmwGjm";   //access key of admin
   //  protected String cloudadminpassword = "0qFRkf0GIV54gpgBgaRtTUrxzLyQPL1ST7vu8JYp"; //secret-key for admin
