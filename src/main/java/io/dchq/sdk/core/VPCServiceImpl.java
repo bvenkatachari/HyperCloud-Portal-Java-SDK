@@ -11,7 +11,7 @@ public class VPCServiceImpl extends
 		GenericServiceImpl<VirtualPrivateCloud, ResponseEntity<List<VirtualPrivateCloud>>, ResponseEntity<VirtualPrivateCloud>>
 		implements VPCService {
 	
-	public static final String ENDPOINT = "virtualprivatecloud/";
+	public static final String ENDPOINT = "vpc/";
 
 	    /**
 	     * @param baseURI  - e.g. https://dchq.io/api/1.0/
