@@ -17,6 +17,9 @@ import io.dchq.sdk.core.VPCService;
 */
 public class SubnetTest extends AbstractServiceTest {
 
+	public final String vpcId = "402881845c9458a6015c945ac24c0004";
+	
+	
 	//Create VPC
     VPCService vpcService;
 	VirtualPrivateCloud createdVPC;
@@ -28,6 +31,7 @@ public class SubnetTest extends AbstractServiceTest {
 	boolean success;
 	
 	
+	//TO DO
 	 public VirtualPrivateCloud getVPC(String vpcName, boolean success) {
 	        logger.info("Create VPC with Name [{}]", vpcName);
 	        this.vpcService = ServiceFactory.buildVPCService(rootUrl, cloudadminusername, cloudadminpassword);
