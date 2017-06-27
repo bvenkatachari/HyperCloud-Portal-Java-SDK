@@ -10,37 +10,38 @@ import io.dchq.sdk.core.SubnetService;
 import io.dchq.sdk.core.VPCService;
 
 /**
-*
-* @author Santosh Kumar.
-* @since 1.0
-*
-*/
+ *
+ * @author Santosh Kumar.
+ * @since 1.0
+ *
+ */
 public class SubnetTest extends AbstractServiceTest {
 
-	//Create VPC
-    VPCService vpcService;
+	public final String vpcId = "402881845c9458a6015c945ac24c0004";
+
+	// Create VPC
+	VPCService vpcService;
 	VirtualPrivateCloud createdVPC;
-	
-	//Create Subnet
+
+	// Create Subnet
 	SubnetService subnetService;
 	Subnet subnet;
 	Subnet subnetCreated;
 	boolean success;
-	
-	
-	 public VirtualPrivateCloud getVPC(String vpcName, boolean success) {
-	        logger.info("Create VPC with Name [{}]", vpcName);
-	        this.vpcService = ServiceFactory.buildVPCService(rootUrl, cloudadminusername, cloudadminpassword);
-	        VirtualPrivateCloud vpc = new VirtualPrivateCloud();
-	        vpc.setName(vpcName);
 
-	        ResponseEntity<VirtualPrivateCloud> responseEntity = vpcService.create(vpc);
-	        if (responseEntity.isErrors())
-	            logger.warn("Message from Server... {}", responseEntity.getMessages().get(0).getMessageText());
+	// TO DO
+	public VirtualPrivateCloud getVPC(String vpcName, boolean success) {
+		logger.info("Create VPC with Name [{}]", vpcName);
+		this.vpcService = ServiceFactory.buildVPCService(rootUrl, cloudadminusername, cloudadminpassword);
+		VirtualPrivateCloud vpc = new VirtualPrivateCloud();
+		vpc.setName(vpcName);
 
+		ResponseEntity<VirtualPrivateCloud> responseEntity = vpcService.create(vpc);
+		if (responseEntity.isErrors())
+			logger.warn("Message from Server... {}", responseEntity.getMessages().get(0).getMessageText());
 
-	        return responseEntity.getResults();
+		return responseEntity.getResults();
 
-	    }
-	
+	}
+
 }
