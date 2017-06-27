@@ -16,6 +16,8 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.base.NameEntityBase;
+import com.dchq.schema.beans.one.security.EntitlementType;
 import com.dchq.schema.beans.one.vpc.VirtualPrivateCloud;
 
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -38,7 +40,7 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	boolean sussess;
 	
 	
-	public VPCCreateServiceTest(String vpcName, boolean success)
+	public VPCCreateServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean success)
 	{
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
@@ -47,6 +49,12 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 		}
 		createVPC = new VirtualPrivateCloud();
 		createVPC.setName(vpcName);
+		createVPC.setEntitlementType(entitlementType);
+		createVPC.setIpv4Cidr(ipv4Cidr);
+		NameEntityBase entity = new NameEntityBase();
+		entity.withId(providerId);
+		createVPC.setProvider(entity);
+		createVPC.setDescription(description);
 		this.sussess = success;
 
 	}
@@ -57,11 +65,14 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	}
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
+		
 		return Arrays.asList(new Object[][]{ 
-				{"testvpc", true}
+			{"testvpc", "8a818a105c83f42a015c83fd71240014", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true},
+			{"testvpcc", "8a818a105c83f42a015c83fd71240014", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true},
+			{"testvpccc", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true}
 		});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest()
 	{
