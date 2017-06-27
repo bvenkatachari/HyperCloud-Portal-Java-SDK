@@ -1,4 +1,4 @@
-package io.dchq.sdk.core.subnet;
+package io.dchq.sdk.core.networkacl;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -18,7 +18,7 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.vpc.Subnet;
+import com.dchq.schema.beans.one.vpc.NetworkACL;
 
 import io.dchq.sdk.core.ServiceFactory;
 
@@ -31,45 +31,49 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class SubnetCreateServiceTest extends SubnetTest {
+public class NetworkACLCreateServiceTest extends NetworkACLTest {
 
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		subnetService = ServiceFactory.buildSubnetService(rootUrl, cloudadminusername, cloudadminpassword);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
+
 	
 
-	public SubnetCreateServiceTest(String subnetName, String vpcName, boolean success) 
+	public NetworkACLCreateServiceTest(String networkACLName, String subnetName, String vpcName, boolean success) 
 	{
+
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		
 		vpcName = vpcName + "-" + postfix;
 		createdVPC = getVPC(vpcName, true);
 		
 		Assert.assertNotNull(createdVPC);
-		subnet = new Subnet();
-		subnet.setName(subnetName);
 		
+		subnetName = subnetName + "-" + postfix;
+		createdSubnet = getSubnet(subnetName, true);
+		
+		networkACL = new NetworkACL();
+		networkACL.setName(networkACLName);
 		
 		this.success = success;
+		
 	}
 
-	
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
-			{"subnet1", "vpc1", true }
+			{"networkACL1","vpc1","subnet1", true}
 		});
 	}
 
 	@Ignore
 	@Test
 	public void createTest() {
-
 		try {
-			logger.info("Create Subnet name as [{}] ", subnet.getName());
-			ResponseEntity<Subnet> response = subnetService.create(subnet);
+			logger.info("Create Network ACL name as [{}] ", networkACL.getName());
+			ResponseEntity<NetworkACL> response = networkACLService.create(networkACL);
 			if(success)
 			{
 				for (Message message : response.getMessages()) {
@@ -80,18 +84,18 @@ public class SubnetCreateServiceTest extends SubnetTest {
 				assertEquals(false, response.isErrors());
 
 				if (response.getResults() != null && !response.isErrors()) {
-					this.subnetCreated = response.getResults();
-					logger.info("Create Subnet service Successful..");
+					this.networkACLCreated = response.getResults();
+					logger.info("Create Network ACL service Successful..");
 				}
 
 				
 				assertNotNull(response);
 				assertNotNull(response.isErrors());
-				if (this.subnetCreated != null) {
+				if (this.networkACLCreated != null) {
 					assertNotNull(response.getResults().getId());
-					assertNotNull(subnetCreated.getId());
-					assertNotNull("It shloud not be null or empty", subnetCreated.getName());
-					assertEquals(subnet.getName(), subnetCreated.getName());
+					assertNotNull(networkACLCreated.getId());
+					assertNotNull("It shloud not be null or empty", networkACLCreated.getName());
+					assertEquals(networkACL.getName(), networkACLCreated.getName());
 				}
 				
 			}
@@ -110,9 +114,18 @@ public class SubnetCreateServiceTest extends SubnetTest {
 
 	@After
 	public void cleanUp() {
-		if (this.subnetCreated != null) {
+		
+		if (this.networkACLCreated != null) {
+			logger.info("cleaning up Network ACL...");
+			ResponseEntity<?> response = networkACLService.delete(this.networkACLCreated.getId());
+			for (Message message : response.getMessages()) {
+				logger.warn("Error Network ACL deletion: [{}] ", message.getMessageText());
+			}
+		}
+		
+		if (this.createdSubnet != null) {
 			logger.info("cleaning up Subnet...");
-			ResponseEntity<?> response = subnetService.delete(this.subnetCreated.getId());
+			ResponseEntity<?> response = subnetService.delete(this.createdSubnet.getId());
 			for (Message message : response.getMessages()) {
 				logger.warn("Error Subnet deletion: [{}] ", message.getMessageText());
 			}
