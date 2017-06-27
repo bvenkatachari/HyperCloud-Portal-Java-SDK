@@ -90,4 +90,12 @@ public class ServiceFactory {
     public static final VPCService buildVPCService(String baseURL, String username, String password){
     	return new VPCServiceImpl(baseURL, username, password);
     }
+    
+    public static final SubnetService buildSubnetService(String baseURL, String username, String password){
+    	return new SubnetServiceImpl(baseURL, username, password);
+    }
+    
+    public static final NetworkACLService buildNetworkACLService(String baseURL, String username, String password){
+    	return new NetworkACLServiceImpl(baseURL, username, password);
+    }
 }
