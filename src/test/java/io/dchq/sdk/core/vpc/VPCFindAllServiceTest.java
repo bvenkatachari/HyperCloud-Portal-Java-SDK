@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -42,6 +41,8 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createdVPC;
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	boolean sussess;
+	long startTime = System.currentTimeMillis();
+	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
 	public VPCFindAllServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
@@ -94,7 +95,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	@Ignore
+	
 	@Test
 	public void findAllTest() {
 		logger.info("Create VPC name[{}] ", createVPC.getName());
@@ -112,6 +113,21 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 				this.createdVPC = response.getResults();
 				logger.info("Create VPC Successful..");
 			}
+			
+			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
+			{
+				try {
+					Thread.sleep(10000);
+					response = vpcService.findById(createdVPC.getId());
+					Assert.assertEquals(false, response.isErrors());
+					Assert.assertNotNull(response.getResults());
+					this.createdVPC = response.getResults();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				
+			}
+			
 			countAfterCreate = testVPCPosition(createdVPC.getId());
 			assertEquals(countBeforeCreate + 1, countAfterCreate);
 
@@ -128,8 +144,9 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 		{
 			logger.info("cleaning up...");
 			ResponseEntity<VirtualPrivateCloud> responseDelete = vpcService.delete(createdVPC.getId());
+			Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
-				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error VPC deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}

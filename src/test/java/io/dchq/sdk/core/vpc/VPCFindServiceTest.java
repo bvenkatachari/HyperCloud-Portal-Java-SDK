@@ -39,6 +39,8 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createdVPC;
 	VirtualPrivateCloud findVpc;
 	boolean sussess;
+	long startTime = System.currentTimeMillis();
+	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 	
 	public VPCFindServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
@@ -89,7 +91,19 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 				this.createdVPC = resultResponse.getResults();
 				logger.info("Create VPC Successful..");
 			}
-			
+			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
+			{
+				try {
+					Thread.sleep(10000);
+					resultResponse = vpcService.findById(createdVPC.getId());
+					Assert.assertEquals(false, resultResponse.isErrors());
+					Assert.assertNotNull(resultResponse.getResults());
+					this.createdVPC = resultResponse.getResults();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				
+			}
 			ResponseEntity<VirtualPrivateCloud> resultFindResponse = vpcService.findById(createdVPC.getId());
 			
 			Assert.assertNotNull(resultFindResponse);
@@ -98,10 +112,12 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 			if(resultFindResponse.getResults() != null && !resultFindResponse.isErrors())
 			{
 				this.findVpc = resultFindResponse.getResults();
-				logger.info("Create VPC Successful..");
+				logger.info("Find VPC Successfully..");
 			}
 			
-			Assert.assertEquals(findVpc.getName(), createdVPC.getName());
+			Assert.assertEquals(findVpc.getName(), createVPC.getName());
+			Assert.assertEquals(findVpc.getProvider().getId(), createVPC.getProvider().getId());
+			Assert.assertEquals(findVpc.getIpv4Cidr(), createVPC.getIpv4Cidr());
 
 		} else {
 

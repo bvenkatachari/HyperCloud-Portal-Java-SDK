@@ -38,7 +38,8 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createVPC;
 	VirtualPrivateCloud createdVPC;
 	boolean sussess;
-	
+	long startTime = System.currentTimeMillis();
+	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 	
 	public VPCCreateServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean success)
 	{
@@ -89,8 +90,24 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 
 			if (resultResponse.getResults() != null && !resultResponse.isErrors()) {
 				this.createdVPC = resultResponse.getResults();
-				logger.info("Create VPC Successful..");
+				logger.info("Create VPC Successfully..");
 			}
+			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
+			{
+				try {
+					Thread.sleep(10000);
+					resultResponse = vpcService.findById(createdVPC.getId());
+					Assert.assertEquals(false, resultResponse.isErrors());
+					Assert.assertNotNull(resultResponse.getResults());
+					this.createdVPC = resultResponse.getResults();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				
+			}
+			Assert.assertEquals(createdVPC.getName(), createVPC.getName());
+			Assert.assertEquals(createdVPC.getProvider().getId(), createVPC.getProvider().getId());
+			Assert.assertEquals(createdVPC.getIpv4Cidr(), createVPC.getIpv4Cidr());
 
 		} else {
 
@@ -105,8 +122,9 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 		{
 			logger.info("cleaning up...");
 			ResponseEntity<VirtualPrivateCloud> responseDelete = vpcService.delete(createdVPC.getId());
+			Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
-				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error VPC deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}
