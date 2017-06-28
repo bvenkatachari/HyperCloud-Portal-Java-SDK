@@ -98,4 +98,8 @@ public class ServiceFactory {
     public static final NetworkACLService buildNetworkACLService(String baseURL, String username, String password){
     	return new NetworkACLServiceImpl(baseURL, username, password);
     }
+    
+    public static final SecurityGroupService buildSecurityGroupService(String baseURL, String username, String password){
+    	return new SecurityGroupServiceImpl(baseURL, username, password);
+    }
 }
