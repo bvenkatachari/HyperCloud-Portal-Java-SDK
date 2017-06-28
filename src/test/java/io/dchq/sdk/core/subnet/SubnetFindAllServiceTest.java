@@ -108,10 +108,10 @@ public class SubnetFindAllServiceTest extends SubnetTest {
 	@Test
 	public void testFindAll() {
 		try {
-
-			logger.info("Create Subnet name as [{}] ", subnet.getName());
 			
 			countBeforeCreate = testNetworktPosition(null);
+			
+			logger.info("Create Subnet name as [{}] ", subnet.getName());
 			
 			ResponseEntity<Subnet> response = subnetService.create(subnet);
 			for (Message message : response.getMessages()) {
