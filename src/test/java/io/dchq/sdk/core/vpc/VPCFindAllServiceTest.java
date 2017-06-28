@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -95,7 +96,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	
+	@Ignore
 	@Test
 	public void findAllTest() {
 		logger.info("Create VPC name[{}] ", createVPC.getName());
