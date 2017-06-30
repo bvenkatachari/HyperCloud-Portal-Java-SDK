@@ -106,4 +106,8 @@ public class ServiceFactory {
     public static final NetworkACLRuleService buildNetworkACLRuleService(String baseURL, String username, String password){
     	return new NetworkACLRuleServiceImpl(baseURL, username, password);
     }
+    
+    public static final VirtualNetworkService buildVirtualNetworkService(String baseURL, String username, String password){
+    	return new VirtualNetworkServiceImpl(baseURL, username, password);
+    }
 }
