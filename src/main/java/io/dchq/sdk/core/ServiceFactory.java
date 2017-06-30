@@ -102,4 +102,8 @@ public class ServiceFactory {
     public static final SecurityGroupService buildSecurityGroupService(String baseURL, String username, String password){
     	return new SecurityGroupServiceImpl(baseURL, username, password);
     }
+    
+    public static final NetworkACLRuleService buildNetworkACLRuleService(String baseURL, String username, String password){
+    	return new NetworkACLRuleServiceImpl(baseURL, username, password);
+    }
 }
