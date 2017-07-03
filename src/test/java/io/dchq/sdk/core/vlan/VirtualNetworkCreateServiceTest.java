@@ -72,6 +72,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 	@Test
 	public void createTest()
 	{
+		logger.info("Create vlan name[{}] ", virtualNetwork.getName());
 		ResponseEntity<VirtualNetwork> resultResponse = vlanService.create(virtualNetwork);
 		Assert.assertNotNull(resultResponse);
 		
