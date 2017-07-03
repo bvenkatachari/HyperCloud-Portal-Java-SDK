@@ -38,9 +38,7 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
 	}
 
-	public SecurityGroupCreateServiceTest(String securityGroupName, EntitlementType entitlementType, String subnetName,
-			String vlanId, String ipv4Cidr, String dhcp, String fromIpRange, String toIpRange, String dnsServers,
-			String vpcName, String providerId, boolean success) {
+	public SecurityGroupCreateServiceTest(String securityGroupName, EntitlementType entitlementType, String subnetId, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		securityGroupName = securityGroupName + postfix;
@@ -49,10 +47,8 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 		securityGroup.setName(securityGroupName);
 		securityGroup.setEntitlementType(entitlementType);
 		
-		createdSubnet = getSubnet(subnetName, vlanId, ipv4Cidr, dhcp, fromIpRange, toIpRange, dnsServers, vpcName, providerId);
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(createdSubnet.getId());
-		//subnet.setId(subnetId);
+		subnet.setId(subnetId);
 		
 		securityGroup.setSubnet(subnet);
 
@@ -63,8 +59,9 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "securityGroup", EntitlementType.OWNER, "subnet","402881875cd3e674015cd4ca484501b4", "10.0.0.0/24", "true", 
-				"10.0.0.2", "10.0.0.254", "8.8.8.8", "vpc", "8a818a105c83f42a015c83fd71240014", true } });
+			 { "securityGroup", EntitlementType.OWNER, "402881875d06a531015d06c2d0c20033", true },
+			 { "securityGroup", EntitlementType.PUBLIC, "402881875d06a531015d06c2d0c20033", true } 
+			});
 	}
 
 	
@@ -90,7 +87,7 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 				if (this.securityGroupCreated != null) {
 					assertNotNull(response.getResults().getId());
 					assertNotNull(securityGroupCreated.getId());
-					assertNotNull("It shloud not be null or empty", securityGroupCreated.getName());
+					assertNotNull("It should not be null or empty", securityGroupCreated.getName());
 					assertEquals(securityGroup.getName(), securityGroupCreated.getName());
 				}
 
@@ -112,22 +109,6 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 			ResponseEntity<?> response = securityGroupService.delete(this.securityGroupCreated.getId());
 			for (Message message : response.getMessages()) {
 				logger.warn("Error Security Group deletion: [{}] ", message.getMessageText());
-			}
-		}
-
-		if (this.createdSubnet != null) {
-			logger.info("cleaning up Subnet...");
-			ResponseEntity<?> response = subnetService.delete(this.createdSubnet.getId());
-			for (Message message : response.getMessages()) {
-				logger.warn("Error Subnet deletion: [{}] ", message.getMessageText());
-			}
-		}
-
-		if (this.createdVPC != null) {
-			logger.info("cleaning up VPC ...");
-			ResponseEntity<?> response = vpcService.delete(this.createdVPC.getId());
-			for (Message message : response.getMessages()) {
-				logger.warn("Error VPC deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}

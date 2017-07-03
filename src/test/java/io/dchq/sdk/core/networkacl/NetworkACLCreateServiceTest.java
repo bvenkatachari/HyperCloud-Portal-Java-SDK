@@ -87,7 +87,7 @@ public class NetworkACLCreateServiceTest extends NetworkACLTest {
 				if (this.networkACLCreated != null) {
 					assertNotNull(response.getResults().getId());
 					assertNotNull(networkACLCreated.getId());
-					assertNotNull("It shloud not be null or empty", networkACLCreated.getName());
+					assertNotNull("It should not be null or empty", networkACLCreated.getName());
 					assertEquals(networkACL.getName(), networkACLCreated.getName());
 				}
 
