@@ -9,6 +9,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,11 +38,13 @@ public class SubnetFindServiceTest extends SubnetTest {
 	@org.junit.Before
 	public void setUp() throws Exception {
 		subnetService = ServiceFactory.buildSubnetService(rootUrl, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
 	}
 
 
 	public SubnetFindServiceTest(String subnetName, String vlanId, String ipv4Cidr, String dhcp, String fromIpRange,
-			String toIpRange, String dnsServers, EntitlementType entitlementType, String vpcName, String providerId, boolean success) {
+			String toIpRange, String dnsServers, EntitlementType entitlementType, boolean success) {
 		
 		
 		String postfix = RandomStringUtils.randomAlphabetic(3);
@@ -51,11 +54,9 @@ public class SubnetFindServiceTest extends SubnetTest {
 		subnet.setEntitlementType(entitlementType);
 		subnet.setName(subnetName);
 
-		//createdVPC = getVPC(vpcName, providerId, ipv4Cidr);
-		 NameEntityBase vpc = new NameEntityBase();
-		 //vpc.setId(createdVPC.getId());
-		 vpc.setId(vpcId);
-		 subnet.setVpc(vpc);
+		NameEntityBase vpc = new NameEntityBase();
+		vpc.setId(vpcId);
+		subnet.setVpc(vpc);
 
 		VirtualNetwork virtualNetwork = new VirtualNetwork();
 		virtualNetwork.setId(vlanId);
@@ -75,10 +76,11 @@ public class SubnetFindServiceTest extends SubnetTest {
 		return Arrays.asList(new Object[][] { 
 			
 			 { "subnet", "402881875cd3e674015cd4ca484501b4", "10.0.0.0/24", "true", "10.0.0.2", "10.0.0.254", "8.8.8.8", 
-				            EntitlementType.OWNER, "vpc", "8a818a105c83f42a015c83fd71240014", true }
+				            EntitlementType.OWNER, true }
 			});
 	}
 
+	@Ignore
 	@Test
 	public void testFind() {
 		try {
@@ -125,6 +127,10 @@ public class SubnetFindServiceTest extends SubnetTest {
 
 	@After
 	public void cleanUp() {
+		
+		deleteNetworkACL();
+		deleteSecurityGroup();
+		
 		if (this.subnetCreated != null) {
 			logger.info("cleaning up Subnet...");
 			ResponseEntity<?> response = subnetService.delete(this.subnetCreated.getId());
@@ -132,14 +138,5 @@ public class SubnetFindServiceTest extends SubnetTest {
 				logger.warn("Error Subnet deletion: [{}] ", message.getMessageText());
 			}
 		}
-
-		if (this.createdVPC != null) {
-			logger.info("cleaning up VPC ...");
-			ResponseEntity<?> response = vpcService.delete(this.createdVPC.getId());
-			for (Message message : response.getMessages()) {
-				logger.warn("Error VPC deletion: [{}] ", message.getMessageText());
-			}
-		}
-
 	}
 }
