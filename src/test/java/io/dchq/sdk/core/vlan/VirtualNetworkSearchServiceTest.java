@@ -41,6 +41,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 	private VirtualNetwork virtualNetwork;
 	private VirtualNetwork VirtualNetworkCreated;
 	private VirtualNetwork findVlan;
+	private String vlanSearchByName;
 	
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
@@ -51,6 +52,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 		if (name != null && !name.isEmpty()) {
 			name = name + "-" + prifix;
+			vlanSearchByName = prifix;
 		}
 		virtualNetwork = new VirtualNetwork();
 		virtualNetwork.setName(name);
@@ -107,7 +109,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 				}
 				
 			}
-			ResponseEntity<List<VirtualNetwork>> resultFindResponse = vlanService.search(VirtualNetworkCreated.getName(),0,1);
+			ResponseEntity<List<VirtualNetwork>> resultFindResponse = vlanService.search(vlanSearchByName,0,1);
 			
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());
