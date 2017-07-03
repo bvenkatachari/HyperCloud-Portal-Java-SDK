@@ -70,7 +70,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void testUpdate() {
 		try {
@@ -125,7 +125,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 	@After
 	public void cleanUp() {
 		
-		/*if (this.ruleCreated != null) {
+		if (this.ruleCreated != null) {
 			logger.info("cleaning up Network ACL Rule...");
 			ResponseEntity<?> response = ruleService.deleteRule(this.ruleCreated.getId(), this.networkACL.getId());
 			for (Message message : response.getMessages()) {
@@ -139,6 +139,6 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 			for (Message message : response.getMessages()) {
 				logger.warn("Error Network ACL deletion: [{}] ", message.getMessageText());
 			}
-		}*/
+		}
 	}
 }
