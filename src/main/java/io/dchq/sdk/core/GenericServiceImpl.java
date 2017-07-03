@@ -16,24 +16,33 @@
 
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.net.ssl.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
 /**
  * Abstracts low level rest calls.
@@ -468,6 +477,36 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
 
         return res.getBody();
     }
+    
+    /**
+     * Executes PUT request with url postfix
+     *
+     * @param entity - not null
+     * @return
+     */
+    @Override
+    public RO update(E entity, String id, String urlPostfix) {
+
+        String url = baseURI + endpoint + urlPostfix + id;
+        URI uri = getUri(url);
+
+        HttpHeaders map = getHttpHeaders();
+
+        //set your entity to send
+        HttpEntity<E> requestEntity = new HttpEntity<>(entity, map);
+
+
+        org.springframework.http.ResponseEntity<RO> res =
+                template.exchange(
+                        url,
+                        HttpMethod.PUT,
+                        requestEntity,
+                        singleTypeReference
+                );
+
+        return res.getBody();
+    }
+
 
     /**
      * Executes DELETE request
@@ -479,6 +518,35 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
     public RO delete(String id) {
 
         String url = baseURI + endpoint + id;
+        URI uri = getUri(url);
+
+        HttpHeaders map = getHttpHeaders();
+
+        //set your entity to send
+        HttpEntity<E> requestEntity = new HttpEntity<>(map);
+
+
+        org.springframework.http.ResponseEntity<RO> res =
+                template.exchange(
+                        url,
+                        HttpMethod.DELETE,
+                        requestEntity,
+                        singleTypeReference
+                );
+
+        return res.getBody();
+    }
+    
+    /**
+     * Executes DELETE request with url postfix
+     *
+     * @param id - not null
+     * @return
+     */
+    @Override
+    public RO delete(String id, String urlPostfix) {
+
+        String url = baseURI + endpoint + urlPostfix + id;
         URI uri = getUri(url);
 
         HttpHeaders map = getHttpHeaders();

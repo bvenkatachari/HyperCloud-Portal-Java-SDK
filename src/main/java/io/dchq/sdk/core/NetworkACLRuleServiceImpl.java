@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.vpc.NetworkACL;
 import com.dchq.schema.beans.one.vpc.Rule;
 
 /**
@@ -15,7 +16,7 @@ import com.dchq.schema.beans.one.vpc.Rule;
  */
 
 public class NetworkACLRuleServiceImpl extends
-		GenericServiceImpl<Rule, ResponseEntity<List<Rule>>, ResponseEntity<Rule>> implements NetworkACLRuleService {
+		GenericServiceImpl<Rule, ResponseEntity<List<NetworkACL>>, ResponseEntity<NetworkACL>> implements NetworkACLRuleService {
 
 	public static final String ENDPOINT = "networkacl/rule/";
 
@@ -30,9 +31,26 @@ public class NetworkACLRuleServiceImpl extends
 
 	public NetworkACLRuleServiceImpl(String baseURI, String username, String password) {
 
-		super(baseURI, ENDPOINT, username, password, new ParameterizedTypeReference<ResponseEntity<List<Rule>>>() {
-		   }, new ParameterizedTypeReference<ResponseEntity<Rule>>() {
+		super(baseURI, ENDPOINT, username, password, new ParameterizedTypeReference<ResponseEntity<List<NetworkACL>>>() {
+		   }, new ParameterizedTypeReference<ResponseEntity<NetworkACL>>() {
 		});
+	}
+
+	@Override
+	public ResponseEntity<NetworkACL> createRule(Rule rule, String networkACLId) {
+		 return super.doPost(rule, networkACLId);
+	}
+	
+	public ResponseEntity<NetworkACL> updateRule(Rule rule, String networkACLId) {
+		 
+		 String urlPostfix = networkACLId+"?ruleid=";
+		 return super.update(rule, rule.getId(), urlPostfix);
+	}
+	
+	public ResponseEntity<NetworkACL> deleteRule(String ruleId, String networkACLId) {
+		
+		 String urlPostfix = networkACLId+"?ruleid=";
+		 return super.delete(ruleId, urlPostfix);
 	}
 
 }

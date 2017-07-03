@@ -16,7 +16,6 @@
 
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
 import org.springframework.core.ParameterizedTypeReference;
 
 /**
@@ -119,6 +118,13 @@ interface GenericService<E, RL, RO> {
      */
     RO delete(String id);
     /**
+     * Creates a delete request with url postfix
+     *
+     * @param urlPostfix
+     * @return
+     */
+    RO delete(String id,String urlPostfix);
+    /**
      * Delete <code>E</code> by id.
      *
      * @param id - Entity id
@@ -134,5 +140,11 @@ interface GenericService<E, RL, RO> {
      */
     RO update(E entity);
 
-    // TODO - search
+    /**
+     * Creates a update request with url postfix
+     *
+     * @param urlPostfix
+     * @return
+     */
+    RO update(E entity, String id, String urlPostfix);
 }
