@@ -131,7 +131,7 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 			logger.info("cleaning up...");
 			ResponseEntity<VirtualPrivateCloud> responseDelete = vpcService.delete(createdVPC.getId());
 			for (Message message : responseDelete.getMessages()) {
-				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error vpc deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}

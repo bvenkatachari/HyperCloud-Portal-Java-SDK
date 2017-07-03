@@ -36,7 +36,7 @@ import io.dchq.sdk.core.VPCService;
 public class VPCSearchServiceTest extends AbstractServiceTest {
 	
 	private VPCService vpcService;
-
+	private String vpcSearchByName;
 	VirtualPrivateCloud createVPC;
 	VirtualPrivateCloud createdVPC;
 	long startTime = System.currentTimeMillis();
@@ -48,6 +48,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 
 		if (vpcName != null && !vpcName.isEmpty()) {
 			vpcName = vpcName + "-" + prifix;
+			vpcSearchByName = prifix;
 		}
 		createVPC = new VirtualPrivateCloud();
 		createVPC.setName(vpcName);
@@ -107,7 +108,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 				
 			}
 			
-			ResponseEntity<List<VirtualPrivateCloud>> resultFindResponse = vpcService.search(createdVPC.getName(), 0, 1);
+			ResponseEntity<List<VirtualPrivateCloud>> resultFindResponse = vpcService.search(vpcSearchByName, 0, 1);
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());
 			assertNotNull(resultFindResponse.getResults());
@@ -135,7 +136,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 			logger.info("cleaning up...");
 			ResponseEntity<VirtualPrivateCloud> responseDelete = vpcService.delete(createdVPC.getId());
 			for (Message message : responseDelete.getMessages()) {
-				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error vpc deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}
