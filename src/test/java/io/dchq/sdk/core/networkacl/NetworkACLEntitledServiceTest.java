@@ -47,7 +47,7 @@ public class NetworkACLEntitledServiceTest extends NetworkACLTest {
 		networkACLService2 = ServiceFactory.buildNetworkACLService(rootUrl, username2, password2);
 	}
 
-	public NetworkACLEntitledServiceTest(String networkACLName, EntitlementType entitlementType, String subnetId,
+	public NetworkACLEntitledServiceTest(String networkACLName, EntitlementType entitlementType,
 			boolean isEntitlementTypeUser, String entitledUserId, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
@@ -81,10 +81,9 @@ public class NetworkACLEntitledServiceTest extends NetworkACLTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "networkACL", EntitlementType.OWNER, "402881875d06a531015d06c2d0c20033", false, null, true },
-				{ "networkACL", EntitlementType.PUBLIC, "402881875d06a531015d06c2d0c20033", false, null, true },
-				{ "networkACL", EntitlementType.CUSTOM, "402881875d06a531015d06c2d0c20033", true, userId2, true },
-				{ "networkACL", EntitlementType.CUSTOM, "402881875d06a531015d06c2d0c20033", true, USER_GROUP, true }
+				{ "networkACL", EntitlementType.OWNER, false, null, true },
+				{ "networkACL", EntitlementType.PUBLIC, false, null, true },
+				{ "networkACL", EntitlementType.CUSTOM, true, userId2, true }
 			});
 	}
 

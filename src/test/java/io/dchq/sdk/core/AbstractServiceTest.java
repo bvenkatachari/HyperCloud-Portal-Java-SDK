@@ -65,6 +65,9 @@ public abstract class AbstractServiceTest {
     protected  static String clusterID = "2c9180865bb2559a015bc3adaf62002a";   //Cluster name : Docker-Engine
     
     protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
+    
+    protected static String vpcId = "402881845c9458a6015c945ac24c0004"; 
+    protected static String subnetId = "402881875d06a531015d06c2d0c20033";
 
     protected int waitTime = 0, maxWaitTime = 0;
 

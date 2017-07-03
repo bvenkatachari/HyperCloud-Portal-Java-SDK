@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -40,7 +41,7 @@ public class SecurityGroupSearchServiceTest extends SecurityGroupTest {
 	}
 
 	
-	public SecurityGroupSearchServiceTest(String securityGroupName, EntitlementType entitlementType, String subnetId, boolean success) {
+	public SecurityGroupSearchServiceTest(String securityGroupName, EntitlementType entitlementType, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		securityGroupName = securityGroupName + postfix;
@@ -61,12 +62,12 @@ public class SecurityGroupSearchServiceTest extends SecurityGroupTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			 { "securityGroup", EntitlementType.OWNER, "402881875d06a531015d06c2d0c20033", true },
-			 { "securityGroup", EntitlementType.PUBLIC, "402881875d06a531015d06c2d0c20033", true } 
+			 { "securityGroup", EntitlementType.OWNER, true },
+			 { "securityGroup", EntitlementType.PUBLIC, true } 
 			});
 	}
 
-
+	@Ignore
 	@Test
 	public void testSearch() {
 		try {

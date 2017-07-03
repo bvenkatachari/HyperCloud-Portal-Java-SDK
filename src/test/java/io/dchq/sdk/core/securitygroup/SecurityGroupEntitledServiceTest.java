@@ -47,7 +47,7 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupTest {
 		securityGroupService2 = ServiceFactory.buildSecurityGroupService(rootUrl, username2, password2);
 	}
 
-	public SecurityGroupEntitledServiceTest(String securityGroupName, EntitlementType entitlementType, String subnetId,
+	public SecurityGroupEntitledServiceTest(String securityGroupName, EntitlementType entitlementType,
 			boolean isEntitlementTypeUser, String entitledUserId, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
@@ -81,15 +81,15 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "securityGroup", EntitlementType.OWNER, "402881875d06a531015d06c2d0c20033", false, null, true },
-				{ "securityGroup", EntitlementType.PUBLIC, "402881875d06a531015d06c2d0c20033", false, null, true },
-				{ "securityGroup", EntitlementType.CUSTOM, "402881875d06a531015d06c2d0c20033", true, userId2, true }
+				{ "securityGroup", EntitlementType.OWNER, false, null, true },
+				{ "securityGroup", EntitlementType.PUBLIC, false, null, true },
+				{ "securityGroup", EntitlementType.CUSTOM, true, userId2, true }
 			});
 	}
 
 
 	
-    @Ignore
+	@Ignore
 	@Test
 	public void testEntitledSearch() {
 		try {

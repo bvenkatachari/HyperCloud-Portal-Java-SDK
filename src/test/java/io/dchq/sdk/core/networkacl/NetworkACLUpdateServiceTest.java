@@ -10,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -40,7 +41,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 	}
 
 	
-	public NetworkACLUpdateServiceTest(String networkACLName, EntitlementType entitlementType, String subnetId,boolean success) {
+	public NetworkACLUpdateServiceTest(String networkACLName, EntitlementType entitlementType, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		networkACLName = networkACLName + postfix;
@@ -61,13 +62,14 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "networkACL", EntitlementType.OWNER, "402881875d06a531015d06c2d0c20033", true },
-			{ "networkACL", EntitlementType.PUBLIC, "402881875d06a531015d06c2d0c20033", true }
+			{ "networkACL", EntitlementType.OWNER, true },
+			{ "networkACL", EntitlementType.PUBLIC, true }
 			});
 	}
 
 
 
+	@Ignore
 	@Test
 	public void testUpdate() {
 		try {
