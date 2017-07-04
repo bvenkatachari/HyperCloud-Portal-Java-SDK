@@ -92,7 +92,7 @@ public class SecurityGroupUpdateServiceTest extends SecurityGroupTest {
 				String updatedName = this.securityGroupCreated.getName() + "_updated";
 				this.securityGroupCreated.setName(updatedName);
 
-				// Updating User Group
+				// Updating Security Group Name
 				logger.info("Updating Security Group name with [{}]", updatedName);
 				response = securityGroupService.update(this.securityGroupCreated);
 

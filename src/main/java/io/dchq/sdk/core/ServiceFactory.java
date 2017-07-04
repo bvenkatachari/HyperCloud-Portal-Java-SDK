@@ -107,6 +107,10 @@ public class ServiceFactory {
     	return new NetworkACLRuleServiceImpl(baseURL, username, password);
     }
     
+    public static final SecurityGroupRuleService buildSecurityGroupRuleService(String baseURL, String username, String password){
+    	return new SecurityGroupRuleServiceImpl(baseURL, username, password);
+    }
+    
     public static final VirtualNetworkService buildVirtualNetworkService(String baseURL, String username, String password){
     	return new VirtualNetworkServiceImpl(baseURL, username, password);
     }

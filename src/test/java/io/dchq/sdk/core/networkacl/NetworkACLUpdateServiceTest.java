@@ -94,7 +94,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 				String updatedName = this.networkACLCreated.getName() + "_updated";
 				this.networkACLCreated.setName(updatedName);
 
-				// Updating User Group
+				// Updating Network ACL Name
 				logger.info("Updating Network ACL name with [{}]", updatedName);
 				response = networkACLService.update(this.networkACLCreated);
 

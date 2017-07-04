@@ -105,7 +105,7 @@ public class SubnetUpdateServiceTest extends SubnetTest {
 				String updatedName = this.subnetCreated.getName() + "_updated";
 				this.subnetCreated.setName(updatedName);
 
-				// Updating User Group
+				// Updating Subnet Name
 				logger.info("Updating Subnet name with [{}]", updatedName);
 				response = subnetService.update(this.subnetCreated);
 

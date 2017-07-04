@@ -1,4 +1,4 @@
-package io.dchq.sdk.core.networkaclrule;
+package io.dchq.sdk.core.securitygrouprule;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -18,35 +18,35 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.vpc.NetworkACL;
 import com.dchq.schema.beans.one.vpc.Rule;
 import com.dchq.schema.beans.one.vpc.RuleAction;
 import com.dchq.schema.beans.one.vpc.RuleBoundType;
+import com.dchq.schema.beans.one.vpc.SecurityGroup;
 
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- *
- * @author Santosh Kumar.
- * @since 1.0
- *
- */
+*
+* @author Santosh Kumar.
+* @since 1.0
+*
+*/
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
+public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		ruleService = ServiceFactory.buildNetworkACLRuleService(rootUrl, username, password);
+		ruleService = ServiceFactory.buildSecurityGroupRuleService(rootUrl, username, password);
 	}
 
 	
-	public NetworkACLRuleUpdateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
+	public SecurityGroupRuleUpdateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
 			RuleAction action, boolean success) {
 
-		//Create Network ACL
-		networkACL = getNetworkACL();
+		//Create Security Group
+		securityGroup = getSecurityGroup();
 		
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		ruleName = ruleName + postfix;
@@ -74,8 +74,8 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 	@Test
 	public void testUpdate() {
 		try {
-			logger.info("Create Network ACL Rule name as [{}] ", rule.getName());
-			ResponseEntity<NetworkACL> response = ruleService.createRule(rule, networkACL.getId());
+			logger.info("Create Security Group Rule name as [{}] ", rule.getName());
+			ResponseEntity<SecurityGroup> response = ruleService.createRule(rule, securityGroup.getId());
 			
 			for (Message message : response.getMessages()) {
 				logger.warn("Error while Create request  [{}] ", message.getMessageText());
@@ -89,7 +89,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 				if (response.getResults() != null && !response.getResults().getRules().isEmpty() 
 						    && !response.isErrors()) {
 					this.ruleCreated = response.getResults().getRules().iterator().next();
-					logger.info("Create Network ACL Rule Successful..");
+					logger.info("Create Security Group Rule Successful..");
 				}
 
 				
@@ -97,8 +97,8 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 				this.ruleCreated.setName(updatedName);
 
 				// Updating Rule Name
-				logger.info("Updating Network ACL Rule name with [{}]", updatedName);
-				response = ruleService.updateRule(this.ruleCreated, networkACL.getId());
+				logger.info("Updating Network ACL name with [{}]", updatedName);
+				response = ruleService.updateRule(this.ruleCreated, securityGroup.getId());
 
 				for (Message message : response.getMessages()) {
 					logger.warn("Error while Update request  [{}] ", message.getMessageText());
@@ -126,18 +126,18 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
 	public void cleanUp() {
 		
 		if (this.ruleCreated != null) {
-			logger.info("cleaning up Network ACL Rule...");
-			ResponseEntity<?> response = ruleService.deleteRule(this.ruleCreated.getId(), this.networkACL.getId());
+			logger.info("cleaning up Security Group Rule...");
+			ResponseEntity<?> response = ruleService.deleteRule(this.ruleCreated.getId(), this.securityGroup.getId());
 			for (Message message : response.getMessages()) {
-				logger.warn("Error Network ACL Rule deletion: [{}] ", message.getMessageText());
+				logger.warn("Error Security Group Rule deletion: [{}] ", message.getMessageText());
 			}
 		}
 
-		if (this.networkACL != null) {
-			logger.info("cleaning up Network ACL...");
-			ResponseEntity<?> response = networkACLService.delete(this.networkACL.getId());
+		if (this.securityGroup != null) {
+			logger.info("cleaning up Security Group...");
+			ResponseEntity<?> response = securityGroupService.delete(this.securityGroup.getId());
 			for (Message message : response.getMessages()) {
-				logger.warn("Error Network ACL deletion: [{}] ", message.getMessageText());
+				logger.warn("Error Security Group deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}
