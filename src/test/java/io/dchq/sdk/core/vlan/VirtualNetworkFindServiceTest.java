@@ -67,7 +67,22 @@ public class VirtualNetworkFindServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][]{ 
 			{"testvlan", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.OWNER, "21" , true},
 			{"testvlan1", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.PUBLIC, "50" , true},
-			{"testvlan2", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true}
+			{"testvlan2", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true},
+			{"", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{null, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan2", "", EntitlementType.CUSTOM, "12" , true},
+			{"@@@@@@@@@@@@@@@@", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
+					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
+					+ "lan2testvlan2testvlan2testvlan2testvlan2testvlan2"
+					+ "testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
+					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
+					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
+					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
+					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
+					, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan2223232323", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "" , false},
 		});
 	}
 	@Ignore

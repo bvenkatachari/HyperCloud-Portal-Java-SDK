@@ -69,7 +69,17 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][]{ 
 			{"testvpc", "8a818a105c83f42a015c83fd71240014", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true},
 			{"testvpcc", "8a818a105c83f42a015c83fd71240014", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true},
-			{"testvpccc", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true}
+			{"testvpccc", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true},
+			{"", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{null, "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" ,false},
+			{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{"1111111111111111111111", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false},
+			{"testvpccc", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "10.0.0.2/11", "descriptions test" , false},
+			{"testvpccc", "8a818a105c83f42a015c83fd71240014", EntitlementType.CUSTOM, "172.0.0.0/24", "descriptions test" , false},
+			{"testvpccc", "8a818a105c83f42a015c83fd71240014", null, "10.0.0.0/24", "descriptions test" , false},
 		});
 	}
 	@Ignore
