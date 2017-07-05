@@ -103,10 +103,13 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 				this.createdVPC = resultResponse.getResults();
 				logger.info("Create VPC Successfully..");
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// Sleep for some time
 					Thread.sleep(10000);
+					logger.info("VPC state[{}]", createdVPC.getState().name());
 					resultResponse = vpcService.findById(createdVPC.getId());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
@@ -114,8 +117,8 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// ignore
 				}
-				
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			Assert.assertEquals(createdVPC.getName(), createVPC.getName());
 			Assert.assertEquals(createdVPC.getProvider().getId(), createVPC.getProvider().getId());
 			Assert.assertEquals(createdVPC.getIpv4Cidr(), createVPC.getIpv4Cidr());

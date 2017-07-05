@@ -124,10 +124,11 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 				this.createdVPC = response.getResults();
 				logger.info("Create VPC Successful..");
 			}
-			
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// sleep for some time
 					Thread.sleep(10000);
 					response = vpcService.findById(createdVPC.getId());
 					Assert.assertEquals(false, response.isErrors());
@@ -138,7 +139,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 				}
 				
 			}
-			
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			countAfterCreate = testVPCPosition(createdVPC.getId());
 			assertEquals(countBeforeCreate + 1, countAfterCreate);
 

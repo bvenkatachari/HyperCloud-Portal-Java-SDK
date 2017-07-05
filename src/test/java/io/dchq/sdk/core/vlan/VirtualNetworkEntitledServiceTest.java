@@ -71,7 +71,6 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 			{"testvlan", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.OWNER, "21" , true},
 			{"testvlan1", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.PUBLIC, "50" , true},
 			{"testvlan2", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true},
-			
 			{"", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
 			{null, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
 			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , false},
@@ -108,10 +107,13 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 				this.VirtualNetworkCreated = resultResponse.getResults();
 				logger.info("Create VPC Successfully..");
 			}
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			while (VirtualNetworkCreated.getStatus().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 				try {
+					// wait for some time
 					Thread.sleep(10000);
 					resultResponse = vlanService.findById(VirtualNetworkCreated.getId());
+					logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
 					this.VirtualNetworkCreated = resultResponse.getResults();
@@ -120,7 +122,7 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 				}
 
 			}
-
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			if (VirtualNetworkCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
 				ResponseEntity<VirtualNetwork> resultResponse1 = vlanService.findById(VirtualNetworkCreated.getId());
 				for (Message message : resultResponse.getMessages()) {

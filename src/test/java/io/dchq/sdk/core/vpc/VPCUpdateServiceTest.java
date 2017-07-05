@@ -100,10 +100,13 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 				this.createdVPC = resultResponse.getResults();
 				logger.info("Create VPC Successfull..");
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// wait for some time
 					Thread.sleep(10000);
+					logger.info("VPC state [{}]", createdVPC.getState().name());
 					resultResponse = vpcService.findById(createdVPC.getId());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
@@ -112,6 +115,7 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 					// ignore
 				}
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			createdVPC.setName(createVPC.getName()+"-updated");
 			ResponseEntity<VirtualPrivateCloud> resultFindResponse = vpcService.update(createdVPC);
 			

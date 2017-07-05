@@ -72,10 +72,9 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 	public static Collection<Object[]> data() throws Exception {
 		
 		return Arrays.asList(new Object[][]{ 
-			//{"testvlan", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.OWNER, "21" , true},
-			//{"testvlan1", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.PUBLIC, "50" , true},
-			//{"testvlan2sdsd", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true},
-			
+			{"testvlan", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.OWNER, "21" , true},
+			{"testvlan1", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.PUBLIC, "50" , true},
+			{"testvlan2sdsd", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true},
 			{"", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
 			{null, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
 			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , false},
@@ -112,21 +111,23 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 				this.VirtualNetworkCreated = resultResponse.getResults();
 				logger.info("Create vlan Successful..");
 			}
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			while(VirtualNetworkCreated.getStatus().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// wait for some time
 					Thread.sleep(10000);
 					resultResponse = vlanService.findById(VirtualNetworkCreated.getId());
+					logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
 					this.VirtualNetworkCreated = resultResponse.getResults();
 				} catch (InterruptedException e) {
 					// ignore
 				}
-				
 			}
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			ResponseEntity<List<VirtualNetwork>> resultFindResponse = vlanService.search(vlanSearchByName,0,1);
-			
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());
 			assertNotNull(resultFindResponse.getResults());
