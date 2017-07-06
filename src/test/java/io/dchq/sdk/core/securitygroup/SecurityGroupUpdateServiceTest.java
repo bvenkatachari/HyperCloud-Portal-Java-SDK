@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -104,8 +103,8 @@ public class SecurityGroupUpdateServiceTest extends SecurityGroupTest {
 				assertNotNull(response);
 
 				if (!response.isErrors()) {
-					Assert.assertNotNull(response.getResults());
-					Assert.assertNotNull(response.getResults().getName(), updatedName);
+					assertNotNull(response.getResults());
+					assertEquals(response.getResults().getName(), updatedName);
 				}
 			} else {
 				assertEquals(null, response.getResults());

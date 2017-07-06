@@ -86,7 +86,6 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 
 				
 				if (this.securityGroupCreated != null) {
-					assertNotNull(response.getResults().getId());
 					assertNotNull(securityGroupCreated.getId());
 					assertNotNull("It should not be null or empty", securityGroupCreated.getName());
 					assertEquals(securityGroup.getName(), securityGroupCreated.getName());
