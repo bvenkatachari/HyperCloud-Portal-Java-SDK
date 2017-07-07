@@ -88,7 +88,6 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 	@Test
 	public void searchTest()
 	{
-
 		logger.info("Create VPC name[{}] ", createVPC.getName());
 		ResponseEntity<VirtualPrivateCloud> resultResponse = vpcService.create(createVPC);
 		Assert.assertNotNull(resultResponse);
@@ -104,10 +103,13 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 				this.createdVPC = resultResponse.getResults();
 				logger.info("Create VPC Successful..");
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			while(createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// wait for some time
 					Thread.sleep(10000);
+					logger.info("VPC state [{}]", createdVPC.getState().name());
 					resultResponse = vpcService.findById(createdVPC.getId());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
@@ -117,7 +119,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 				}
 				
 			}
-			
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			ResponseEntity<List<VirtualPrivateCloud>> resultFindResponse = vpcService.search(vpcSearchByName, 0, 1);
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());

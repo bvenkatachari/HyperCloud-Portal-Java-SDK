@@ -105,11 +105,14 @@ public class VirtualNetworkUpdateServiceTest extends AbstractServiceTest{
 				this.VirtualNetworkCreated = resultResponse.getResults();
 				logger.info("Create VPC Successful..");
 			}
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			while(VirtualNetworkCreated.getStatus().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// wait for some time
 					Thread.sleep(10000);
 					resultResponse = vlanService.findById(VirtualNetworkCreated.getId());
+					logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
 					this.VirtualNetworkCreated = resultResponse.getResults();
@@ -118,6 +121,7 @@ public class VirtualNetworkUpdateServiceTest extends AbstractServiceTest{
 				}
 				
 			}
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			VirtualNetworkCreated.setName(VirtualNetworkCreated.getName()+"-update");
 			ResponseEntity<VirtualNetwork> resultFindResponse = vlanService.update(VirtualNetworkCreated);
 			

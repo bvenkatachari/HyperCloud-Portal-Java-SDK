@@ -116,9 +116,12 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 				this.createdVPC = resultResponse.getResults();
 				logger.info("Create VPC Successfully..");
 			}
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			while (createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 				try {
+					// sleep for some time
 					Thread.sleep(10000);
+					logger.info("VPC state [{}]", createdVPC.getState().name());
 					resultResponse = vpcService.findById(createdVPC.getId());
 					Assert.assertEquals(false, resultResponse.isErrors());
 					Assert.assertNotNull(resultResponse.getResults());
@@ -126,9 +129,8 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 				} catch (InterruptedException e) {
 					// ignore
 				}
-
 			}
-
+			logger.info("VPC state [{}]", createdVPC.getState().name());
 			if (createVPC.getEntitlementType().equals(EntitlementType.OWNER)) {
 				ResponseEntity<VirtualPrivateCloud> resultResponse1 = vpcServiceUser.findById(createdVPC.getId());
 				for (Message message : resultResponse.getMessages()) {

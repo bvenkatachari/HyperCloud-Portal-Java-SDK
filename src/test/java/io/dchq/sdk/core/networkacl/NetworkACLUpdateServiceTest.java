@@ -106,8 +106,8 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 				assertNotNull(response);
 
 				if (!response.isErrors()) {
-					Assert.assertNotNull(response.getResults());
-					Assert.assertNotNull(response.getResults().getName(), updatedName);
+					assertNotNull(response.getResults());
+					assertEquals(response.getResults().getName(), updatedName);
 				}
 			} else {
 				assertEquals(null, response.getResults());

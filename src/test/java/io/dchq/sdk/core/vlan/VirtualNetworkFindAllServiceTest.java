@@ -128,21 +128,22 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 				this.VirtualNetworkCreated = response.getResults();
 				logger.info("Create vlan Successful..");
 			}
-			
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			while(VirtualNetworkCreated.getStatus().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime))
 			{
 				try {
+					// wait for some time
 					Thread.sleep(10000);
 					response = vlanService.findById(VirtualNetworkCreated.getId());
+					logger.info("VLan state [{}]", VirtualNetworkCreated.getStatus().name());
 					Assert.assertEquals(false, response.isErrors());
 					Assert.assertNotNull(response.getResults());
 					this.VirtualNetworkCreated = response.getResults();
 				} catch (InterruptedException e) {
 					// ignore
 				}
-				
 			}
-			
+			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
 			countAfterCreate = testVPCPosition(VirtualNetworkCreated.getId());
 			assertEquals(countBeforeCreate + 1, countAfterCreate);
 

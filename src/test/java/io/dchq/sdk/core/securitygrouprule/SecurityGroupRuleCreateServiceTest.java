@@ -94,7 +94,6 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleTest {
 
 				
 				if (this.ruleCreated != null) {
-					assertNotNull(response.getResults().getId());
 					assertNotNull(ruleCreated.getId());
 					assertNotNull("It should not be null or empty", ruleCreated.getName());
 					assertEquals(rule.getName(), ruleCreated.getName());
