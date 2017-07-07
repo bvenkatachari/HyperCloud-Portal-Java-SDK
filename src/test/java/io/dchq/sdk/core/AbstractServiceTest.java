@@ -32,11 +32,8 @@ import java.util.Date;
 public abstract class AbstractServiceTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-   protected String cloudadminusername = "RAgDDq3ggUiSwwX157pB";   //access key of admin
-   protected String cloudadminpassword = "aQSuFUKeOM2d1Ks656JGvUm3qa1h1e7JLv11FVcw"; //secret-key for admin
-
-    //protected String cloudadminusername = "TALK2q22oB8j2EOmwGjm";   //access key of admin
-  //  protected String cloudadminpassword = "0qFRkf0GIV54gpgBgaRtTUrxzLyQPL1ST7vu8JYp"; //secret-key for admin
+   protected String cloudadminusername = "0zvgcENfPMWzdZk8pDpu";   //access key of admin
+   protected String cloudadminpassword = "QrnwYl9c1pVRjXUpgN554mYPfCMKLII2UPLcqhOe"; //secret-key for admin
 
    protected String rootUrl = "https://172.16.1.30:443/api/1.0/";
     protected String rootUrl1 = "https://172.16.1.30:443/api/";
@@ -45,6 +42,14 @@ public abstract class AbstractServiceTest {
     protected String username = "mDPyeM9qD0dns4DZOw9c";   // access-key for user1 <QEAutomation1@dchq.io>
     protected String password = "KfYJtg6Rjx0tIQwFJJxUmE5YyUbq9LN4sE8LeoNo";  // secret-key for user1
 
+    /*********Intesar M/C
+
+    protected String rootUrl = "http://73.189.41.57:9090/api/";
+    protected String rootUrl1 = "https://hcdevtest.skygrid.cloud:443/api/1.0/";
+    protected String userId = "2c9180865ce8bc11015ce8e7fe1e0051";
+    protected String username = "30Ryl7lq6alGLxty8Qg1";   // access-key for user1 <QEAutomation1@dchq.io>
+    protected String password = "KUvizs2FpC0mGdrigl83ZXhF2arJGSANVP31PnfB";  // secret-key for user1
+******************/
     // Create another user  for entitlement check
     protected static String userId2 = "2c9180865ce8bc11015ce8e8b3360054";
     protected String username2 = "L1iJFKrXUy28yzzT89JW";// accesskey <QEAutomation2@dchq.io>
@@ -67,7 +72,7 @@ public abstract class AbstractServiceTest {
     protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
     
     protected static String vpcId = "402881845c9458a6015c945ac24c0004"; 
-    protected static String subnetId = "402881875d06a531015d06c2d0c20033";
+    protected static String subnetId = "402881875d06a531015d0761d7d502aa";
 
     protected int waitTime = 0, maxWaitTime = 0;
 
