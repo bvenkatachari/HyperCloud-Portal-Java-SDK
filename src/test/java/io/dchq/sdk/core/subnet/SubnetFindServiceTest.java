@@ -9,7 +9,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,9 +36,9 @@ public class SubnetFindServiceTest extends SubnetTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		subnetService = ServiceFactory.buildSubnetService(rootUrl, username, password);
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
+		subnetService = ServiceFactory.buildSubnetService(rootUrl1, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
 	}
 
 
@@ -75,12 +74,12 @@ public class SubnetFindServiceTest extends SubnetTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 			
-			 { "subnet", "402881875cd3e674015cd4ca484501b4", "10.0.0.0/24", "true", "10.0.0.2", "10.0.0.254", "8.8.8.8", 
+			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", 
 				            EntitlementType.OWNER, true }
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void testFind() {
 		try {

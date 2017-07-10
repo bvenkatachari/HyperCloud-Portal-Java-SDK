@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,7 +36,7 @@ public class NetworkACLSearchServiceTest extends NetworkACLTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
 	}
 
 	
@@ -69,7 +68,7 @@ public class NetworkACLSearchServiceTest extends NetworkACLTest {
 
 
 
-	@Ignore
+	
 	@Test
 	public void testSearch() {
 		try {

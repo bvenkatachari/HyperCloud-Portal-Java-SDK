@@ -33,8 +33,8 @@ public class NetworkACLRuleTest extends AbstractServiceTest {
 
 	public NetworkACL getNetworkACL() {
 
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
-
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		String name = "networkACL" + postfix;
 

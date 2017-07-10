@@ -8,9 +8,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -38,7 +36,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		ruleService = ServiceFactory.buildSecurityGroupRuleService(rootUrl, username, password);
+		ruleService = ServiceFactory.buildSecurityGroupRuleService(rootUrl1, username, password);
 	}
 
 	
@@ -70,7 +68,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleTest {
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void testUpdate() {
 		try {
@@ -108,8 +106,8 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleTest {
 				assertNotNull(response);
 
 				if (!response.isErrors()) {
-					Assert.assertNotNull(response.getResults());
-					Assert.assertNotNull(response.getResults().getRules().iterator().next().getName(), updatedName);
+					assertNotNull(response.getResults());
+					assertEquals(response.getResults().getRules().iterator().next().getName(), updatedName);
 				}
 
 			} else {

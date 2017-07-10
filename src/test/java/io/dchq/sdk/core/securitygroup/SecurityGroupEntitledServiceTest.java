@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -43,8 +42,8 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
-		securityGroupService2 = ServiceFactory.buildSecurityGroupService(rootUrl, username2, password2);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
+		securityGroupService2 = ServiceFactory.buildSecurityGroupService(rootUrl1, username2, password2);
 	}
 
 	public SecurityGroupEntitledServiceTest(String securityGroupName, EntitlementType entitlementType,
@@ -83,13 +82,14 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupTest {
 		return Arrays.asList(new Object[][] { 
 				{ "securityGroup", EntitlementType.OWNER, false, null, true },
 				{ "securityGroup", EntitlementType.PUBLIC, false, null, true },
-				{ "securityGroup", EntitlementType.CUSTOM, true, userId2, true }
+				{ "securityGroup", EntitlementType.CUSTOM, true, userId2, true },
+				{ "securityGroup", EntitlementType.CUSTOM, false, USER_GROUP, true }
 			});
 	}
 
 
 	
-	@Ignore
+	
 	@Test
 	public void testEntitledSearch() {
 		try {

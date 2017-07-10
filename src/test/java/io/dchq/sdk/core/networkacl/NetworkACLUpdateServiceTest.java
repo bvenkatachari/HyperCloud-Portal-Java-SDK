@@ -8,9 +8,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,7 +35,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
 	}
 
 	
@@ -69,7 +67,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 
 
 
-	@Ignore
+	
 	@Test
 	public void testUpdate() {
 		try {
@@ -106,8 +104,8 @@ public class NetworkACLUpdateServiceTest extends NetworkACLTest {
 				assertNotNull(response);
 
 				if (!response.isErrors()) {
-					Assert.assertNotNull(response.getResults());
-					Assert.assertNotNull(response.getResults().getName(), updatedName);
+					assertNotNull(response.getResults());
+					assertEquals(response.getResults().getName(), updatedName);
 				}
 			} else {
 				assertEquals(null, response.getResults());

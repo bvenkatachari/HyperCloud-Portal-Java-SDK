@@ -9,7 +9,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -36,7 +35,7 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
 	}
 
 	public SecurityGroupCreateServiceTest(String securityGroupName, EntitlementType entitlementType, boolean success) {
@@ -65,7 +64,7 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {
@@ -86,7 +85,6 @@ public class SecurityGroupCreateServiceTest extends SecurityGroupTest {
 
 				
 				if (this.securityGroupCreated != null) {
-					assertNotNull(response.getResults().getId());
 					assertNotNull(securityGroupCreated.getId());
 					assertNotNull("It should not be null or empty", securityGroupCreated.getName());
 					assertEquals(securityGroup.getName(), securityGroupCreated.getName());

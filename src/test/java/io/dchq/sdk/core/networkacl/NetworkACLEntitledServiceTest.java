@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -43,8 +42,8 @@ public class NetworkACLEntitledServiceTest extends NetworkACLTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
-		networkACLService2 = ServiceFactory.buildNetworkACLService(rootUrl, username2, password2);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		networkACLService2 = ServiceFactory.buildNetworkACLService(rootUrl1, username2, password2);
 	}
 
 	public NetworkACLEntitledServiceTest(String networkACLName, EntitlementType entitlementType,
@@ -83,13 +82,14 @@ public class NetworkACLEntitledServiceTest extends NetworkACLTest {
 		return Arrays.asList(new Object[][] { 
 				{ "networkACL", EntitlementType.OWNER, false, null, true },
 				{ "networkACL", EntitlementType.PUBLIC, false, null, true },
-				{ "networkACL", EntitlementType.CUSTOM, true, userId2, true }
+				{ "networkACL", EntitlementType.CUSTOM, true, userId2, true },
+				{ "networkACL", EntitlementType.CUSTOM, false, USER_GROUP, true }
 			});
 	}
 
 
 	
-    @Ignore
+    
 	@Test
 	public void testEntitledSearch() {
 		try {

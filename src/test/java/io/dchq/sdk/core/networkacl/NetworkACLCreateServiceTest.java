@@ -9,7 +9,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -36,7 +35,7 @@ public class NetworkACLCreateServiceTest extends NetworkACLTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
 	}
 
 	public NetworkACLCreateServiceTest(String networkACLName, EntitlementType entitlementType, boolean success) {
@@ -65,7 +64,7 @@ public class NetworkACLCreateServiceTest extends NetworkACLTest {
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {
@@ -86,7 +85,6 @@ public class NetworkACLCreateServiceTest extends NetworkACLTest {
 
 				
 				if (this.networkACLCreated != null) {
-					assertNotNull(response.getResults().getId());
 					assertNotNull(networkACLCreated.getId());
 					assertNotNull("It should not be null or empty", networkACLCreated.getName());
 					assertEquals(networkACL.getName(), networkACLCreated.getName());
