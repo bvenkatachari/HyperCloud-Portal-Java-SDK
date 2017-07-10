@@ -9,7 +9,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,7 +36,7 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		ruleService = ServiceFactory.buildSecurityGroupRuleService(rootUrl, username, password);
+		ruleService = ServiceFactory.buildSecurityGroupRuleService(rootUrl1, username, password);
 	}
 
 	
@@ -72,7 +71,7 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleTest {
 			});
 	}
 
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {

@@ -34,7 +34,7 @@ public class SecurityGroupRuleTest extends AbstractServiceTest {
 
 	public SecurityGroup getSecurityGroup() {
 
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		String name = "securityGroup" + postfix;
