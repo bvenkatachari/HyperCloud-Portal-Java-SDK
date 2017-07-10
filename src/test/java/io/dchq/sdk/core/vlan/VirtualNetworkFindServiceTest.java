@@ -85,7 +85,7 @@ public class VirtualNetworkFindServiceTest extends AbstractServiceTest {
 			{"testvlan2223232323", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "" , false},
 		});
 	}
-	@Ignore
+	
 	@Test
 	public void findTest()
 	{

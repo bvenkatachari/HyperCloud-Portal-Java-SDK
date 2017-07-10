@@ -80,7 +80,7 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 			{"testvpccc", "8a818a105c83f42a015c83fd71240014", null, "10.0.0.0/24", "descriptions test" , false},
 		});
 	}
-	@Ignore
+	
 	@Test
 	public void updateTest()
 	{

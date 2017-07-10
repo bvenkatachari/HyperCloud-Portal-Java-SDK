@@ -86,7 +86,6 @@ public class VirtualNetworkUpdateServiceTest extends AbstractServiceTest{
 		});
 	}
 
-	@Ignore
 	@Test
 	public void updateTest()
 	{

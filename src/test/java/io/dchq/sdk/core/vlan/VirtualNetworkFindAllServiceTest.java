@@ -109,7 +109,7 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	@Ignore
+	
 	@Test
 	public void findAllTest()
 	{

@@ -106,7 +106,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	@Ignore
+	
 	@Test
 	public void findAllTest() {
 		logger.info("Create VPC name[{}] ", createVPC.getName());
