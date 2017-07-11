@@ -32,15 +32,15 @@ import java.util.Date;
 public abstract class AbstractServiceTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-   protected String cloudadminusername = "0zvgcENfPMWzdZk8pDpu";   //access key of admin
-   protected String cloudadminpassword = "QrnwYl9c1pVRjXUpgN554mYPfCMKLII2UPLcqhOe"; //secret-key for admin
+   protected String cloudadminusername = "IZgKyvVXoiaFCcB0QdYh";   //access key of admin
+   protected String cloudadminpassword = "xri9g67zbxxN0Qh3Kg0t860WOrWO7ooaBLxsKwOT"; //secret-key for admin
 
    protected String rootUrl = "https://172.16.1.30:443/api/1.0/";
     protected String rootUrl1 = "https://172.16.1.30:443/api/";
   // protected String rootUrl = "https://hcdevtest.skygrid.cloud:443/api/1.0/";
-  protected String userId = "2c9180865ce8bc11015ce8e7fe1e0051";
-    protected String username = "mDPyeM9qD0dns4DZOw9c";   // access-key for user1 <QEAutomation1@dchq.io>
-    protected String password = "KfYJtg6Rjx0tIQwFJJxUmE5YyUbq9LN4sE8LeoNo";  // secret-key for user1
+  protected String userId = "2c9180865d312fc4015d314702ce005b";
+    protected String username = "YOBRfhNQzhsY4jBMO4ox";   // access-key for user1 <QEAutomation1@dchq.io>
+    protected String password = "I61rFLyQe1DQzdUeBSNn3e57iMxYl1DSKUowL20i";  // secret-key for user1
 
     /********Intesar M/C
 
@@ -51,28 +51,28 @@ public abstract class AbstractServiceTest {
     protected String password = "KUvizs2FpC0mGdrigl83ZXhF2arJGSANVP31PnfB";  // secret-key for user1
 ******************/
     // Create another user  for entitlement check
-    protected static String userId2 = "2c9180865ce8bc11015ce8e8b3360054";
-    protected String username2 = "L1iJFKrXUy28yzzT89JW";// accesskey <QEAutomation2@dchq.io>
-    protected String password2 = "ZIn9Pg5xXbHzc9a4tZ3h70fe6BYVF15trXUSMBvV";//secret key
+    protected static String userId2 = "2c9180865d312fc4015d3147a4d4005e";
+    protected String username2 = "ua7fE7TNe0groIEPhEjb";// accesskey <QEAutomation2@dchq.io>
+    protected String password2 = "luQ09MXPNAERxPriA4dK9a1MRSNS4zpKFNWRItNQ";//secret key
 
     // UserGroup with userId2 entitled user
-    protected static String USER_GROUP = "2c9180865ce8bc11015ce8ea8a8c0064";
+    protected static String USER_GROUP = "2c9180865d312fc4015d314845140061";
 
 
     // new tenant user 
     // login: qeautomationtenant@hypercloud.local
-    // password: n@k633jKiuHO
-    protected static String userId3 = "2c9180865ce8bc11015ce8e998780061";
-    protected static String username3 = "GRqKOFnCCRFJW7SMNQWL";
-    protected static String password3 = "VLdGhofnrQkFWOiOnm685vGZO6HoRasHaBOlkLH3";
+    // password: 7DjBpB6xBIK!
+    protected static String userId3 = "2c9180865d312fc4015d31492a870066";
+    protected static String username3 = "qB74EOboKenqSSto9k1i";
+    protected static String password3 = "46ru9wNuKvqmRCUv2WjufJZt4OO5J2CILgbnrocM";
 
   //  protected  static String bluePrintID = "2c9180865a4a48d9015a52b610c8080c"; //App & Machines Blueprints Test
-    protected  static String clusterID = "2c9180865bb2559a015bc3adaf62002a";   //Cluster name : Docker-Engine
+    protected  static String clusterID = "2c9180865d312fc4015d314b5d510069";   //Cluster name : Sam_Automation_Cluster
     
     protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
     
-    protected static String vpcId = "402881845c9458a6015c945ac24c0004"; 
-    protected static String subnetId = "402881875d06a531015d0761d7d502aa";
+    protected static String vpcId = "2c9180865d312fc4015d3158a5c00078";
+    protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";
 
     protected int waitTime = 0, maxWaitTime = 0;
 
