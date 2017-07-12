@@ -11,7 +11,7 @@ import io.dchq.sdk.core.SecurityGroupService;
 * @since 1.0
 *
 */
-public class SecurityGroupTest extends AbstractServiceTest {
+public class SecurityGroupUtil extends AbstractServiceTest {
 
 	//Create Security Group
 	SecurityGroupService securityGroupService;

@@ -32,11 +32,11 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleTest {
+public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		ruleService = ServiceFactory.buildNetworkACLRuleService(rootUrl1, username, password);
+		ruleService = ServiceFactory.buildNetworkACLRuleService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 	

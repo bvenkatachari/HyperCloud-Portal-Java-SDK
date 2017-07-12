@@ -36,13 +36,13 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class SecurityGroupEntitledServiceTest extends SecurityGroupTest {
+public class SecurityGroupEntitledServiceTest extends SecurityGroupUtil {
 
 	SecurityGroupService securityGroupService2;
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, cloudadminusername, cloudadminpassword);
 		securityGroupService2 = ServiceFactory.buildSecurityGroupService(rootUrl1, username2, password2);
 	}
 

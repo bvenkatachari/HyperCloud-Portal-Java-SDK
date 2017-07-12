@@ -32,11 +32,11 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class SecurityGroupFindAllServiceTest extends SecurityGroupTest {
+public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 	private int countBeforeCreate = 0, countAfterCreate = 0;

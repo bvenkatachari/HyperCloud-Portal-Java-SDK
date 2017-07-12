@@ -19,7 +19,7 @@ import io.dchq.sdk.core.ServiceFactory;
  * @since 1.0
  *
  */
-public class NetworkACLRuleTest extends AbstractServiceTest {
+public class NetworkACLRuleUtil extends AbstractServiceTest {
 
 	// Create Network ACL
 	NetworkACLService networkACLService;
@@ -33,7 +33,7 @@ public class NetworkACLRuleTest extends AbstractServiceTest {
 
 	public NetworkACL getNetworkACL() {
 
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 		
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		String name = "networkACL" + postfix;

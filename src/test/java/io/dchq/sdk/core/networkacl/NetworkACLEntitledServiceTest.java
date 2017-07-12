@@ -36,13 +36,13 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class NetworkACLEntitledServiceTest extends NetworkACLTest {
+public class NetworkACLEntitledServiceTest extends NetworkACLUtil {
 
 	NetworkACLService networkACLService2;
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 		networkACLService2 = ServiceFactory.buildNetworkACLService(rootUrl1, username2, password2);
 	}
 

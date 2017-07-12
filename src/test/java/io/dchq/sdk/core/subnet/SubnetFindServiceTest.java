@@ -32,7 +32,7 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class SubnetFindServiceTest extends SubnetTest {
+public class SubnetFindServiceTest extends SubnetUtil {
 
 	@org.junit.Before
 	public void setUp() throws Exception {

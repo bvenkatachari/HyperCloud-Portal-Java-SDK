@@ -11,7 +11,7 @@ import io.dchq.sdk.core.NetworkACLService;
 * @since 1.0
 *
 */
-public class NetworkACLTest extends AbstractServiceTest {
+public class NetworkACLUtil extends AbstractServiceTest {
 
 	//Create NetworkACL
 	NetworkACLService networkACLService;

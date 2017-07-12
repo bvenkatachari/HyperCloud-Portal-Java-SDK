@@ -19,7 +19,7 @@ import io.dchq.sdk.core.SubnetService;
  * @since 1.0
  *
  */
-public class SubnetTest extends AbstractServiceTest {
+public class SubnetUtil extends AbstractServiceTest {
 
 	// Create Subnet
 	SubnetService subnetService;

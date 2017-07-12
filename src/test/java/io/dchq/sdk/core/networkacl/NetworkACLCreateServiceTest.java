@@ -31,11 +31,11 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class NetworkACLCreateServiceTest extends NetworkACLTest {
+public class NetworkACLCreateServiceTest extends NetworkACLUtil {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 	public NetworkACLCreateServiceTest(String networkACLName, EntitlementType entitlementType, boolean success) {

@@ -37,7 +37,7 @@ import io.dchq.sdk.core.SubnetService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class SubnetEntitledServiceTest extends SubnetTest {
+public class SubnetEntitledServiceTest extends SubnetUtil {
 
 	SubnetService subnetService2;
 	

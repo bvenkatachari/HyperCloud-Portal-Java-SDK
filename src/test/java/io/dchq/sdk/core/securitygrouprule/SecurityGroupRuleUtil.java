@@ -20,7 +20,7 @@ import io.dchq.sdk.core.ServiceFactory;
 *
 */
 
-public class SecurityGroupRuleTest extends AbstractServiceTest {
+public class SecurityGroupRuleUtil extends AbstractServiceTest {
 
 	// Create Security Group
 	SecurityGroupService securityGroupService;
@@ -34,7 +34,7 @@ public class SecurityGroupRuleTest extends AbstractServiceTest {
 
 	public SecurityGroup getSecurityGroup() {
 
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, cloudadminusername, cloudadminpassword);
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
 		String name = "securityGroup" + postfix;
