@@ -71,14 +71,14 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 	public static Collection<Object[]> data() throws Exception {
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.OWNER, "21" , true},
-			{"testvlan1", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.PUBLIC, "50" , true},
-			{"testvlan2sdsd", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , true},
-			{"", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
-			{null, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "21" , true},
+			{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "50" , true},
+			{"testvlan2sdsd", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , true},
+			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
+			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
 			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , false},
 			{"testvlan2", "", EntitlementType.CUSTOM, "12" , true},
-			{"@@@@@@@@@@@@@@@@", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
+			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
 			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
 					+ "lan2testvlan2testvlan2testvlan2testvlan2testvlan2"
@@ -87,8 +87,8 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
-					, "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "12" , false},
-			{"testvlan2223232323", "402881875cf281ee015cf5c9f7ff05d0", EntitlementType.CUSTOM, "" , false},
+					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
+			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , false},
 		});
 	}
 	
