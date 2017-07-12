@@ -116,4 +116,7 @@ dependencies {
 
 
 }
+dependencyManagement {
+    applyMavenExclusions false
+}
 
