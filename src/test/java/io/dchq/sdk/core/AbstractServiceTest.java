@@ -73,6 +73,8 @@ public abstract class AbstractServiceTest {
     
     protected static String vpcId = "2c9180865d312fc4015d3158a5c00078";
     protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";
+    
+    protected static String vlanId = "2c9180865d312fc4015d3158c366007b"; // VLAN-ID 505
 
     protected int waitTime = 0, maxWaitTime = 0;
 

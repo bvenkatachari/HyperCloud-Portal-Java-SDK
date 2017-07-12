@@ -37,15 +37,15 @@ public class SubnetFindAllServiceTest extends SubnetTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		subnetService = ServiceFactory.buildSubnetService(rootUrl1, username, password);
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		subnetService = ServiceFactory.buildSubnetService(rootUrl1, cloudadminusername, cloudadminpassword);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, cloudadminusername, cloudadminpassword);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	
-	public SubnetFindAllServiceTest(String subnetName, String vlanId, String ipv4Cidr, String dhcp, String fromIpRange,
+	public SubnetFindAllServiceTest(String subnetName, String ipv4Cidr, String dhcp, String fromIpRange,
 			String toIpRange, String dnsServers, EntitlementType entitlementType, boolean success) {
 		
 		
@@ -77,10 +77,8 @@ public class SubnetFindAllServiceTest extends SubnetTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 			
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", 
-				            EntitlementType.OWNER, true },
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", 
-					            EntitlementType.PUBLIC, true }
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.OWNER, true },
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.PUBLIC, true }
 			});
 	}
 	

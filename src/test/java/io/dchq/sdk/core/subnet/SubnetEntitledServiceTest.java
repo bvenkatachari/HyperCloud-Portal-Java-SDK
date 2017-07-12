@@ -43,14 +43,14 @@ public class SubnetEntitledServiceTest extends SubnetTest {
 	
 	@org.junit.Before
 	public void setUp() throws Exception {
-		subnetService = ServiceFactory.buildSubnetService(rootUrl1, username, password);
+		subnetService = ServiceFactory.buildSubnetService(rootUrl1, cloudadminusername, cloudadminpassword);
 		subnetService2 = ServiceFactory.buildSubnetService(rootUrl1, username2, password2);
-		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, username, password);
-		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, username, password);
+		securityGroupService = ServiceFactory.buildSecurityGroupService(rootUrl1, cloudadminusername, cloudadminpassword);
+		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 
-	public SubnetEntitledServiceTest(String subnetName, String vlanId, String ipv4Cidr, String dhcp, String fromIpRange,
+	public SubnetEntitledServiceTest(String subnetName, String ipv4Cidr, String dhcp, String fromIpRange,
 			String toIpRange, String dnsServers, EntitlementType entitlementType, 
 			boolean isEntitlementTypeUser, String entitledUserId, boolean success) {
 		
@@ -94,13 +94,13 @@ public class SubnetEntitledServiceTest extends SubnetTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", EntitlementType.OWNER, 
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.OWNER, 
 				          false, null, true },	 
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", EntitlementType.PUBLIC, 
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.PUBLIC, 
 				          false, null, true } ,
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", EntitlementType.CUSTOM, 
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.CUSTOM, 
 				          true, userId2, true },
-			 { "subnet", "2c9180875cf2a916015cf5e1031205c3", "10.50.3.1/24", "true", "10.50.3.2", "10.50.3.254", "8.8.8.8", EntitlementType.CUSTOM, 
+			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.CUSTOM, 
 				          false, USER_GROUP, true } 
 			});
 	}
