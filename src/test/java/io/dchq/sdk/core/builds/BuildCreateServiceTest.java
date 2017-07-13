@@ -15,6 +15,19 @@
  */
 package io.dchq.sdk.core.builds;
 
+import static junit.framework.TestCase.assertNotNull;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 //import com.dchq.schema.beans.one.blueprint.Blueprint;
@@ -25,19 +38,12 @@ import com.dchq.schema.beans.one.build.Build;
 import com.dchq.schema.beans.one.build.BuildTask;
 import com.dchq.schema.beans.one.build.BuildType;
 import com.dchq.schema.beans.one.provider.DataCenter;
-import io.dchq.sdk.core.*;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.BuildService;
+import io.dchq.sdk.core.RegistryAccountService;
+import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.machines.DockerServerCreateServiceTest;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
-
-import java.util.*;
-
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * Created by Abedeen on 04/05/16.
@@ -57,10 +63,11 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
     private DockerServerCreateServiceTest dockerServerCreateService;
 
     public DataCenter getDataCenter() throws Exception {
-        dockerServerCreateService = new DockerServerCreateServiceTest("TEST_BUILD_RACK ("+getDateSuffix(null)+")", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 360000,"Build_Cluster("+getDateSuffix(null)+")", false);
-        dockerServerCreateService.setUp();
+        //dockerServerCreateService = new DockerServerCreateServiceTest("TEST_BUILD_RACK ("+getDateSuffix(null)+")", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 360000,"Build_Cluster("+getDateSuffix(null)+")", false);
+    	dockerServerCreateService = new DockerServerCreateServiceTest("automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx", "Compute vmSwitch,vlanId=504", 1, "2c9180865d312fc4015d3134e26d0002", 360000,"Build_Cluster("+getDateSuffix(null)+")", false);
+    	dockerServerCreateService.setUp();
 
-return dockerServerCreateService.getDataCenter();
+        return dockerServerCreateService.getDataCenter();
     }
 
     @org.junit.Before

@@ -1,19 +1,19 @@
 package io.dchq.sdk.core.machines;
 
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.provider.DataCenter;
 import com.dchq.schema.beans.one.provider.DockerServer;
 import com.dchq.schema.beans.one.security.EntitlementType;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DataCenterService;
 import io.dchq.sdk.core.DockerServerService;
 import io.dchq.sdk.core.ServiceFactory;
-import org.junit.Assert;
-
-import java.util.List;
-
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by abed on 19/4/16.
@@ -62,7 +62,7 @@ public class DockerServerTest extends AbstractServiceTest {
                 tempDockerserver = response.getResults();
                 serverStatus = tempDockerserver.getDockerServerStatus().name();
                 logger.info("Current Serverstatus   [{}] ", serverStatus);
-                if (serverStatus.equals("CONNECTED") || serverStatus.equals("DESTROYED")) break provision;
+                if (serverStatus.equals("PROVISIONED") || serverStatus.equals("CONNECTED") || serverStatus.equals("DESTROYED")) break provision;
 
             }
             if (serverStatus == "WARNINGS") {
@@ -74,8 +74,10 @@ public class DockerServerTest extends AbstractServiceTest {
 
 
         } while (serverStatus == action);
-        if (tempDockerserver.getDockerServerStatus().name().equals("CONNECTED") || tempDockerserver.getDockerServerStatus().name().equals("DESTROYED"))
+        if (tempDockerserver.getDockerServerStatus().name().equals("PROVISIONED") || tempDockerserver.getDockerServerStatus().name().equals("CONNECTED") 
+        		    || tempDockerserver.getDockerServerStatus().name().equals("DESTROYED")){
             outDockerserver = tempDockerserver;
+        }
         return outDockerserver;
 
     }
