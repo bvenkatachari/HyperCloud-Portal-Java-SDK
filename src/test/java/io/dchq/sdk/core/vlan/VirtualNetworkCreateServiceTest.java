@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -39,11 +38,11 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 	
-	public VirtualNetworkCreateServiceTest(String name, String driver, EntitlementType entitlementType, String vlanId, boolean success)
+	public VirtualNetworkCreateServiceTest(String name, String driver, EntitlementType entitlementType, String vlanId, boolean isprifix, boolean success)
 	{
 		String prifix = RandomStringUtils.randomAlphabetic(3);
-		if (name != null && !name.isEmpty()) {
-			name = name + "-" + prifix;
+		if (name != null && !name.isEmpty() && isprifix) {
+			name = (name + prifix).toLowerCase();
 		}
 		virtualNetwork = new VirtualNetwork();
 		virtualNetwork.setName(name);
@@ -56,7 +55,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 	@Before
 	public void setUp()
 	{
-		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl, cloudadminusername, cloudadminpassword);
+		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 	
 	@Parameterized.Parameters
@@ -64,25 +63,25 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 		// driver id - "402881875cf281ee015cf5c9f7ff05d0" on Intesar machine
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "21" , true},
-//			{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "50" , true},
-//			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , true},
-//			
-//			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
-//			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
-//			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , false},
-//			{"testvlan2", "", EntitlementType.CUSTOM, "12" , true},
-//			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
-//			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
-//					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
-//					+ "lan2testvlan2testvlan2testvlan2testvlan2testvlan2"
-//					+ "testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
-//					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
-//					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
-//					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
-//					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
-//					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "12" , false},
-//			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , false},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "505" , true, true},
+			{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "506" , true, true},
+			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "507" , true,true},
+			
+			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "508" ,false, false},
+			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "509" , false, false},
+			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , true, false},
+			{"testvlan2", "", EntitlementType.CUSTOM, "12" , true, true},
+			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "510" ,false, false},
+			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
+					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
+					+ "lan2testvlan2testvlan2testvlan2testvlan2testvlan2"
+					+ "testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
+					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan"
+					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
+					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
+					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
+					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "511" , true, false},
+			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false},
 		});
 	}
 	
@@ -141,12 +140,12 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 		{
 			logger.info("cleaning up...");
 			// TODO not working delete api
-			//ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId());
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId());
 			//Assert.assertNotNull(responseDelete);
 			//Assert.assertEquals(false, responseDelete.isErrors());
-			//for (Message message : responseDelete.getMessages()) {
-			//	logger.warn("Error vlan deletion: [{}] ", message.getMessageText());
-			//}
+			for (Message message : responseDelete.getMessages()) {
+				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());
+			}
 		}
 	}
 }
