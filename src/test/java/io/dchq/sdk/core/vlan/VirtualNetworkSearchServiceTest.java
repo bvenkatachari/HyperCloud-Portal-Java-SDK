@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -76,8 +77,8 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 			
 			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "508" ,false, false},
 			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "509" , false, false},
-			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "12" , true, false},
-			{"testvlan2", "", EntitlementType.CUSTOM, "12" , true, true},
+			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "512" , true, false},
+			{"testvlan2", "", EntitlementType.CUSTOM, "513" , true, true},
 			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "510" ,false, false},
 			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
@@ -91,7 +92,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false},
 		});
 	}
-	
+	@Ignore
 	@Test
 	public void searchTest()
 	{
