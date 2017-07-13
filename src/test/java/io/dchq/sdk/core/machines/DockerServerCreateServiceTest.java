@@ -15,27 +15,27 @@
  */
 package io.dchq.sdk.core.machines;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.provider.DataCenter;
-import com.dchq.schema.beans.one.provider.DockerServer;
-import com.dchq.schema.beans.one.security.EntitlementType;
-import io.dchq.sdk.core.ServiceFactory;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.provider.DataCenter;
+import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
+import io.dchq.sdk.core.ServiceFactory;
 
 /**
  * Created by Abedeen on 04/05/16.
@@ -60,35 +60,39 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"test", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx", "Compute vmSwitch,vlanId=504", 1, "2c9180865d312fc4015d3134e26d0002", 300000, "", false},
         });
     }
 
 
-    public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
+    public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
     	String postfix = RandomStringUtils.randomAlphabetic(3);
     	if(clusterName !=null && !clusterName.isEmpty())
 		{
-			clusterName = clusterName + "-" + postfix;
+			clusterName = clusterName  + postfix;
 			datacenterCreated = getDataCenter(clusterName, Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
 			
 			Assert.assertNotNull(datacenterCreated);
 			// TODO removed withEndpointType and added network id, it is required to have network ID
 			this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
-					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withInactive(activeFlag).withImageId(image).withSize(size)
 					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
+			this.dockerServer.setSkipAgentInstall("true");
+			this.dockerServer.setOperatingSystem("LINUX");
 		}
     	else
     	{
     		// TODO cluster not mandatory field 
     		if(serverName!=null && !serverName.isEmpty())
     		{
-    			serverName = serverName +"-"+ postfix;
+    			serverName = serverName + postfix;
     			
     			this.dockerServer = new DockerServer().withName(serverName)
-					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withInactive(activeFlag).withImageId(image).withSize(size)
 					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
     			this.dockerServer.setGroup(serverName);
+    			this.dockerServer.setSkipAgentInstall("true");
+    			this.dockerServer.setOperatingSystem("LINUX");
     		}
     		
     	}
@@ -97,7 +101,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     }
 
 
-    @Ignore
+    
     @org.junit.Test
     public void testCreate() throws Exception {
 
@@ -114,7 +118,6 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
         if (response.getTotalElements() == null) {
             logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
 
-//            assertNotNull(response.getTotalElements());
             
             dockerServer = response.getResults();
             ResponseEntity<DockerServer> findByIdresponse = dockerServerService.findById(dockerServer.getId());
@@ -122,7 +125,10 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
             Assert.assertEquals(false, findByIdresponse.isErrors());
             assertNotNull(findByIdresponse.getResults());
             dockerServer = findByIdresponse.getResults();
-            dockerServerResponseEntity = dockerServerService.search(dockerServer.getName(), 0, 1);
+            
+            //Search based on partial string. Currently search with name containing "-" not working. 
+            //"-" gets added to name through backend.
+            dockerServerResponseEntity = dockerServerService.search("automationtest", 0, 1); 
             errorMessage = "";
             for (Message message : dockerServerResponseEntity.getMessages()) {
                 logger.warn("Error while Create request  [{}] ", message.getMessageText());
@@ -133,8 +139,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
             assertFalse(dockerServerResponseEntity.isErrors());
 
             if (dockerServerResponseEntity.getResults() != null) {
-
-                String serverStatus = "";
+            	
                 for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
                     dockerServerProvisioning = searchDocker;
                 }
@@ -142,13 +147,8 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
                 dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
                 Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
                 if (dockerServerCreated != null) {
-
                     Assert.assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
-                    Assert.assertEquals(dockerServer.getRegion(), dockerServerCreated.getRegion());
-//                    Assert.assertEquals(dockerServer.getSize(), dockerServerCreated.getSize());
                     Assert.assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
-                    Assert.assertEquals(dockerServer.getEndpointType(), dockerServerCreated.getEndpointType());
-
 
                 }
 
