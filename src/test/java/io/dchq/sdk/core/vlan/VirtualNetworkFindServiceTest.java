@@ -27,6 +27,7 @@ import io.dchq.sdk.core.VirtualNetworkService;
 /**
  * 
  * @author Jagdeep Jain
+ * @updater Saurabh B.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
@@ -148,7 +149,7 @@ public class VirtualNetworkFindServiceTest extends AbstractServiceTest {
 		{
 			logger.info("cleaning up...");
 			// TODO delete not working
-			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId());
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId(),"release/");
 			//Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());
