@@ -1,30 +1,33 @@
 package io.dchq.sdk.core.machines;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.base.PkEntityBase;
-import com.dchq.schema.beans.one.blueprint.Blueprint;
-import com.dchq.schema.beans.one.container.Container;
-import com.dchq.schema.beans.one.provider.DockerServer;
-import com.dchq.schema.beans.one.provider.DockerServerStatus;
-import com.dchq.schema.beans.one.provision.App;
-import com.dchq.schema.beans.one.provision.ProvisionState;
-import com.dchq.schema.beans.one.security.EntitlementType;
-import io.dchq.sdk.core.BlueprintService;
-import io.dchq.sdk.core.DockerServerService;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.apps.AppBaseImpl;
+import static junit.framework.TestCase.assertNotNull;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
-import javax.print.Doc;
-import java.util.Arrays;
-import java.util.Collection;
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.base.PkEntityBase;
+import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.provider.DockerServerStatus;
+import com.dchq.schema.beans.one.security.EntitlementType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static junit.framework.TestCase.assertNotNull;
+import io.dchq.sdk.core.BlueprintService;
+import io.dchq.sdk.core.DockerServerService;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.apps.AppBaseImpl;
 
 /**
  * Created by Saurabh Bhatia on 3/16/2017.
@@ -73,12 +76,13 @@ public class DockerServerDeployTest extends AppBaseImpl{
         @Parameterized.Parameters
         public static Collection<Object[]> data() throws Exception {
             return Arrays.asList(new Object[][]{
-                    {"2c9180865a6421f0015a6592d16c0869", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false}
+                    {"2c9180865d312fc4015d3157aa95006e", "Override", EntitlementType.OWNER, "\nAll Input Values are normal. Malfunction in SDK", false}
             });
         }
 
         //Deploy Blueprint Successfully
-    @Ignore
+    
+        @Ignore
         @Test
         public void testDeployAppAndWait() {
 
@@ -95,6 +99,15 @@ public class DockerServerDeployTest extends AppBaseImpl{
             dc.setId(clusterID);
             blueprint.setDatacenter(dc);
 
+           //Converting Blueprint Object to JSON Object
+           /* try {
+            	 ObjectMapper mapper = new ObjectMapper();
+				String blueprintJson = mapper.writeValueAsString(blueprint);
+				logger.info("BluePrint JSON : " + blueprintJson);
+			} catch (JsonProcessingException ex) {
+				logger.error(ex.getMessage());
+			}*/
+            
             // Deploying using blueprint object
             ResponseEntity<DockerServer> vmResponseEntity = vmServer.deploy(blueprint);
 
