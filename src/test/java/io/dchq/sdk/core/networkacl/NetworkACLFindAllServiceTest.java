@@ -68,7 +68,7 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 	}
 
 	
-	public int testNetworktPosition(String id) {
+	public int testNetworkACLPosition(String id) {
 		ResponseEntity<List<NetworkACL>> response = networkACLService.findAll(0, 500);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
@@ -96,7 +96,7 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 	public void createFindAll() {
 		try {
 			
-			countBeforeCreate = testNetworktPosition(null);
+			countBeforeCreate = testNetworkACLPosition(null);
 			
 			logger.info("Create Network ACL name as [{}] ", networkACL.getName());
 			
@@ -118,7 +118,7 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 
 				
 				logger.info("FindAll Network ACL by Id [{}]", this.networkACLCreated.getId());
-				this.countAfterCreate = testNetworktPosition(this.networkACLCreated.getId());
+				this.countAfterCreate = testNetworkACLPosition(this.networkACLCreated.getId());
 				assertEquals(countBeforeCreate + 1, countAfterCreate);
 				
 			} else {
