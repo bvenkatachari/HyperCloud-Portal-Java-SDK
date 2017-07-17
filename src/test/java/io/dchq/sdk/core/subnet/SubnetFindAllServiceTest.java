@@ -82,7 +82,7 @@ public class SubnetFindAllServiceTest extends SubnetUtil {
 			});
 	}
 	
-	public int testNetworktPosition(String id) {
+	public int testSubnetPosition(String id) {
 		ResponseEntity<List<Subnet>> response = subnetService.findAll(0, 500);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
@@ -109,7 +109,7 @@ public class SubnetFindAllServiceTest extends SubnetUtil {
 	public void testFindAll() {
 		try {
 			
-			countBeforeCreate = testNetworktPosition(null);
+			countBeforeCreate = testSubnetPosition(null);
 			
 			logger.info("Create Subnet name as [{}] ", subnet.getName());
 			
@@ -130,7 +130,7 @@ public class SubnetFindAllServiceTest extends SubnetUtil {
 
 				
 				logger.info("FindAll Subnet by Id [{}]", this.subnetCreated.getId());
-				this.countAfterCreate = testNetworktPosition(this.subnetCreated.getId());
+				this.countAfterCreate = testSubnetPosition(this.subnetCreated.getId());
 				assertEquals(countBeforeCreate + 1, countAfterCreate);
 				
 				

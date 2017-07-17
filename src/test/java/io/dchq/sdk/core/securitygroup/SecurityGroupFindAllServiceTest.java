@@ -68,7 +68,7 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 	}
 	
 	
-	public int testNetworktPosition(String id) {
+	public int testSecurityGroupPosition(String id) {
 		ResponseEntity<List<SecurityGroup>> response = securityGroupService.findAll(0, 500);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
@@ -96,7 +96,7 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 	public void createFindAll() {
 		try {
 			
-			countBeforeCreate = testNetworktPosition(null);
+			countBeforeCreate = testSecurityGroupPosition(null);
 			
 			logger.info("Create Security Group name as [{}] ", securityGroup.getName());
 			
@@ -118,7 +118,7 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 
 				
 				logger.info("FindAll Security Group by Id [{}]", this.securityGroupCreated.getId());
-				this.countAfterCreate = testNetworktPosition(this.securityGroupCreated.getId());
+				this.countAfterCreate = testSecurityGroupPosition(this.securityGroupCreated.getId());
 				assertEquals(countBeforeCreate + 1, countAfterCreate);
 				
 			} else {

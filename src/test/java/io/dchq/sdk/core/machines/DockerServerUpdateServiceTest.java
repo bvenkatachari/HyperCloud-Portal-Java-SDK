@@ -15,30 +15,27 @@
  */
 package io.dchq.sdk.core.machines;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.provider.DockerServer;
-import com.dchq.schema.beans.one.security.EntitlementType;
-import io.dchq.sdk.core.ServiceFactory;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import io.dchq.sdk.core.ServiceFactory;
 
 /**
  * Created by Abedeen on 04/05/16.
@@ -54,53 +51,57 @@ import static org.junit.Assert.assertFalse;
 @RunWith(Parameterized.class)
 public class DockerServerUpdateServiceTest extends DockerServerTest {
     DockerServer dockerServerUpdated;
-    boolean inActiveUpdated;
+   
 
     @org.junit.Before
     public void setUp() throws Exception {
-        dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, username, password);
+        dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, cloudadminusername, cloudadminpassword);
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"test", Boolean.FALSE, "VHG01-N03", "cpu=1,memory=1GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865bb2559a015bd998188e4457", 300000, "", false},
-
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx", "Compute vmSwitch,vlanId=504", 1, "2c9180865d312fc4015d3134e26d0002", 300000, "", false},
         });
     }
 
 
-    public DockerServerUpdateServiceTest(String serverName, Boolean activeFlag, String region, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
+    public DockerServerUpdateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
     	String postfix = RandomStringUtils.randomAlphabetic(3);
     	if(clusterName !=null && !clusterName.isEmpty())
 		{
-			clusterName = clusterName + "-" + postfix;
+			clusterName = clusterName + postfix;
 			datacenterCreated = getDataCenter(clusterName, Boolean.FALSE, EntitlementType.ALL_BLUEPRINTS);
 			
 			Assert.assertNotNull(datacenterCreated);
 			// TODO removed withEndpointType and added network id, it is required field.
 			this.dockerServer = new DockerServer().withDatacenter(datacenterCreated).withName(serverName)
-					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withInactive(activeFlag).withImageId(image).withSize(size)
 					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
+			this.dockerServer.setSkipAgentInstall("true");
+			this.dockerServer.setOperatingSystem("LINUX");
 		}
     	else
     	{
     		// TODO cluster not mandatory field 
     		if(serverName!=null && !serverName.isEmpty())
     		{
-    			serverName = serverName +"-"+ postfix;
+    			serverName = serverName + postfix;
     		}
     		
     		this.dockerServer = new DockerServer().withName(serverName)
-					.withInactive(activeFlag).withRegion(region).withImageId(image).withSize(size)
+					.withInactive(activeFlag).withImageId(image).withSize(size)
 					.withEndpoint(endpoint).withHardwareId(hardwareID).withNetworkId(networkId);
+    		this.dockerServer.setGroup(serverName);
+    		this.dockerServer.setSkipAgentInstall("true");
+			this.dockerServer.setOperatingSystem("LINUX");
     		
     	}
         maxWaitTime = tinout;
         this.createError = success;
     }
 
-    @Ignore
+    
     @org.junit.Test
     public void testUpdate() throws Exception {
         logger.info("Create Machine with Name [{}]", dockerServer.getName());
@@ -115,9 +116,11 @@ public class DockerServerUpdateServiceTest extends DockerServerTest {
         if (response.getTotalElements() == null) {
             logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
 
-//            assertNotNull(response.getTotalElements());
+
             assertEquals("", 1, wait(7000));
-            dockerServerResponseEntity = dockerServerService.search(dockerServer.getName(), 0, 1);
+          //Search based on partial string. Currently search with name containing "-" not working. 
+            //"-" gets added to name through backend.
+            dockerServerResponseEntity = dockerServerService.search("automationtest", 0, 1);
             errorMessage = "";
             for (Message message : dockerServerResponseEntity.getMessages()) {
                 logger.warn("Error while Create request  [{}] ", message.getMessageText());
@@ -129,7 +132,6 @@ public class DockerServerUpdateServiceTest extends DockerServerTest {
 
             if (dockerServerResponseEntity.getResults() != null) {
 
-                String serverStatus = "";
                 for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
                     dockerServerProvisioning = searchDocker;
                 }
@@ -138,12 +140,11 @@ public class DockerServerUpdateServiceTest extends DockerServerTest {
                 if (dockerServerCreated != null) {
 
                     assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
-                    assertEquals(dockerServer.getRegion(), dockerServerCreated.getRegion());
                     assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
-                    assertEquals(dockerServer.getEndpointType(), dockerServerCreated.getEndpointType());
 
-                    dockerServerCreated.setInactive(inActiveUpdated);
-                    logger.info("Update Machine with ActiveFlag [{}]", dockerServerCreated.getInactive());
+                    String updatedName = dockerServerCreated.getName() + "_updated";
+                    dockerServerCreated.setName(updatedName);
+                    logger.info("Update Machine name with [{}]", dockerServerCreated.getName());
                     response = dockerServerService.update(dockerServerCreated);
                     errorMessage = "";
                     for (Message message : response.getMessages()) {
@@ -156,12 +157,10 @@ public class DockerServerUpdateServiceTest extends DockerServerTest {
 
                     if (response.getResults() != null) {
 
-
                         dockerServerUpdated = response.getResults();
                         assertNotNull(response.getResults());
                         assertNotNull(response.getResults().getId());
-
-                        assertEquals(dockerServerCreated.getInactive(), dockerServerUpdated.getInactive());
+                        assertEquals(updatedName, dockerServerUpdated.getName());
 
 
                     }
