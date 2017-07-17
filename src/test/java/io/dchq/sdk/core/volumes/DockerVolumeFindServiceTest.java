@@ -44,7 +44,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
+		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 	
 	public DockerVolumeFindServiceTest(String volumeName, String provider, String size, EntitlementType type, boolean error) {

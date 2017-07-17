@@ -88,7 +88,7 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() {
-		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
+		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
     
 	@Test

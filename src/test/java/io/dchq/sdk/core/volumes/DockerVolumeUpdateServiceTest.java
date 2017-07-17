@@ -89,8 +89,8 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() {
-		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl, cloudadminusername, cloudadminpassword);
-		dockerVolumeService2 = ServiceFactory.buildDockerVolumeService(rootUrl, username2, password2);
+		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl1, cloudadminusername, cloudadminpassword);
+		dockerVolumeService2 = ServiceFactory.buildDockerVolumeService(rootUrl1, username2, password2);
 	}
 	
 	@Test
