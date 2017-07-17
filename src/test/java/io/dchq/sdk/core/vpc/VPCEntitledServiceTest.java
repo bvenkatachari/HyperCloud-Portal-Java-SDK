@@ -73,7 +73,7 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() {
-		vpcService = ServiceFactory.buildVPCService(rootUrl, cloudadminusername, cloudadminpassword);
+		vpcService = ServiceFactory.buildVPCService(rootUrl1, cloudadminusername, cloudadminpassword);
 		vpcServiceUser = ServiceFactory.buildVPCService(rootUrl, username, password);
 	}
 

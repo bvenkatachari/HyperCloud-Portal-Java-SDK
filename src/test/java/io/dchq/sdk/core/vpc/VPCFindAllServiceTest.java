@@ -63,7 +63,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() {
-		vpcService = ServiceFactory.buildVPCService(rootUrl, cloudadminusername, cloudadminpassword);
+		vpcService = ServiceFactory.buildVPCService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 	@Parameterized.Parameters
