@@ -41,7 +41,7 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 	String ipv4CidrForEdit;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 160); // this is for 10 mints
+	long endTime = startTime +(60 * 60 * 160); // this is for aprox 10 mints
 	
 	public VPCUpdateServiceTest(String vpcName, String nameForEdit, String providerId, EntitlementType entitlementType, String ipv4Cidr, String ipv4CidrForEdit, String description, boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);

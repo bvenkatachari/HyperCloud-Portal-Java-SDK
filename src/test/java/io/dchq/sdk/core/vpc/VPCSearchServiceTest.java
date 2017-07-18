@@ -40,7 +40,7 @@ public class VPCSearchServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createVPC;
 	VirtualPrivateCloud createdVPC;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	boolean sussess;
 	
 	public VPCSearchServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description, boolean isprifix, boolean success) {

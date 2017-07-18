@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -40,7 +39,7 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud findVpc;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	
 	public VPCFindServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);

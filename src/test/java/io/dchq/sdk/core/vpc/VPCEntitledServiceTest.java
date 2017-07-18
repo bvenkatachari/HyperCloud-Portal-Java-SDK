@@ -46,7 +46,7 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createdVPC;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 150); // this is for 9 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
 	public VPCEntitledServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr,
 			String description, String entitledUserId, boolean isEntitlementTypeUser, boolean isprifix, boolean success) {

@@ -42,7 +42,7 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
 	public VPCFindAllServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description, boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
