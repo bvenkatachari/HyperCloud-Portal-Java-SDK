@@ -46,7 +46,7 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createdVPC;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 150); // this is for 9 mints
 
 	public VPCEntitledServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr,
 			String description, String entitledUserId, boolean isEntitlementTypeUser, boolean isprifix, boolean success) {
@@ -91,20 +91,22 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp2121212121", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			// Negative scenario, passing empty/null for name 
 			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
 			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
-			// TODO should not accept only special character or numeric value 
+			// TODO Negative scenario for vpcname , Should accept only alphanumeric  
 			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			//{"1111111111111111111111", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			//{"11111111111111111_11111", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			// Negative scenario for provider 
 			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			// TODO accept valid ip
+			// TODO Nagetive scenario  for IP address, accept valid ip
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , true, false},
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , true, false},
-			// TODO null EntitledType not accept
+			// TODO Negative scenario for null EntitledType
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , true, false},
 		});
 	}
@@ -148,8 +150,8 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 				}
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) resultResponse.isErrors()).toString());
 				assertNotNull(resultResponse1.getResults());
-				assertNotNull(resultResponse1.getResults().getId());
-				assertEquals(createdVPC.getId(), resultResponse1.getResults().getId());
+				assertNotNull(resultResponse1.getResults());
+				assertEquals(null, resultResponse1.getResults().getId());
 				
 			} else if (createVPC.getEntitlementType().equals(EntitlementType.PUBLIC)) {
 				

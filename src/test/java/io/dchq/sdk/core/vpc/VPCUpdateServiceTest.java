@@ -36,15 +36,19 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 	VirtualPrivateCloud createVPC;
 	VirtualPrivateCloud createdVPC;
 	VirtualPrivateCloud updatedVpc;
+	
+	String nameForEdit;
+	String ipv4CidrForEdit;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for 10 mints
 	
-	public VPCUpdateServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description, boolean isprifix, boolean success) {
+	public VPCUpdateServiceTest(String vpcName, String nameForEdit, String providerId, EntitlementType entitlementType, String ipv4Cidr, String ipv4CidrForEdit, String description, boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (vpcName != null && !vpcName.isEmpty() && isprifix) {
 			vpcName = (vpcName + prifix).toLowerCase();
+			this.nameForEdit = (nameForEdit + prifix).toLowerCase();
 		}
 		createVPC = new VirtualPrivateCloud();
 		createVPC.setName(vpcName);
@@ -54,6 +58,7 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 		entity.withId(providerId);
 		createVPC.setProvider(entity);
 		createVPC.setDescription(description);
+		this.ipv4CidrForEdit = ipv4CidrForEdit;
 		this.sussess = success;
 	}
 	@Before
@@ -65,25 +70,28 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][]{ 
 			// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp2121212121", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
-			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
-			// TODO should not accept only special character or numeric value 
-			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			//{"1111111111111111111111", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			// TODO accept valid ip
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , true, false},
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , true, false},
-			// TODO null EntitledType not accept
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , true, false},
+			{"testvpc","testvpcupdate", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24","10.0.0.0/22", "descriptions test" , true, true},
+			{"testvpc", "testvpcupdated", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24","10.0.0.0/20", "descriptions test" , true, true},
+			{"testvpc","testvpctest", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/16", "descriptions test" , true, true},
+			// Negative scenario, passing empty/null for name
+			{"","", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test" , false, false},
+			{null, "", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test", false ,false},
+			// TODO Negative scenario for vpcname , Should accept only alphanumeric 
+			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "#####", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test" , false, false},
+			//{"1111111111111111111111", "21212", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			// Negative scenario for provider
+			{"testvpccc","aassasasa", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "10.0.0.0/20", "descriptions test" , true, false},
+			{"testvpccc", "sdasdasd", "", EntitlementType.CUSTOM, "10.0.0.0/24", "10.0.0.0/20", "descriptions test" , true, false},
+			{"testvpccc", "sadsadad", null, EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/22", "descriptions test" , true, false},
+			// TODO Nagetive scenario  for IP address, accept valid ip
+			//{"testvpccc", "sdasd" "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "", "descriptions test" , true, false},
+			//{"testvpccc", "asdasd","2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "","", "descriptions test" , true, false},
+			// TODO Negative scenario for null EntitledType
+			//{"testvpccc", "asdasdasd","2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "", "descriptions test" , true, false},
+			
+			
 		});
 	}
-	
 	@Test
 	public void updateTest()
 	{
@@ -120,7 +128,8 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 			}
 			logger.info("VPC state [{}]", createdVPC.getState().name());
 			Assert.assertEquals("LIVE", createdVPC.getState().name());
-			createdVPC.setName(createVPC.getName()+"-updated");
+			//*********************** Edit vpc name **********************
+			createdVPC.setName(this.nameForEdit);
 			ResponseEntity<VirtualPrivateCloud> resultFindResponse = vpcService.update(createdVPC);
 			
 			Assert.assertNotNull(resultFindResponse);
@@ -131,8 +140,19 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 				this.updatedVpc = resultFindResponse.getResults();
 				logger.info("Create VPC Successful..");
 			}
-			
 			Assert.assertEquals(updatedVpc.getName(), createdVPC.getName());
+			//********************** End edit vpc ***************************
+			//***********************Edit IPv4 ******************************
+			if(this.ipv4CidrForEdit != null && !this.ipv4CidrForEdit.isEmpty() && !this.ipv4CidrForEdit.equals(createdVPC.getIpv4Cidr()))
+			{
+				createdVPC.setIpv4Cidr(this.ipv4CidrForEdit);
+				resultFindResponse = vpcService.update(createdVPC);
+				Assert.assertNotNull(resultFindResponse);
+				Assert.assertEquals(true, resultFindResponse.isErrors());
+				
+			}
+			//**************************** End edit ipv4 ********************
+			
 
 		} else {
 

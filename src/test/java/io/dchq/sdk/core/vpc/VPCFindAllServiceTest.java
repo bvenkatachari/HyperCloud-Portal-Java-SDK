@@ -71,20 +71,22 @@ public class VPCFindAllServiceTest extends AbstractServiceTest {
 		 // provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp2121212121", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			// Negative scenario, passing empty/null for name 
 			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
 			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
-			// TODO should not accept only special character or numeric value 
+			// TODO Negative scenario for vpcname , Should accept only alphanumeric 
 			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
 			//{"1111111111111111111111", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			// Negative scenario for provider
 			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			// TODO accept valid ip
+			// TODO Nagetive scenario  for IP address
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , true, false},
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , true, false},
-			// TODO null EntitledType not accept
+			// TODO Negative scenario for null EntitledType
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , true, false},
 		});
 	}

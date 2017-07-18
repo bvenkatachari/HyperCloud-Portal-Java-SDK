@@ -69,20 +69,22 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][]{ 
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvp2121212121", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			// Negative scenario, passing empty/null for name
 			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
 			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
-			// TODO should not accept only special character or numeric value 
+			// TODO Negative scenario for vpcname , Should accept only alphanumeric 
 			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
 			//{"1111111111111111111111", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			// Negative scenario for provider
 			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
 			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			// TODO accept valid ip
+			// TODO Nagetive scenario  for IP address, accept valid ip
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , true, false},
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , true, false},
-			// TODO null EntitledType not accept
+			// TODO Negative scenario for null EntitledType
 			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , true, false},
 		});
 	}
@@ -134,6 +136,10 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 			Assert.assertEquals(findVpc.getName(), createVPC.getName());
 			Assert.assertEquals(findVpc.getProvider().getId(), createVPC.getProvider().getId());
 			Assert.assertEquals(findVpc.getIpv4Cidr(), createVPC.getIpv4Cidr());
+			Assert.assertNotNull(findVpc.getVpcId());
+			Assert.assertNotNull(findVpc.getId());
+			Assert.assertNotNull(findVpc.getFirewallId());
+			Assert.assertNotNull(findVpc.getFirewallIp());
 
 		} else {
 
