@@ -67,9 +67,8 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] {
 
 			// TODO: add more test data for all sorts of validations
-			{ "testvalume", "2c9180865ccf117a015ccf1aa46b0005",	"5", EntitlementType.OWNER, false },
-			{ "test21111", "2c9180865ccf117a015ccf1aa46b0005",	"2", EntitlementType.PUBLIC, false },
-		
+			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"5", EntitlementType.OWNER, false },
+			{ "test21111", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
 			{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
 			// TODO volume name should not be blank
 			//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
@@ -77,11 +76,10 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 			//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
 			// TODO Should not accept negative volume
 			//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
-		
 			{"sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
 		 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
 		 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865ccf117a015ccf1aa46b0005",	"2", EntitlementType.CUSTOM, true }
+		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, true }
 		
 	
 		});
