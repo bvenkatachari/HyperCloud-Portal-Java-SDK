@@ -46,18 +46,20 @@ public class NetworkACLEntitledServiceTest extends NetworkACLUtil {
 		networkACLService2 = ServiceFactory.buildNetworkACLService(rootUrl1, username2, password2);
 	}
 
-	public NetworkACLEntitledServiceTest(String networkACLName, EntitlementType entitlementType,
-			boolean isEntitlementTypeUser, String entitledUserId, boolean success) {
+	public NetworkACLEntitledServiceTest(String networkACLName, String subnet_Id, EntitlementType entitlementType,
+			boolean isEntitlementTypeUser, String entitledUserId, boolean isprifix, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		networkACLName = networkACLName + postfix;
+		if(isprifix){
+		    networkACLName = networkACLName + postfix;
+		}
 
 		networkACL = new NetworkACL();
 		networkACL.setName(networkACLName);
 		networkACL.setEntitlementType(entitlementType);
 		
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(subnetId);
+		subnet.setId(subnet_Id);
 		
 		networkACL.setSubnet(subnet);
 		
@@ -80,10 +82,18 @@ public class NetworkACLEntitledServiceTest extends NetworkACLUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "networkACL", EntitlementType.OWNER, false, null, true },
-				{ "networkACL", EntitlementType.PUBLIC, false, null, true },
-				{ "networkACL", EntitlementType.CUSTOM, true, userId2, true },
-				{ "networkACL", EntitlementType.CUSTOM, false, USER_GROUP, true }
+				{ "networkACL", subnetId, EntitlementType.OWNER, false, null, true,true },
+				{ "networkACL", subnetId, EntitlementType.PUBLIC, false, null, true, true },
+				{ "networkACL", subnetId, EntitlementType.CUSTOM, true, userId2, true, true },
+				{ "networkACL", subnetId, EntitlementType.CUSTOM, false, USER_GROUP, true, true },
+				//{ "networkACL", subnetId, null, false, USER_GROUP, true, false },
+				{ "networkACL", null, EntitlementType.OWNER, false, null, true,false },
+				/*
+				 * N/W ACL gets created for the blank value & special character, but didn't list on UI.
+				 * */
+				//{ "", subnetId, EntitlementType.PUBLIC, false, null, true, false },
+				//{ null, subnetId, EntitlementType.CUSTOM, true, userId2, true, false },
+				{ "", "", EntitlementType.CUSTOM, false, USER_GROUP, false, false }
 			});
 	}
 

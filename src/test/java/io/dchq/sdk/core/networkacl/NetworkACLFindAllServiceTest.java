@@ -41,32 +41,46 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	
-	public NetworkACLFindAllServiceTest(String networkACLName, EntitlementType entitlementType, boolean success) {
+	public NetworkACLFindAllServiceTest(String networkACLName, String subnet_Id, EntitlementType entitlementType, boolean isprifix, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		networkACLName = networkACLName + postfix;
+		if(isprifix){
+		    networkACLName = networkACLName + postfix;
+		}
 
 		networkACL = new NetworkACL();
 		networkACL.setName(networkACLName);
 		networkACL.setEntitlementType(entitlementType);
 		
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(subnetId);
+		subnet.setId(subnet_Id);
 		
 		networkACL.setSubnet(subnet);
 
 		this.success = success;
 
 	}
-
+	
+	
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "networkACL", EntitlementType.OWNER, true },
-			{ "networkACL", EntitlementType.PUBLIC, true }
+			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
+			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
+			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
+			{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, true },
+			{ "networkACL", "", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false, false },
+			{ "networkACL", null, EntitlementType.OWNER, true, false },
+			/*
+			 * N/W ACL gets created for the blank value & special character, but didn't list on UI.
+			 * */
+			//{ null, subnetId, EntitlementType.OWNER, false, false },
+			//{ "", subnetId, EntitlementType.OWNER, false, false },
+			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
+			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
 			});
 	}
-
 	
 	public int testNetworkACLPosition(String id) {
 		ResponseEntity<List<NetworkACL>> response = networkACLService.findAll(0, 500);
@@ -122,6 +136,11 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 				assertEquals(countBeforeCreate + 1, countAfterCreate);
 				
 			} else {
+				
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while Create request  [{}] ", message.getMessageText());
+				}
+				
 				assertEquals(null, response.getResults());
 				assertEquals(true, response.isErrors());
 			}
