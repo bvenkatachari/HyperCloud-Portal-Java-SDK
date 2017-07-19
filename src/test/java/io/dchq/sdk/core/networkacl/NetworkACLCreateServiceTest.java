@@ -38,17 +38,19 @@ public class NetworkACLCreateServiceTest extends NetworkACLUtil {
 		networkACLService = ServiceFactory.buildNetworkACLService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
-	public NetworkACLCreateServiceTest(String networkACLName, EntitlementType entitlementType, boolean success) {
+	public NetworkACLCreateServiceTest(String networkACLName, String subnet_Id, EntitlementType entitlementType, boolean isprifix, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		networkACLName = networkACLName + postfix;
+		if(isprifix){
+		    networkACLName = networkACLName + postfix;
+		}
 
 		networkACL = new NetworkACL();
 		networkACL.setName(networkACLName);
 		networkACL.setEntitlementType(entitlementType);
 		
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(subnetId);
+		subnet.setId(subnet_Id);
 		
 		networkACL.setSubnet(subnet);
 
@@ -59,8 +61,17 @@ public class NetworkACLCreateServiceTest extends NetworkACLUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "networkACL", EntitlementType.OWNER, true },
-			{ "networkACL", EntitlementType.PUBLIC, true }
+			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
+			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
+			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
+			{ "networkACL", "", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false },
+			/*
+			 * N/W ACL gets created for the blank value & special character, but didn't list on UI.
+			 * */
+			//{ "", subnetId, EntitlementType.OWNER, false, false },
+			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
+			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
 			});
 	}
 
@@ -91,6 +102,10 @@ public class NetworkACLCreateServiceTest extends NetworkACLUtil {
 				}
 
 			} else {
+				
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while Create request  [{}] ", message.getMessageText());
+				}
 				assertEquals(null, response.getResults());
 				assertEquals(true, response.isErrors());
 			}
