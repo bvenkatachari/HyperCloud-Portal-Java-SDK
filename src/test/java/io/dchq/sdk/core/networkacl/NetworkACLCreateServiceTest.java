@@ -64,11 +64,14 @@ public class NetworkACLCreateServiceTest extends NetworkACLUtil {
 			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
 			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
 			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
+			{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, true },
 			{ "networkACL", "", EntitlementType.OWNER, true, false },
 			{ "", "", EntitlementType.OWNER, false, false },
+			{ "networkACL", null, EntitlementType.OWNER, true, false },
 			/*
 			 * N/W ACL gets created for the blank value & special character, but didn't list on UI.
 			 * */
+			//{ null, subnetId, EntitlementType.OWNER, false, false },
 			//{ "", subnetId, EntitlementType.OWNER, false, false },
 			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
 			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
