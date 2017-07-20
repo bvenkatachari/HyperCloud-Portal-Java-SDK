@@ -169,16 +169,16 @@ public class SubnetEntitledServiceTest extends SubnetUtil {
 
 	@After
 	public void cleanUp() {
-		
-		deleteNetworkACL();
-		deleteSecurityGroup();
-		
+				
 		if (this.subnetCreated != null) {
+			deleteNetworkACL();
+			deleteSecurityGroup();
 			logger.info("cleaning up Subnet...");
 			ResponseEntity<?> response = subnetService.delete(this.subnetCreated.getId());
 			for (Message message : response.getMessages()) {
 				logger.warn("Error Subnet deletion: [{}] ", message.getMessageText());
 			}
 		}
+
 	}
 }
