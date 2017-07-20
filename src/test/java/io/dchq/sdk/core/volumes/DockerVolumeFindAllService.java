@@ -9,10 +9,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -20,7 +18,6 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.blueprint.RegistryAccount;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.security.EntitlementType;
 
@@ -44,7 +41,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 	String validationMessage;
 	long startTime = System.currentTimeMillis();
 	private int countBeforeCreate = 0, countAfterCreate = 0;
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
+	long endTime = startTime + (60 * 60 * 160); // this is for 10 mins
 
 	public DockerVolumeFindAllService(String volumeName, String provider, String size, EntitlementType type, boolean error) {
 		String prefix = RandomStringUtils.randomAlphabetic(3);
@@ -71,19 +68,8 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
 			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"5", EntitlementType.OWNER, false },
-			{ "test21111", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
-			{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
-			// TODO volume name should not be blank
-			//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
-			// TODO not accept only special characters
-			//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
-			// TODO Should not accept negative volume
-			//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
-			
-			{ "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
-			 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-			 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865ccf117a015ccf1aa46b0005",	"2", EntitlementType.CUSTOM, true }
+			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
+			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, false },
 			
 		});
 	}
@@ -130,17 +116,17 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 					logger.info("Create docker volumne Successful..");
 				}
 
-				while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+				while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 					try {
 						Thread.sleep(10000);
 						dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-						
 						assertNotNull(dockerVolumeCreated);
 						logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 					} catch (InterruptedException e) {
 						// TODO: handling exception
 					}
 				}
+				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 				assertNotNull(response.getResults());
 				assertNotNull(response.getResults().getId());
 				// getting Count of objects after creating Object

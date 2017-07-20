@@ -40,7 +40,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 	String validationMessage;
 
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mins
+	long endTime = startTime + (60 * 60 * 160); // this is for 3 mins
 	
 	@Before
 	public void setUp() throws Exception {
@@ -65,24 +65,10 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-
-			// TODO: add more test data for all sorts of validations
-		{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"5", EntitlementType.OWNER, false },
-		{ "test21111", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
-		{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
-		// TODO volume name should not be blank
-		//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
-		// TODO not accept only special characters
-		//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
-		// TODO Should not accept negative volume
-		//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
-		
-		{ "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
-		 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-		 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, true }
-		
-	
+				// TODO: add more test data for all sorts of validations
+				{ "testvalume", "2c9180865d312fc4015d3134e40d0004", "5", EntitlementType.OWNER, false },
+				{ "testvalume", "2c9180865d312fc4015d3134e40d0004", "2", EntitlementType.PUBLIC, false },
+				{ "testvalume", "2c9180865d312fc4015d3134e40d0004", "2", EntitlementType.CUSTOM, false }, 
 		});
 	}
 	@Test
@@ -102,7 +88,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 				logger.info("Create docker volumne Successful..");
 			}
 
-			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+			while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 				try {
 					Thread.sleep(10000);
 					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
@@ -112,9 +98,10 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 					// TODO: handling exception
 				}
 			}
-
+			logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+			assertEquals("LIVE", dockerVolumeCreated.getStatus());
+			
 			response = dockerVolumeService.findById(dockerVolumeCreated.getId());
-
 			// Check for create
 			assertNotNull(response);
 			assertNotNull(response.isErrors());
@@ -124,6 +111,7 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 			assertEquals(dockerVolumeCreated.getEndpoint(), response.getResults().getEndpoint());
 			assertEquals(dockerVolumeCreated.getCreatedOn(), response.getResults().getCreatedOn());
 			assertEquals(dockerVolumeCreated.getId(), response.getResults().getId());
+			assertEquals(dockerVolumeCreated.getSize(), response.getResults().getSize());
 		}
 		else
 		{

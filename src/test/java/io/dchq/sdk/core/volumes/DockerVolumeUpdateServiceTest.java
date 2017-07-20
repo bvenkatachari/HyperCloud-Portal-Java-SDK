@@ -68,19 +68,8 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 
 			// TODO: add more test data for all sorts of validations
 			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"5", EntitlementType.OWNER, false },
-			{ "test21111", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
-			{ "test21111", "",	"2", EntitlementType.PUBLIC, true },
-			// TODO volume name should not be blank
-			//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
-			// TODO not accept only special characters
-			//{ "@@@@@@@@", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.CUSTOM, true},
-			// TODO Should not accept negative volume
-			//{ "nagative-volume", "2c9180865bb2559a015bd99819254459", "-2", EntitlementType.CUSTOM, true},
-			{"sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
-		 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-		 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-		 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, true }
-		
+			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false },
+			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, false },
 	
 		});
 	}
@@ -115,7 +104,7 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 			}
 
 			// wait till status change to Live
-			while (!dockerVolumeCreated.getStatus().equals("LIVE") && (System.currentTimeMillis() < endTime)) {
+			while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 				try {
 					Thread.sleep(10000);
 					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
@@ -130,7 +119,6 @@ public class DockerVolumeUpdateServiceTest extends AbstractServiceTest {
 				assertNotNull(response.getResults());
 				assertNotNull(response.getResults().getId());
 				Assert.assertNotNull(dockerVolume.getName(), dockerVolumeCreated.getName());
-
 				// updating entitlement
 				UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId2);
 				List<UsernameEntityBase> entiledUsers = new ArrayList<>();
