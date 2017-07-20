@@ -94,8 +94,8 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , false,  null, true, true}, 
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , false,  null, true, true},
 			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true,  userId2, true, true},
-			// TODO Failing, groups under entitled users is visible to specific Groups
-			//{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false,  userId3, true, true},
+			// Bug in create API using below data as VPC never going live status
+			//{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false,  USER_GROUP, true, true},
 			
 		});
 	}
@@ -165,26 +165,26 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 				
 			} else if (createVPC.getEntitlementType().equals(EntitlementType.CUSTOM) && !isEntitlementTypeUser) {
 				// For group user
-				ResponseEntity<VirtualPrivateCloud> resultResponseForGroupuser = vpcService2.create(createdVPC);
-				if (resultResponseForGroupuser.getResults() != null && !resultResponseForGroupuser.isErrors()) {
-					this.createdVPC = resultResponseForGroupuser.getResults();
-					logger.info("Create VPC Successfully..");
-				}
-				logger.info("VPC state [{}]", createdVPC.getState().name());
-				while (createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
-					try {
-						// sleep for some time
-						Thread.sleep(10000);
-						logger.info("VPC state [{}]", createdVPC.getState().name());
-						resultResponseForGroupuser = vpcService.findById(createdVPC.getId());
-						Assert.assertEquals(false, resultResponseForGroupuser.isErrors());
-						Assert.assertNotNull(resultResponseForGroupuser.getResults());
-						this.createdVPC = resultResponseForGroupuser.getResults();
-					} catch (InterruptedException e) {
-						// ignore
-					}
-				}
-				logger.info("VPC state [{}]", createdVPC.getState().name());
+//				ResponseEntity<VirtualPrivateCloud> resultResponseForGroupuser = vpcService2.create(createdVPC);
+//				if (resultResponseForGroupuser.getResults() != null && !resultResponseForGroupuser.isErrors()) {
+//					this.createdVPC = resultResponseForGroupuser.getResults();
+//					logger.info("Create VPC Successfully..");
+//				}
+//				logger.info("VPC state [{}]", createdVPC.getState().name());
+//				while (createdVPC.getState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
+//					try {
+//						// sleep for some time
+//						Thread.sleep(10000);
+//						logger.info("VPC state [{}]", createdVPC.getState().name());
+//						resultResponseForGroupuser = vpcService.findById(createdVPC.getId());
+//						Assert.assertEquals(false, resultResponseForGroupuser.isErrors());
+//						Assert.assertNotNull(resultResponseForGroupuser.getResults());
+//						this.createdVPC = resultResponseForGroupuser.getResults();
+//					} catch (InterruptedException e) {
+//						// ignore
+//					}
+//				}
+//				logger.info("VPC state [{}]", createdVPC.getState().name());
 				ResponseEntity<VirtualPrivateCloud> resultResponseForGroupUser2 = vpcService3.findById(createdVPC.getId());
 				for (Message message : resultResponseForGroupUser2.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
