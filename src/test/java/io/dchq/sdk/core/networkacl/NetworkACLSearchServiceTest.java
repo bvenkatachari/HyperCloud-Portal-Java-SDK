@@ -67,7 +67,7 @@ public class NetworkACLSearchServiceTest extends NetworkACLUtil {
 			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
 			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
 			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
-			{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, true },
+			{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, false },
 			{ "networkACL", "", EntitlementType.OWNER, true, false },
 			{ "", "", EntitlementType.OWNER, false, false },
 			{ "networkACL", null, EntitlementType.OWNER, true, false },
