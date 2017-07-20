@@ -41,17 +41,19 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 
 	private int countBeforeCreate = 0, countAfterCreate = 0;
 	
-	public SecurityGroupFindAllServiceTest(String securityGroupName, EntitlementType entitlementType, boolean success) {
+	public SecurityGroupFindAllServiceTest(String securityGroupName, String subnet_Id, EntitlementType entitlementType, boolean isprifix, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		securityGroupName = securityGroupName + postfix;
+		if(isprifix){
+		 securityGroupName = securityGroupName + postfix;
+		}
 
 		securityGroup = new SecurityGroup();
 		securityGroup.setName(securityGroupName);
 		securityGroup.setEntitlementType(entitlementType);
 		
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(subnetId);
+		subnet.setId(subnet_Id);
 		
 		securityGroup.setSubnet(subnet);
 
@@ -62,8 +64,20 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			 { "securityGroup", EntitlementType.OWNER, true },
-			 { "securityGroup", EntitlementType.PUBLIC, true } 
+			{ "securityGroup", subnetId, EntitlementType.OWNER, true, true },
+			{ "securityGroup", subnetId, EntitlementType.PUBLIC, true, true },
+			{ "securityGroup", subnetId, EntitlementType.CUSTOM, true, true },
+			{ "securityGroup", "", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false, false },
+			{ "securityGroup", null, EntitlementType.OWNER, true, false },
+			/*
+			 * Security Group gets created for the blank value & special character, but didn't list/search on UI/API.
+			 * */
+			//{ "@@@^%%*&*^securityGroup", subnetId, EntitlementType.OWNER, true, false },
+			//{ null, subnetId, EntitlementType.OWNER, false, false },
+			//{ "", subnetId, EntitlementType.OWNER, false, false },
+			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
+			{ "securityGroup", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
 			});
 	}
 	
