@@ -65,6 +65,10 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true }
+				/*
+				 * Security Group Rule gets created for the blank values, special character & invalid values.
+				 * */
+				//{ "", RuleBoundType.in, "tcp", "abcd", "1234", RuleAction.pass, false, false }
 			});
 	}
 
@@ -93,9 +97,13 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 				
 				String updatedName = this.ruleCreated.getName() + "_updated";
 				this.ruleCreated.setName(updatedName);
+				this.ruleCreated.setProtocol("any");
+				this.ruleCreated.setIp("any");
+				this.ruleCreated.setPort("");
+				this.ruleCreated.setAction(RuleAction.block);
 
 				// Updating Rule Name
-				logger.info("Updating Network ACL name with [{}]", updatedName);
+				logger.info("Updating Security Group name with [{}]", updatedName);
 				response = ruleService.updateRule(this.ruleCreated, securityGroup.getId());
 
 				for (Message message : response.getMessages()) {
@@ -107,7 +115,12 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 
 				if (!response.isErrors()) {
 					assertNotNull(response.getResults());
-					assertEquals(response.getResults().getRules().iterator().next().getName(), updatedName);
+					Rule updatedRule = response.getResults().getRules().iterator().next();
+					assertEquals(updatedRule.getName(), this.ruleCreated.getName());
+					assertEquals(updatedRule.getProtocol(), this.ruleCreated.getProtocol());
+					assertEquals(updatedRule.getIp(), this.ruleCreated.getIp());
+					assertEquals(updatedRule.getPort(), this.ruleCreated.getPort());
+					assertEquals(updatedRule.getAction(), this.ruleCreated.getAction());
 				}
 
 			} else {
