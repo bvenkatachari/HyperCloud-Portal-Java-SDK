@@ -69,7 +69,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLUtil {
 			{ "", "", EntitlementType.OWNER, false, false },
 			{ "networkACL", null, EntitlementType.OWNER, true, false },
 			/*
-			 * N/W ACL gets created for the blank value & special character, but didn't list/search on UI.
+			 * N/W ACL gets created for the blank value & special character, but didn't list/search on UI/API.
 			 * */
 			//{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, false },
 			//{ null, subnetId, EntitlementType.OWNER, false, false },

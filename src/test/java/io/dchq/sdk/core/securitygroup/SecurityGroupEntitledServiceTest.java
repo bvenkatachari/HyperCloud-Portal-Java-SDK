@@ -46,18 +46,20 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupUtil {
 		securityGroupService2 = ServiceFactory.buildSecurityGroupService(rootUrl1, username2, password2);
 	}
 
-	public SecurityGroupEntitledServiceTest(String securityGroupName, EntitlementType entitlementType,
-			boolean isEntitlementTypeUser, String entitledUserId, boolean success) {
+	public SecurityGroupEntitledServiceTest(String securityGroupName, String subnet_Id, EntitlementType entitlementType,
+			boolean isEntitlementTypeUser, String entitledUserId, boolean isprifix, boolean success) {
 
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		securityGroupName = securityGroupName + postfix;
+		if(isprifix){
+		   securityGroupName = securityGroupName + postfix;
+		}
 
 		securityGroup = new SecurityGroup();
 		securityGroup.setName(securityGroupName);
 		securityGroup.setEntitlementType(entitlementType);
 		
 		NameEntityBase subnet = new NameEntityBase();
-		subnet.setId(subnetId);
+		subnet.setId(subnet_Id);
 		
 		securityGroup.setSubnet(subnet);
 		
@@ -80,10 +82,19 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "securityGroup", EntitlementType.OWNER, false, null, true },
-				{ "securityGroup", EntitlementType.PUBLIC, false, null, true },
-				{ "securityGroup", EntitlementType.CUSTOM, true, userId2, true },
-				{ "securityGroup", EntitlementType.CUSTOM, false, USER_GROUP, true }
+				{ "securityGroup", subnetId, EntitlementType.OWNER, false, null, true,true },
+				{ "securityGroup", subnetId, EntitlementType.PUBLIC, false, null, true, true },
+				{ "securityGroup", subnetId, EntitlementType.CUSTOM, true, userId2, true, true },
+				{ "securityGroup", subnetId, EntitlementType.CUSTOM, false, USER_GROUP, true, true },
+				{ "securityGroup", null, EntitlementType.OWNER, false, null, true,false },
+				/*
+				 * Security Group gets created for the blank value & special character, but didn't list/search on UI/API.
+				 * */
+				//{ "@@@^%%*&*^securityGroup", subnetId, EntitlementType.OWNER, true, false },
+				//{ "", subnetId, EntitlementType.PUBLIC, false, null, true, false },
+				//{ null, subnetId, EntitlementType.CUSTOM, true, userId2, true, false },
+				{ "", "", EntitlementType.CUSTOM, false, USER_GROUP, false, false },
+				{ "securityGroup", "ssssssssssssssssssssssssss", EntitlementType.OWNER, false, null, true,false }
 			});
 	}
 

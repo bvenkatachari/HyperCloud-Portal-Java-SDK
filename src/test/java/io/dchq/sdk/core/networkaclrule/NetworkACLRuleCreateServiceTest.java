@@ -41,13 +41,15 @@ public class NetworkACLRuleCreateServiceTest extends NetworkACLRuleUtil {
 
 	
 	public NetworkACLRuleCreateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
-			RuleAction action, boolean success) {
+			RuleAction action, boolean isprifix, boolean success) {
 
 		//Create Network ACL
 		networkACL = getNetworkACL();
 		
 		String postfix = RandomStringUtils.randomAlphabetic(3);
-		ruleName = ruleName + postfix;
+		if(isprifix){
+		  ruleName = ruleName + postfix;
+		}
 
 		rule = new Rule();
 		rule.setName(ruleName);
@@ -64,10 +66,30 @@ public class NetworkACLRuleCreateServiceTest extends NetworkACLRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.pass, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true },
-				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.pass, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true }
+				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true }
+				/*
+				 * N/W ACL Rule gets created for the blank values, special character & invalid values.
+				 * */
+				/*{ "", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false },
+				{ "rule", RuleBoundType.in, "abcd", "10.0.0.0/24", "0-4500", RuleAction.pass, true, false },
+				{ "rule", RuleBoundType.in, "tcp", "12345", "0-4500", RuleAction.pass, true, false },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "12345", RuleAction.pass, true, false },
+				{ "@@@@@@@@@@@@@@", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false }*/
 			});
 	}
 
