@@ -64,19 +64,8 @@ public class NetworkACLUpdateServiceTest extends NetworkACLUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
-			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
-			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
-			{ "networkACL", "", EntitlementType.OWNER, true, false },
 			{ "", "", EntitlementType.OWNER, false, false },
-			{ "networkACL", null, EntitlementType.OWNER, true, false },
-			/*
-			 * N/W ACL gets created for the blank value & special character, but didn't list/search on UI/API.
-			 * */
-			//{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, false },
-			//{ null, subnetId, EntitlementType.OWNER, false, false },
-			//{ "", subnetId, EntitlementType.OWNER, false, false },
-			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
-			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
+			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false }
 			});
 	}
 
@@ -105,6 +94,7 @@ public class NetworkACLUpdateServiceTest extends NetworkACLUtil {
 				
 				String updatedName = this.networkACLCreated.getName() + "_updated";
 				this.networkACLCreated.setName(updatedName);
+				this.networkACLCreated.setEntitlementType(EntitlementType.PUBLIC);
 
 				// Updating Network ACL Name
 				logger.info("Updating Network ACL name with [{}]", updatedName);
@@ -119,7 +109,8 @@ public class NetworkACLUpdateServiceTest extends NetworkACLUtil {
 
 				if (!response.isErrors()) {
 					assertNotNull(response.getResults());
-					assertEquals(response.getResults().getName(), updatedName);
+					assertEquals(response.getResults().getName(), this.networkACLCreated.getName());
+					assertEquals(response.getResults().getEntitlementType(), this.networkACLCreated.getEntitlementType());
 				}
 			} else {
 				assertEquals(null, response.getResults());

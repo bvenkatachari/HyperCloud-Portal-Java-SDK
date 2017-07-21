@@ -68,18 +68,8 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 		return Arrays.asList(new Object[][] { 
 			{ "networkACL", subnetId, EntitlementType.OWNER, true, true },
 			{ "networkACL", subnetId, EntitlementType.PUBLIC, true, true },
-			{ "networkACL", subnetId, EntitlementType.CUSTOM, true, true },
 			{ "networkACL", "", EntitlementType.OWNER, true, false },
-			{ "", "", EntitlementType.OWNER, false, false },
-			{ "networkACL", null, EntitlementType.OWNER, true, false },
-			/*
-			 * N/W ACL gets created for the blank value & special character, but didn't list/search on UI/API.
-			 * */
-			//{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, false },
-			//{ null, subnetId, EntitlementType.OWNER, false, false },
-			//{ "", subnetId, EntitlementType.OWNER, false, false },
-			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
-			{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false, false }
 			});
 	}
 	

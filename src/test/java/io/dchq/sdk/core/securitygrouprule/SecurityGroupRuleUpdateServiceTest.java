@@ -65,11 +65,8 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true }
-				/*
-				 * Security Group Rule gets created for the blank values, special character & invalid values.
-				 * */
-				//{ "", RuleBoundType.in, "tcp", "abcd", "1234", RuleAction.pass, false, false }
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true }
 			});
 	}
 

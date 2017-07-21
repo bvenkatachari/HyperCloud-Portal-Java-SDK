@@ -64,19 +64,7 @@ public class SecurityGroupUpdateServiceTest extends SecurityGroupUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 			{ "securityGroup", subnetId, EntitlementType.OWNER, true, true },
-			{ "securityGroup", subnetId, EntitlementType.PUBLIC, true, true },
-			{ "securityGroup", subnetId, EntitlementType.CUSTOM, true, true },
-			{ "securityGroup", "", EntitlementType.OWNER, true, false },
-			{ "", "", EntitlementType.OWNER, false, false },
-			{ "securityGroup", null, EntitlementType.OWNER, true, false },
-			/*
-			 * Security Group gets created for the blank value & special character, but didn't list/search on UI/API.
-			 * */
-			//{ "@@@^%%*&*^securityGroup", subnetId, EntitlementType.OWNER, true, false },
-			//{ null, subnetId, EntitlementType.OWNER, false, false },
-			//{ "", subnetId, EntitlementType.OWNER, false, false },
-			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
-			{ "securityGroup", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false, false }
 			});
 	}
 
@@ -104,6 +92,7 @@ public class SecurityGroupUpdateServiceTest extends SecurityGroupUtil {
 				
 				String updatedName = this.securityGroupCreated.getName() + "_updated";
 				this.securityGroupCreated.setName(updatedName);
+				this.securityGroupCreated.setEntitlementType(EntitlementType.PUBLIC);
 
 				// Updating Security Group Name
 				logger.info("Updating Security Group name with [{}]", updatedName);
@@ -118,7 +107,8 @@ public class SecurityGroupUpdateServiceTest extends SecurityGroupUtil {
 
 				if (!response.isErrors()) {
 					assertNotNull(response.getResults());
-					assertEquals(response.getResults().getName(), updatedName);
+					assertEquals(response.getResults().getName(), this.securityGroupCreated.getName());
+					assertEquals(response.getResults().getEntitlementType(), this.securityGroupCreated.getEntitlementType());
 				}
 			} else {
 				assertEquals(null, response.getResults());

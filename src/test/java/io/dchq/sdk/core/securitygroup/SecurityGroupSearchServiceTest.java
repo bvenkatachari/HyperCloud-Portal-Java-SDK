@@ -66,18 +66,7 @@ public class SecurityGroupSearchServiceTest extends SecurityGroupUtil {
 		return Arrays.asList(new Object[][] { 
 			{ "securityGroup", subnetId, EntitlementType.OWNER, true, true },
 			{ "securityGroup", subnetId, EntitlementType.PUBLIC, true, true },
-			{ "securityGroup", subnetId, EntitlementType.CUSTOM, true, true },
-			{ "securityGroup", "", EntitlementType.OWNER, true, false },
-			{ "", "", EntitlementType.OWNER, false, false },
-			{ "securityGroup", null, EntitlementType.OWNER, true, false },
-			/*
-			 * Security Group gets created for the blank value & special character, but didn't list/search on UI/API.
-			 * */
-			//{ "@@@^%%*&*^securityGroup", subnetId, EntitlementType.OWNER, true, false },
-			//{ null, subnetId, EntitlementType.OWNER, false, false },
-			//{ "", subnetId, EntitlementType.OWNER, false, false },
-			//{ "@@@@@@@@@@@@@@@@@@@@@@@@", subnetId, EntitlementType.OWNER, false, false },
-			{ "securityGroup", "ssssssssssssssssssssssssss", EntitlementType.OWNER, true, false },
+			{ "", "", EntitlementType.OWNER, false, false }
 			});
 	}
 
