@@ -2,6 +2,7 @@ package io.dchq.sdk.core.subnet;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -119,6 +120,7 @@ public class SubnetFindServiceTest extends SubnetUtil {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			fail(e.getMessage());
 		}
 
 	}

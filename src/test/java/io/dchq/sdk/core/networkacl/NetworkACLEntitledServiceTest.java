@@ -2,6 +2,7 @@ package io.dchq.sdk.core.networkacl;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,19 +83,19 @@ public class NetworkACLEntitledServiceTest extends NetworkACLUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "networkACL", subnetId, EntitlementType.OWNER, false, null, true,true },
+				{ "networkACL", subnetId, EntitlementType.OWNER, false, null, true,true }/*,
 				{ "networkACL", subnetId, EntitlementType.PUBLIC, false, null, true, true },
 				{ "networkACL", subnetId, EntitlementType.CUSTOM, true, userId2, true, true },
 				{ "networkACL", subnetId, EntitlementType.CUSTOM, false, USER_GROUP, true, true },
 				{ "networkACL", null, EntitlementType.OWNER, false, null, true,false },
-				/*
+				
 				 * N/W ACL gets created for the blank value & special character, but didn't list/search on UI/API.
-				 * */
+				 * 
 				//{ "@@@^%%*&*^networkACL", subnetId, EntitlementType.OWNER, true, false },
 				//{ "", subnetId, EntitlementType.PUBLIC, false, null, true, false },
 				//{ null, subnetId, EntitlementType.CUSTOM, true, userId2, true, false },
 				{ "", "", EntitlementType.CUSTOM, false, USER_GROUP, false, false },
-				{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, false, null, true,false }
+				{ "networkACL", "ssssssssssssssssssssssssss", EntitlementType.OWNER, false, null, true,false }*/
 			});
 	}
 
@@ -157,6 +158,7 @@ public class NetworkACLEntitledServiceTest extends NetworkACLUtil {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			fail(e.getMessage());
 		}
 
 	}

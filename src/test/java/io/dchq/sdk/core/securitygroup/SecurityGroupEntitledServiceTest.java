@@ -2,6 +2,7 @@ package io.dchq.sdk.core.securitygroup;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -157,6 +158,7 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupUtil {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			fail(e.getMessage());
 		}
 
 	}
