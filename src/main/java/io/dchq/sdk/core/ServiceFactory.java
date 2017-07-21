@@ -16,6 +16,8 @@
 
 package io.dchq.sdk.core;
 
+import com.dchq.schema.beans.one.network.IpPool;
+
 /**
  * Factory class
  *
@@ -113,5 +115,9 @@ public class ServiceFactory {
     
     public static final VirtualNetworkService buildVirtualNetworkService(String baseURL, String username, String password){
     	return new VirtualNetworkServiceImpl(baseURL, username, password);
+    }
+    
+    public static final IpNatService buildIpNatService(String baseURL, String username, String password){
+    	return new IpNatServiceImpl(baseURL, username, password);
     }
 }
