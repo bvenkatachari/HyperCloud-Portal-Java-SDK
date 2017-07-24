@@ -34,7 +34,7 @@ public class IpNatEntitledServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
-	public IpNatEntitledServiceTest(String ipPoolName, boolean isprifix, boolean success) {
+	public IpNatEntitledServiceTest(String ipPoolName, EntitlementType entitlementType, String ipPoolId, String drescription, boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 		ipPool = new IpPool();
 		if (ipPoolName != null && !ipPoolName.isEmpty() && isprifix) {
@@ -47,14 +47,15 @@ public class IpNatEntitledServiceTest extends AbstractServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		ipnatService = ServiceFactory.buildIpNatService(rootUrl1, cloudadminusername, cloudadminpassword);
-		ipnatService1 = ServiceFactory.buildIpNatService(rootUrl1, cloudadminusername, cloudadminpassword);
-		ipnatService2 = ServiceFactory.buildIpNatService(rootUrl1, cloudadminusername, cloudadminpassword);
+		ipnatService1 = ServiceFactory.buildIpNatService(rootUrl1, userId, password);
+		ipnatService2 = ServiceFactory.buildIpNatService(rootUrl1, userId2, password2);
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
-			{"testipnat",true,true}});
+			{ "testipnat",EntitlementType.OWNER, "402881845c9458a6015c945ac24c0004", "test description", true,true }
+		});
 	}
 	
 	@Ignore

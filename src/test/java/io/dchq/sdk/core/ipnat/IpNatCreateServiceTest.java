@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -17,6 +16,7 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.network.IpPool;
+import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.IpNatService;
@@ -32,13 +32,15 @@ import io.dchq.sdk.core.ServiceFactory;
 public class IpNatCreateServiceTest extends AbstractServiceTest {
 
 	private IpNatService ipnatService;
+	
+	
 	private IpPool ipPool;
 	private IpPool ipPoolCreated;
 	private boolean success;
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
-	public IpNatCreateServiceTest(String ipPoolName, boolean isprifix, boolean success) {
+	public IpNatCreateServiceTest(String ipPoolName, EntitlementType entitlementType, String ipPoolId, String drescription, boolean isprifix, boolean success) {
 		ipPool = new IpPool();
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
@@ -46,20 +48,23 @@ public class IpNatCreateServiceTest extends AbstractServiceTest {
 			ipPoolName = (ipPoolName + prifix).toLowerCase();
 		}
 		ipPool.setName(ipPoolName);
+		ipPool.setEntitlementType(entitlementType);
+		ipPool.setIpPoolId(ipPoolId);
 		this.success = success;
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		ipnatService = ServiceFactory.buildIpNatService(rootUrl1, cloudadminusername, cloudadminpassword);
+		ipnatService = ServiceFactory.buildIpNatService(rootUrl1, username, password);
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testipnat",true,true } });
+		// vpc id : 402881845c9458a6015c945ac24c0004
+		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "402881845c9458a6015c945ac24c0004", "test description", true,true } });
 	}
 
-	@Ignore
+	
 	@Test
 	public void createTest() throws Exception {
 

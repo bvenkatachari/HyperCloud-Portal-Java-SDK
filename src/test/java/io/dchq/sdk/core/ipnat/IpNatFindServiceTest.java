@@ -14,6 +14,8 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.network.IpPool;
+import com.dchq.schema.beans.one.security.EntitlementType;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.IpNatService;
 import io.dchq.sdk.core.ServiceFactory;
@@ -28,7 +30,7 @@ public class IpNatFindServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
-	public IpNatFindServiceTest(String ipPoolName, boolean isprifix, boolean success) {
+	public IpNatFindServiceTest(String ipPoolName, EntitlementType entitlementType, String ipPoolId, String drescription, boolean isprifix, boolean success) {
 		ipPool = new IpPool();
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 		if (ipPoolName != null && !ipPoolName.isEmpty() && isprifix) {
@@ -45,7 +47,7 @@ public class IpNatFindServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testipnat",true,true } });
+		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "402881845c9458a6015c945ac24c0004", "test description", true,true } });
 	}
 	@Ignore
 	@Test
