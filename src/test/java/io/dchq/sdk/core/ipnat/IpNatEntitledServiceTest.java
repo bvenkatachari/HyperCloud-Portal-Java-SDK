@@ -10,8 +10,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
@@ -23,6 +26,8 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.IpNatService;
 import io.dchq.sdk.core.ServiceFactory;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(Parameterized.class)
 public class IpNatEntitledServiceTest extends AbstractServiceTest {
 	private IpNatService ipnatService;
 	private IpNatService ipnatService1;
