@@ -19,4 +19,7 @@ public interface RegistryAccountService extends GenericService<RegistryAccount, 
      * @return RegistryAccount response
      */
     ResponseEntity<RegistryAccount> findRegistryAccountTypeById(String id);
+    
+    /*Test Registry Account connection*/
+    ResponseEntity<String> testConnection(RegistryAccount registry);
 }

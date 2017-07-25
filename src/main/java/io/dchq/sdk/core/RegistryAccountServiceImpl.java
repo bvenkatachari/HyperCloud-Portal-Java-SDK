@@ -1,10 +1,11 @@
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.blueprint.RegistryAccount;
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.List;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.blueprint.RegistryAccount;
 
 /**
  * Encapsulates DCHQ RegistryAccount related methods.
@@ -19,6 +20,9 @@ public class RegistryAccountServiceImpl extends GenericServiceImpl<RegistryAccou
     public static final ParameterizedTypeReference<ResponseEntity<List<RegistryAccount>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<RegistryAccount>>>() {
     };
     public static final ParameterizedTypeReference<ResponseEntity<RegistryAccount>> singleTypeReference = new ParameterizedTypeReference<ResponseEntity<RegistryAccount>>() {
+    };
+    
+    public static final ParameterizedTypeReference<ResponseEntity<String>> testconnectionReference = new ParameterizedTypeReference<ResponseEntity<String>>() {
     };
 
     public static final String ENDPOINT = "registryaccounts/";
@@ -40,6 +44,11 @@ public class RegistryAccountServiceImpl extends GenericServiceImpl<RegistryAccou
     @Override
     public ResponseEntity<RegistryAccount> findRegistryAccountTypeById(String id) {
         return findById("accounttype/" + id);
+    }
+    
+    @Override
+    public ResponseEntity<String> testConnection(RegistryAccount registry) {
+        return (ResponseEntity<String>) post(registry, "test-connection/", testconnectionReference);
     }
 
 }

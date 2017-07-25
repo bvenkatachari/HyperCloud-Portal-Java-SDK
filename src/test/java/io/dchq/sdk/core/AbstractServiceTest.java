@@ -75,6 +75,8 @@ public abstract class AbstractServiceTest {
     protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";
     
     protected static String vlanId = "2c9180865d312fc4015d3158c366007b"; // VLAN-ID 505
+    
+    protected static String cloudProviderId = "4028818c5b3c5889015b3c5b67750001"; // Boston Data Center (ISO) (HCS)
 
     protected int waitTime = 0, maxWaitTime = 0;
 
