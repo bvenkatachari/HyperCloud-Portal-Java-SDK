@@ -1,10 +1,11 @@
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.dockervolume.DockerVolume;
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.List;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 
 /**
  * @Author Saurabh Bhatia on 2/17/2017.
@@ -32,5 +33,15 @@ public class DockerVolumeServiceImpl extends GenericServiceImpl<DockerVolume, Re
                 new ParameterizedTypeReference<ResponseEntity<DockerVolume>>() {
                 }
         );
+    }
+    
+    @Override
+    public ResponseEntity<DockerVolume> attachVolume(String volumeId, String machineId) {
+        return super.doPost(null, volumeId+"/attach/"+machineId);
+    }
+    
+    @Override
+    public ResponseEntity<DockerVolume> detachVolume(String volumeId, String machineId) {
+        return super.doPost(null, volumeId+"/detach/"+machineId);
     }
 }
