@@ -94,10 +94,10 @@ public class VirtualNetworkTest extends AbstractServiceTest {
 
 	public VirtualNetworkTest(String hardwareId, String image, String networkId, boolean success) {
 
-		this.success = success;
 		this.hardwareId = hardwareId;
 		this.image = image;
 		this.networkId = networkId;
+		this.success = success;
 	}
 
 	@Parameterized.Parameters
@@ -487,6 +487,7 @@ public class VirtualNetworkTest extends AbstractServiceTest {
 
     }
 	
+	@Ignore
 	@Test
 	public void test7_cleanUp() {
 		
