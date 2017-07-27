@@ -37,7 +37,7 @@ public class DockerVolumeRegisterServiceTest extends AbstractServiceTest {
 	public DockerVolumeRegisterServiceTest(String name, String hostIp, String volumeId, String destination, EntitlementType entitlement, boolean success) {
 		dockerVolume = new DockerVolume();
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		if (name != null) {
+		if (name != null & !name.isEmpty()) {
 			name = prefix.toLowerCase() + name;
 		}
 		dockerVolume.setName(name);
@@ -51,7 +51,10 @@ public class DockerVolumeRegisterServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 
-		return Arrays.asList(new Object[][] { { "testregister", "dev.hypercloud.local", "SELF_REGISTERED", "Fixed", EntitlementType.OWNER, true } });
+		return Arrays.asList(new Object[][] { 
+			{ "testregister", "dev.hypercloud.local", "SELF_REGISTERED", "Fixed", EntitlementType.OWNER, true },
+			{ "", "dev.hypercloud.local", "SELF_REGISTERED", "Fixed", EntitlementType.OWNER, false },
+			{ null, "dev.hypercloud.local", "SELF_REGISTERED", "Fixed", EntitlementType.OWNER, false }});
 	}
 
 	@org.junit.Before
