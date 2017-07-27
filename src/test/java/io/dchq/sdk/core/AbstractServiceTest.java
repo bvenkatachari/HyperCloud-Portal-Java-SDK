@@ -73,10 +73,13 @@ public abstract class AbstractServiceTest {
     
     protected static String vpcId = "2c9180865d312fc4015d3158a5c00078";
     protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";
-    
     protected static String vlanId = "2c9180865d312fc4015d3158c366007b"; // VLAN-ID 505
     
-    protected static String cloudProviderId = "4028818c5b3c5889015b3c5b67750001"; // Boston Data Center (ISO) (HCS)
+    //Test Suite data
+    protected static String networkProviderId = "2c9180865d312fc4015d3134e4ab0006"; // SkyGridC02 (HNS)
+    protected static String volumeProviderId = "2c9180865d312fc4015d3134e40d0004"; // SkyGridC02 (HBS)
+    protected static String computeProviderId = "2c9180865d312fc4015d3134e26d0002"; // SkyGridC02 (HCS)
+    protected static String blueprintAppId = "402881864e1a36cc014e1a399cf90102"; // 3-Tier Java (Nginx – Jetty – MySQL)
 
     protected int waitTime = 0, maxWaitTime = 0;
 

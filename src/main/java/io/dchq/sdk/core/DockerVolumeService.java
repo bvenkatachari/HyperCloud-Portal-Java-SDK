@@ -14,4 +14,7 @@ import java.util.List;
 public interface DockerVolumeService extends GenericService<DockerVolume, ResponseEntity<List<DockerVolume>>,
         ResponseEntity<DockerVolume>> {
 
+	public ResponseEntity<DockerVolume> attachVolume(String volumeId, String machineId);
+	
+	public ResponseEntity<DockerVolume> detachVolume(String volumeId, String machineId);
 }

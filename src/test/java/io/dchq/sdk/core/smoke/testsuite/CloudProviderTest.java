@@ -55,7 +55,8 @@ public class CloudProviderTest extends AbstractServiceTest {
     @Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			     { cloudProviderId, true }
+			//Cloud Provider Id (HCS), Flag     
+			{ computeProviderId, true }
 			});
 	}
 	
