@@ -1,18 +1,7 @@
-package io.dchq.sdk.core.smoke.testsuite;
+package io.dchq.sdk.core.workflow;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
@@ -27,46 +16,36 @@ import io.dchq.sdk.core.ServiceFactory;
 * @author Santosh Kumar.
 * @since 1.0
 *
+*   Methods:
+*    1) Test Connection
 */
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@RunWith(Parameterized.class)
-public class CloudProviderTest extends AbstractServiceTest {
+
+public class CloudProviderFlow extends AbstractServiceTest {
 	
 	
 	private RegistryAccountService registryAccountService;
     private RegistryAccount registryAccount;
-    private String cloudProvider_Id = "";
     private boolean success;
     
-    @org.junit.Before
-	public void setUp() throws Exception {
-    	registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl1, cloudadminusername, cloudadminpassword);
-		
-	}
     
-    public CloudProviderTest (String cloudProvider_Id, boolean success){
-    	
-    	this.cloudProvider_Id = cloudProvider_Id;
-    	this.success = success;
+    public CloudProviderFlow (){
+    
+    	this.success = true;
+    	setUp();
     }
     	
     
-    @Parameterized.Parameters
-	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { 
-			//Cloud Provider Id (HCS), Flag     
-			{ computeProviderId, true }
-			});
+    public void setUp() {
+    	registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl1, cloudadminusername, cloudadminpassword);
+		
 	}
 	
-	@Ignore
-	@Test
-	public void testConnection() {
+	public void testConnection() throws Exception{
 
 		try {
-			logger.info("Getting cloud provider's detail with id as [{}] ", cloudProvider_Id);
-			ResponseEntity<RegistryAccount> response = registryAccountService.findById(cloudProvider_Id);
+			logger.info("Getting cloud provider's detail with id as [{}] ", computeProviderId);
+			ResponseEntity<RegistryAccount> response = registryAccountService.findById(computeProviderId);
 			if (success) {
 				for (Message message : response.getMessages()) {
 					logger.warn("Error while get request  [{}] ", message.getMessageText());
@@ -99,11 +78,10 @@ public class CloudProviderTest extends AbstractServiceTest {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			fail(e.getMessage());
+			throw e;
 		}
 
 	}
-	
 	
 	
 }
