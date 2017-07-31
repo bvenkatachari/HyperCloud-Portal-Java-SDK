@@ -74,7 +74,7 @@ public class NetworkACLFindAllServiceTest extends NetworkACLUtil {
 	}
 	
 	public int testNetworkACLPosition(String id) {
-		ResponseEntity<List<NetworkACL>> response = networkACLService.findAll(0, 500);
+		ResponseEntity<List<NetworkACL>> response = networkACLService.findAllEntitled(0, 500);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
 		}

@@ -26,46 +26,54 @@ public class SubnetUtil extends AbstractServiceTest {
 	Subnet subnet;
 	Subnet subnetCreated;
 	boolean success;
-	
+
 	NetworkACLService networkACLService;
 	SecurityGroupService securityGroupService;
 
-	
-	public void deleteNetworkACL(){
-		ResponseEntity<List<NetworkACL>> response = networkACLService.findAll();
-		if (response.getResults() != null && !response.isErrors()) {
-			for (NetworkACL acl : response.getResults()) {
-				
-				NetworkACL netowrkACL = networkACLService.findById(acl.getId()).getResults();
-				
-				if(netowrkACL.getSubnet().getId().equals(this.subnetCreated.getId())){
-					logger.info("cleaning up Network ACL with name - "+acl.getName());
-					
-					ResponseEntity<?> deleteResponse = networkACLService.delete(acl.getId());
-					for (Message message : deleteResponse.getMessages()) {
-						logger.warn("Error Network ACL deletion: [{}] ", message.getMessageText());
+	public void deleteNetworkACL() {
+
+		try {
+			ResponseEntity<List<NetworkACL>> response = networkACLService.findAllEntitled(0, 500);
+			if (response.getResults() != null && !response.isErrors()) {
+				for (NetworkACL acl : response.getResults()) {
+
+					NetworkACL netowrkACL = networkACLService.findById(acl.getId()).getResults();
+
+					if (netowrkACL != null && netowrkACL.getSubnet().getId().equals(this.subnetCreated.getId())) {
+						logger.info("cleaning up Network ACL with name - " + acl.getName());
+
+						ResponseEntity<?> deleteResponse = networkACLService.delete(acl.getId());
+						for (Message message : deleteResponse.getMessages()) {
+							logger.warn("Error Network ACL deletion: [{}] ", message.getMessageText());
+						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
-	
-	public void deleteSecurityGroup(){
-		ResponseEntity<List<SecurityGroup>> response = securityGroupService.findAll();
-		if (response.getResults() != null && !response.isErrors()) {
-			for (SecurityGroup sg : response.getResults()) {
-				
-				SecurityGroup securityGroup = securityGroupService.findById(sg.getId()).getResults();
-				
-				if(securityGroup.getSubnet().getId().equals(this.subnetCreated.getId())){
-					logger.info("cleaning up Security Group with name - "+sg.getName());
-					
-					ResponseEntity<?> deleteResponse = securityGroupService.delete(sg.getId());
-					for (Message message : deleteResponse.getMessages()) {
-						logger.warn("Error Security Group deletion: [{}] ", message.getMessageText());
+
+	public void deleteSecurityGroup() {
+		try {
+			ResponseEntity<List<SecurityGroup>> response = securityGroupService.findAllEntitled(0, 500);
+			if (response.getResults() != null && !response.isErrors()) {
+				for (SecurityGroup sg : response.getResults()) {
+
+					SecurityGroup securityGroup = securityGroupService.findById(sg.getId()).getResults();
+
+					if (null != securityGroup && securityGroup.getSubnet().getId().equals(this.subnetCreated.getId())) {
+						logger.info("cleaning up Security Group with name - " + sg.getName());
+
+						ResponseEntity<?> deleteResponse = securityGroupService.delete(sg.getId());
+						for (Message message : deleteResponse.getMessages()) {
+							logger.warn("Error Security Group deletion: [{}] ", message.getMessageText());
+						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 
