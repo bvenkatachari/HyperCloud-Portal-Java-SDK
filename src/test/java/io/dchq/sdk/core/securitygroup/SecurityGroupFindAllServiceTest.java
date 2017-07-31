@@ -74,7 +74,7 @@ public class SecurityGroupFindAllServiceTest extends SecurityGroupUtil {
 	
 	
 	public int testSecurityGroupPosition(String id) {
-		ResponseEntity<List<SecurityGroup>> response = securityGroupService.findAll(0, 500);
+		ResponseEntity<List<SecurityGroup>> response = securityGroupService.findAllEntitled(0, 500);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
 		}
