@@ -56,7 +56,7 @@ public class PluginFindServiceTest extends AbstractServiceTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        appService = ServiceFactory.buildPluginService(rootUrl, username, password);
+        appService = ServiceFactory.buildPluginService(rootUrl1, cloudadminusername, cloudadminpassword);
     }
 
     private Plugin plugin;

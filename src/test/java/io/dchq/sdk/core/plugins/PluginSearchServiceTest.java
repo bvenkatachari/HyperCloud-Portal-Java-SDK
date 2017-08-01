@@ -57,10 +57,11 @@ import static org.junit.Assert.assertEquals;
 public class PluginSearchServiceTest extends AbstractServiceTest {
 
     private PluginService appService;
+    private PluginService appService2;
 
     @org.junit.Before
     public void setUp() throws Exception {
-        appService = ServiceFactory.buildPluginService(rootUrl, username, password);
+        appService = ServiceFactory.buildPluginService(rootUrl1, cloudadminusername, cloudadminpassword);
     }
 
     private Plugin plugin;
