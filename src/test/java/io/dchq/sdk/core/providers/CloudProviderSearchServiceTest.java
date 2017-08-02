@@ -253,7 +253,7 @@ public class CloudProviderSearchServiceTest extends AbstractServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, username, password);
+        registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername, cloudadminpassword);
     }
 
     @Test

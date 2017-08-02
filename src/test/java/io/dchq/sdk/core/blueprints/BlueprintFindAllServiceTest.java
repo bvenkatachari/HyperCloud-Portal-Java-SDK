@@ -204,7 +204,7 @@ public class BlueprintFindAllServiceTest extends AbstractServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        blueprintService = ServiceFactory.buildBlueprintService(rootUrl, username, password);
+        blueprintService = ServiceFactory.buildBlueprintService(rootUrl, cloudadminusername, cloudadminpassword);
     }
     
     @Test
