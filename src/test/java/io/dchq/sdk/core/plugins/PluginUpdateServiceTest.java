@@ -15,32 +15,35 @@
  */
 package io.dchq.sdk.core.plugins;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+import org.springframework.util.StringUtils;
+
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.base.UsernameEntityBase;
 import com.dchq.schema.beans.one.container.Env;
 import com.dchq.schema.beans.one.plugin.Plugin;
-
 import com.dchq.schema.beans.one.security.EntitlementType;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.PluginService;
 import io.dchq.sdk.core.ServiceFactory;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
-import org.springframework.util.StringUtils;
-
-import java.util.*;
-
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * Abstracts class for holding test credentials.
@@ -58,7 +61,7 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        appService = ServiceFactory.buildPluginService(rootUrl, username, password);
+        appService = ServiceFactory.buildPluginService(rootUrl1, cloudadminusername, cloudadminpassword);
     }
 
     private Plugin plugin;
@@ -99,10 +102,10 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 // sets of two, first is the base and the second is the update version
-                {"TestPlugin113", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin12", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin113", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), false,  false},
+                {"TestPlugin12", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), false,  false},
 
-      /**          {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
+                {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
                 {"TestPlugin11", "1.4", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
 
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
@@ -136,8 +139,7 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, null, true,  false},
 
                 {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), true,  false},
-                {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), false,  false},
-       **/
+                {"TestPlugin11", "1.3", "Description", "Dummy Script", "SHELL", "Apache License 2.0", 30, EntitlementType.CUSTOM, true, userId2, null, new HashSet<>(Arrays.asList(new Env().withProp("prop1").withVal("val1"))), false,  false}
         });
     }
 
@@ -180,14 +182,14 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
             this.plugin.setEntitledUserGroups(new ArrayList<NameEntityBase>(Arrays.asList(new NameEntityBase().withId(entitledUserId))));
         }
 
-        this.plugin.setInactive(inactive);
+        //this.plugin.setInactive(inactive);
 
         this.errors = errors;
 
 
     }
 
-    @Ignore
+   // @Ignore
     @org.junit.Test
 	public void testUpdate() throws Exception {
 
@@ -210,7 +212,7 @@ public class PluginUpdateServiceTest extends AbstractServiceTest {
         
         if (!response.isErrors()) {
         	
-        	String updatedName = this.plugin.getName()+"_updated";
+        	String updatedName = this.plugin.getName()+"updated";
         	this.plugin.setName(updatedName);
         	
         	response = appService.update(this.plugin);
