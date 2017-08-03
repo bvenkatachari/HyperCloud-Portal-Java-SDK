@@ -16,6 +16,7 @@
 package io.dchq.sdk.core.machines;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
@@ -60,7 +61,16 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx", "Compute vmSwitch,vlanId=504", 1, "2c9180865d312fc4015d3134e26d0002", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
+        	//Machine gets created for blank values as well
+        	/*{"", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
+        	{"automationtest", Boolean.FALSE, "", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_NoDocker.vhdx", "", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},*/
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "", 300000, "", true}
         });
     }
 
@@ -103,62 +113,70 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
 
     
     @org.junit.Test
-    public void testCreate() throws Exception {
+	public void testCreate() throws Exception {
 
-        logger.info("Create Machine with Name [{}]", dockerServer.getName());
-        ResponseEntity<DockerServer> response = dockerServerService.create(dockerServer);
+		logger.info("Create Machine with Name [{}]", dockerServer.getName());
+		ResponseEntity<DockerServer> response = dockerServerService.create(dockerServer);
 
-        String errorMessage = "";
-        for (Message message : response.getMessages()) {
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-            errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
-        }
-        Assert.assertFalse("Machine Creation Replied with Error." + errorMessage, response.isErrors());
+		if (!createError) {
+			String errorMessage = "";
+			for (Message message : response.getMessages()) {
+				logger.warn("Error while Create request  [{}] ", message.getMessageText());
+				errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
+			}
+			Assert.assertFalse("Machine Creation Replied with Error." + errorMessage, response.isErrors());
 
-        if (response.getTotalElements() == null) {
-            logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
+			if (response.getTotalElements() == null) {
+				logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
 
-            
-            dockerServer = response.getResults();
-            ResponseEntity<DockerServer> findByIdresponse = dockerServerService.findById(dockerServer.getId());
-            
-            Assert.assertEquals(false, findByIdresponse.isErrors());
-            assertNotNull(findByIdresponse.getResults());
-            dockerServer = findByIdresponse.getResults();
-            
-            //Search based on partial string. Currently search with name containing "-" not working. 
-            //"-" gets added to name through backend.
-            dockerServerResponseEntity = dockerServerService.search("automationtest", 0, 1); 
-            errorMessage = "";
-            for (Message message : dockerServerResponseEntity.getMessages()) {
-                logger.warn("Error while Create request  [{}] ", message.getMessageText());
-                errorMessage += message.getMessageText() + "\n";
-            }
+				dockerServer = response.getResults();
+				ResponseEntity<DockerServer> findByIdresponse = dockerServerService.findById(dockerServer.getId());
 
-            assertNotNull(errorMessage, dockerServerResponseEntity.getResults());
-            assertFalse(dockerServerResponseEntity.isErrors());
+				Assert.assertEquals(false, findByIdresponse.isErrors());
+				assertNotNull(findByIdresponse.getResults());
+				dockerServer = findByIdresponse.getResults();
 
-            if (dockerServerResponseEntity.getResults() != null) {
-            	
-                for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
-                    dockerServerProvisioning = searchDocker;
-                }
-                Assert.assertNotNull("Machine Provision not started...", dockerServerProvisioning);
-                dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
-                Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
-                if (dockerServerCreated != null) {
-                    Assert.assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
-                    Assert.assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
+				// Search based on partial string. Currently search with name
+				// containing "-" not working.
+				// "-" gets added to name through backend.
+				dockerServerResponseEntity = dockerServerService.search("automationtest", 0, 1);
+				errorMessage = "";
+				for (Message message : dockerServerResponseEntity.getMessages()) {
+					logger.warn("Error while Create request  [{}] ", message.getMessageText());
+					errorMessage += message.getMessageText() + "\n";
+				}
 
-                }
+				assertNotNull(errorMessage, dockerServerResponseEntity.getResults());
+				assertFalse(dockerServerResponseEntity.isErrors());
 
-            }
+				if (dockerServerResponseEntity.getResults() != null) {
 
+					for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
+						dockerServerProvisioning = searchDocker;
+					}
+					Assert.assertNotNull("Machine Provision not started...", dockerServerProvisioning);
+					dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
+					Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
+					if (dockerServerCreated != null) {
+						Assert.assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
+						Assert.assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
 
-        }
+					}
 
+				}
 
-    }
+			}
+
+		} else {
+
+			for (Message message : response.getMessages()) {
+				logger.warn("Error while Create request  [{}] ", message.getMessageText());
+			}
+			assertEquals(null, response.getResults());
+			assertEquals(true, response.isErrors());
+		}
+
+	}
 
     public DataCenter getDataCenter() {
         setUp();

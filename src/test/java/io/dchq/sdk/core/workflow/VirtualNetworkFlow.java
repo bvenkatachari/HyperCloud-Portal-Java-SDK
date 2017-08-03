@@ -159,7 +159,7 @@ public class VirtualNetworkFlow extends AbstractServiceTest {
 			ResponseEntity<DataCenter> responseEntity = dataCenterService.findById(clusterID);
 			this.dockerServer = new DockerServer().withDatacenter(responseEntity.getResults()).withName(serverName)
 					.withInactive(Boolean.FALSE).withImageId(imageId).withSize(1)
-					.withEndpoint("2c9180865d312fc4015d3160f518008e").withHardwareId(hardwareId)
+					.withEndpoint(computeProviderId).withHardwareId(hardwareId)
 					.withNetworkId(networkId);
 			this.dockerServer.setGroup(serverName);
 			this.dockerServer.setSkipAgentInstall("true");

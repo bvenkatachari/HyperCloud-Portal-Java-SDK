@@ -26,7 +26,7 @@ public class VirtualNetworkTestSuite {
 
 	@BeforeClass
 	public static void setUp() throws Exception { 
-		networkFlow = new VirtualNetworkFlow("cpu=1,memory=4GB,disk=20GB,generation=1","C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx");
+		networkFlow = new VirtualNetworkFlow("cpu=1,memory=2GB,disk=20GB,generation=1","C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_Docker.vhdx");
 	}
 
 	
