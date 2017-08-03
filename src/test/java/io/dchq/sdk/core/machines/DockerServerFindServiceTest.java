@@ -60,7 +60,7 @@ public class DockerServerFindServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ubuntu1604HFTemplate.vhdx", "Compute vmSwitch,vlanId=504", 1, "2c9180865d312fc4015d3134e26d0002", 300000, "", false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
         });
     }
 
