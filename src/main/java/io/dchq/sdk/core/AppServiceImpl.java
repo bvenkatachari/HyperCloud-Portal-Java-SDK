@@ -32,7 +32,7 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     public static final ParameterizedTypeReference<ResponseEntity<AppScaleInProfile>> scaleInReference = new ParameterizedTypeReference<ResponseEntity<AppScaleInProfile>>() {
     };
 
-    public static final String ENDPOINT = "apps/";
+    public static final String ENDPOINT = "provision/";
 
     /**
      * @param baseURI  - e.g. https://dchq.io/api/1.0/
