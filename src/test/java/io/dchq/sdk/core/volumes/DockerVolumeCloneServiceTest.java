@@ -40,6 +40,7 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 		}
 		dockerVolume.setName(volumeName);
 		dockerVolume.setEntitlementType(type);
+		dockerVolume.setEndpoint(provider);
 		dockerVolume.setSize(size);
 		this.success = success;
 		this.cloneName = cloneName;
@@ -49,9 +50,9 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] { 
-			{ "testvalume", "clonename", "2c9180865d312fc4015d3134e40d0004", "2", EntitlementType.OWNER, false },
-			{ "testvalume", "clonename", "2c9180865d312fc4015d3134e40d0004", "2", EntitlementType.PUBLIC, false },
-			{ "testvalume", "clonename","2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, false }
+			{ "testvalume", "clonename", "2c9180865d35d99c015d363715c100e1", "2", EntitlementType.OWNER, false },
+			{ "testvalume", "clonename", "2c9180865d35d99c015d363715c100e1", "2", EntitlementType.PUBLIC, false },
+			{ "testvalume", "clonename","2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false }
 		});
 	}
 
@@ -59,13 +60,13 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 	public void setUp() {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
-	@Ignore
+	
 	@org.junit.Test
 	public void testRegister() {
 		logger.info("Clone volume with name [{}]" , dockerVolume.getName());
 		ResponseEntity<DockerVolume> response = dockerVolumeService.create(dockerVolume);
 		assertNotNull(response);
-		if(success)
+		if(!success)
 		{
 			assertNotNull(response.getResults());
 			assertEquals(false, response.isErrors());
@@ -73,22 +74,13 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 				this.dockerVolumeCreated = response.getResults();
 				logger.info("Create docker volumne Successful..");
 			}
-
-			while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
-				try {
-					Thread.sleep(10000);
-					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-					assertNotNull(dockerVolumeCreated);
-					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-				} catch (InterruptedException e) {
-					// TODO: handling exception
-				}
-			}
+			// get live status after provision a volume
+			dockerVolumeCreated = getStatus(this.dockerVolumeCreated);
 			logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 			assertNotNull(response);
 			assertNotNull(response.isErrors());
 			assertEquals("LIVE", dockerVolumeCreated.getStatus());
-			ResponseEntity<DockerVolume> cloneVolume = dockerVolumeService.doPost(dockerVolumeCreated, dockerVolumeCreated.getClusterId()+"/clone/" + this.cloneName);
+			ResponseEntity<DockerVolume> cloneVolume = dockerVolumeService.doPost(dockerVolumeCreated, dockerVolumeCreated.getId()+"/clone/" + this.cloneName);
 			assertNotNull(cloneVolume.getResults());
 			assertEquals(false, cloneVolume.isErrors());
 			
@@ -96,18 +88,10 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 				this.cloneVolumeCreated = cloneVolume.getResults();
 				logger.info("clone docker volumne Successful..");
 			}
-			while (cloneVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
-				try {
-					Thread.sleep(10000);
-					cloneVolumeCreated = dockerVolumeService.findById(cloneVolumeCreated.getId()).getResults();
-					assertNotNull(cloneVolumeCreated);
-					logger.info("Clone Volume Status is [{}]", cloneVolumeCreated.getStatus());
-				} catch (InterruptedException e) {
-					// TODO: handling exception
-				}
-			}
+			// get live status after clone a volume 
+			dockerVolumeCreated = getStatus(this.cloneVolumeCreated);
 			logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-			
+			assertEquals(dockerVolumeCreated.getName(), this.cloneName);
 		}
 		else
 		{
@@ -116,7 +100,20 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 		}
 
 	}
-
+	private DockerVolume getStatus(DockerVolume volume)
+	{
+		while (volume.getStatus().equals("PROVISIONING") || volume.getStatus().equals("CLONING") && (System.currentTimeMillis() < endTime)) {
+			try {
+				Thread.sleep(10000);
+				volume = dockerVolumeService.findById(volume.getId()).getResults();
+				assertNotNull(cloneVolumeCreated);
+				logger.info("Clone Volume Status is [{}]", volume.getStatus());
+			} catch (InterruptedException e) {
+				// TODO: handling exception
+			}
+		}
+		return volume;
+	}
 	@org.junit.After
 	public void cleanUp() 
 	{

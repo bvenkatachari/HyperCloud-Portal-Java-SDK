@@ -47,7 +47,8 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	boolean isEntitlementTypeUser;
 
-	public DockerVolumeEntitledServiceTest(String volumeName, String provider, String size, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId,  boolean success) {
+	public DockerVolumeEntitledServiceTest(String volumeName, String provider, String size, EntitlementType entitlementType,
+			boolean isEntitlementTypeUser, String entitledUserId,  boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (volumeName != null && !volumeName.isEmpty() ) {
@@ -86,13 +87,12 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
-			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.OWNER, false, false },
-			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.PUBLIC, false, false },
-			{ "testvalume", "2c9180865d312fc4015d3134e40d0004",	"2", EntitlementType.CUSTOM, true, userId2, false },
+			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
+			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
+			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
 			
 		});
 	}
-	@Ignore
 	@Test
 	public void findEntitleTest() {
 		logger.info("Create Volume name[{}] ", createVolume.getName());
@@ -102,7 +102,7 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 		for (Message msg : resultResponse.getMessages()) {
 			logger.warn("Error [{}]  " + msg.getMessageText());
 		}
-		if (this.sussess) {
+		if (!this.sussess) {
 			Assert.assertEquals(false, resultResponse.isErrors());
 			Assert.assertNotNull(resultResponse.getResults());
 
