@@ -2,18 +2,21 @@ package io.dchq.sdk.core.volumes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
+
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.security.EntitlementType;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerVolumeService;
 import io.dchq.sdk.core.ServiceFactory;
@@ -106,7 +109,7 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 			try {
 				Thread.sleep(10000);
 				volume = dockerVolumeService.findById(volume.getId()).getResults();
-				assertNotNull(cloneVolumeCreated);
+				assertNotNull(volume);
 				logger.info("Clone Volume Status is [{}]", volume.getStatus());
 			} catch (InterruptedException e) {
 				// TODO: handling exception
