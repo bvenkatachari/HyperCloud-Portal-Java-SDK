@@ -604,7 +604,7 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
 
         String url = baseURI + endpoint + id;
         if (force)
-            url += "?force=true";
+            url += "?force=true&deleteRootVolume=true";
 
         URI uri = getUri(url);
 
