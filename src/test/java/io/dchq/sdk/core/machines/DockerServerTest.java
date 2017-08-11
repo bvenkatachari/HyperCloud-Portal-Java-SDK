@@ -25,8 +25,12 @@ public class DockerServerTest extends AbstractServiceTest {
     DockerServer dockerServer;
     DockerServer dockerServerCreated, dockerServerProvisioning;
     boolean createError;
+    boolean isConnected;
     ResponseEntity<List<DockerServer>> dockerServerResponseEntity;
 
+    long startTime = System.currentTimeMillis();
+	long endTime = startTime + (60 * 60 * 90); // this is for 3 mints
+	
 
     public DataCenter getDataCenter(String datacenterName, boolean autoScale, EntitlementType entitlementType) {
         logger.info("Create Cluster with Name [{}]", datacenterName);

@@ -15,9 +15,7 @@
  */
 package io.dchq.sdk.core.machines;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,21 +59,25 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false},
-        	//Machine gets created for blank values as well
-        	/*{"", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
-        	{"automationtest", Boolean.FALSE, "", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_NoDocker.vhdx", "", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", true},*/
-        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_Docker.vhdx", "Compute vmSwitch", 1, "", 300000, "", true}
+        	
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFT_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Server2012R2HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFT_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\2016HFTWDockerV2.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Rhel73_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=4GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false},
+        	
         });
     }
 
 
-    public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success) {
+    public DockerServerCreateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success, boolean isConnected) {
     	String postfix = RandomStringUtils.randomAlphabetic(3);
     	if(clusterName !=null && !clusterName.isEmpty())
 		{
@@ -108,6 +110,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     	}
         maxWaitTime = tinout;
         this.createError = success;
+        this.isConnected = isConnected;
     }
 
 
@@ -129,40 +132,26 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
 			if (response.getTotalElements() == null) {
 				logger.info("Expecting No Response for  Machine Create [{}]", dockerServer.getName());
 
-				dockerServer = response.getResults();
-				ResponseEntity<DockerServer> findByIdresponse = dockerServerService.findById(dockerServer.getId());
-
-				Assert.assertEquals(false, findByIdresponse.isErrors());
-				assertNotNull(findByIdresponse.getResults());
-				dockerServer = findByIdresponse.getResults();
-
-				// Search based on partial string. Currently search with name
-				// containing "-" not working.
-				// "-" gets added to name through backend.
-				dockerServerResponseEntity = dockerServerService.search("automationtest", 0, 1);
-				errorMessage = "";
-				for (Message message : dockerServerResponseEntity.getMessages()) {
-					logger.warn("Error while Create request  [{}] ", message.getMessageText());
-					errorMessage += message.getMessageText() + "\n";
+				dockerServerCreated = response.getResults();
+				String serverStatus = dockerServerCreated.getDockerServerStatus().name();
+				
+				while(serverStatus.equals("PROVISIONING") && (System.currentTimeMillis() < endTime)){	
+					// Wait for some time until state changed from PROVISIONING to CONNECTED/PROVISIONED
+					wait(10000);
+					dockerServerCreated = dockerServerService.findById(dockerServerCreated.getId()).getResults();
+					serverStatus = dockerServerCreated.getDockerServerStatus().name();
+					 logger.info("Current Serverstatus   [{}] ", serverStatus);
+			
 				}
-
-				assertNotNull(errorMessage, dockerServerResponseEntity.getResults());
-				assertFalse(dockerServerResponseEntity.isErrors());
-
-				if (dockerServerResponseEntity.getResults() != null) {
-
-					for (DockerServer searchDocker : dockerServerResponseEntity.getResults()) {
-						dockerServerProvisioning = searchDocker;
-					}
-					Assert.assertNotNull("Machine Provision not started...", dockerServerProvisioning);
-					dockerServerCreated = validateProvision(dockerServerProvisioning, "PROVISIONING");
-					Assert.assertNotNull("Machine is not in Running State.", dockerServerCreated);
-					if (dockerServerCreated != null) {
-						Assert.assertEquals(dockerServer.getInactive(), dockerServerCreated.getInactive());
-						Assert.assertEquals(dockerServer.getEndpoint(), dockerServerCreated.getEndpoint());
-
-					}
-
+				
+				//If Server is in provisioned state, then it takes some time to come to connected state.
+				wait(30000); //Wait for 30 seconds
+				dockerServerCreated = dockerServerService.findById(dockerServerCreated.getId()).getResults();
+				
+				if(isConnected){
+					Assert.assertEquals("CONNECTED", dockerServerCreated.getDockerServerStatus().name());
+				}else {
+					Assert.assertEquals("PROVISIONED", dockerServerCreated.getDockerServerStatus().name());
 				}
 
 			}
@@ -231,10 +220,10 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
         logger.info("cleaning up...");
 
 
-        if (dockerServerProvisioning != null) {
+        if (dockerServerCreated != null) {
             logger.info("Deleting Machine ");
-            dockerServerService.delete(dockerServerProvisioning.getId(), true);
-            validateProvision(dockerServerProvisioning, "DESTROYING");
+            dockerServerService.delete(dockerServerCreated.getId(), true);
+            validateProvision(dockerServerCreated, "DESTROYING");
 
         }
         if (datacenterCreated != null) {
