@@ -89,7 +89,7 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false},
 		});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest()
 	{
@@ -172,8 +172,7 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 		if(this.VirtualNetworkCreated !=null)
 		{
 			logger.info("cleaning up...");
-			// TODO delete not working
-			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId(),"release/");
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.update(VirtualNetworkCreated.getId(),"release/");
 			//Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());

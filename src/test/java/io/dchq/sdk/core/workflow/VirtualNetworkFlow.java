@@ -511,8 +511,7 @@ public class VirtualNetworkFlow extends AbstractServiceTest {
 
 		if (virtualNetworkCreated != null) {
 			logger.info("cleaning up Virtual Network...");
-			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(virtualNetworkCreated.getId(),
-					"release/");
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.update(virtualNetworkCreated.getId(),"release/");
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());
 			}

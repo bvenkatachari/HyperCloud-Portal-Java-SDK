@@ -149,4 +149,12 @@ interface GenericService<E, RL, RO> {
      * @return
      */
     RO update(E entity, String id, String urlPostfix);
+    
+    /**
+     * Creates a update request with url postfix & Id
+     *
+     * @param urlPostfix
+     * @return
+     */
+    RO update(String id, String urlPostfix);
 }

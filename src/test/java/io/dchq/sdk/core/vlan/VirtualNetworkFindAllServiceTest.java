@@ -111,7 +111,7 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	@Ignore
+	
 	@Test
 	public void findAllTest()
 	{
@@ -162,8 +162,7 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		if(this.VirtualNetworkCreated !=null)
 		{
 			logger.info("cleaning up...");
-			// TODO delete not working
-			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId(),"release/");
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.update(VirtualNetworkCreated.getId(),"release/");
 			//Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());

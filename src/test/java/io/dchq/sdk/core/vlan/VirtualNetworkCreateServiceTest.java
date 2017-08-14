@@ -66,7 +66,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 		
 		return Arrays.asList(new Object[][]{ 
 			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "505" , true, true},
-	/*		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "506" , true, true},
+		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "506" , true, true},
 			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "507" , true,true},
 			
 			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "508" ,false, false},
@@ -83,10 +83,10 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "511" , true, false},
-			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false}, */
+			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false}
 		});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest()
 	{
@@ -141,8 +141,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 		if(this.VirtualNetworkCreated !=null)
 		{
 			logger.info("cleaning up...");
-			// TODO not working delete api
-			ResponseEntity<VirtualNetwork> responseDelete = vlanService.delete(VirtualNetworkCreated.getId(),"release/");
+			ResponseEntity<VirtualNetwork> responseDelete = vlanService.update(VirtualNetworkCreated.getId(),"release/");
 			//Assert.assertNotNull(responseDelete);
 			//Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
