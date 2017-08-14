@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -83,7 +82,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "511" , true, false},
-			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false}
+			//{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false}
 		});
 	}
 	
