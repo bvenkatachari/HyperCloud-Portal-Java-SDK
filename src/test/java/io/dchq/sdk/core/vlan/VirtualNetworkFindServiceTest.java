@@ -83,7 +83,7 @@ public class VirtualNetworkFindServiceTest extends AbstractServiceTest {
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "511" , true, false},
-			{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false},
+			//{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false},
 		});
 	}
 	
