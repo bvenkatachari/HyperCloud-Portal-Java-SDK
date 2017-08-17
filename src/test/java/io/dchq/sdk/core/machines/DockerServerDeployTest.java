@@ -99,17 +99,8 @@ public class DockerServerDeployTest extends AppBaseImpl{
             dc.setId(clusterID);
             blueprint.setDatacenter(dc);
 
-           //Converting Blueprint Object to JSON Object
-           /* try {
-            	 ObjectMapper mapper = new ObjectMapper();
-				String blueprintJson = mapper.writeValueAsString(blueprint);
-				logger.info("BluePrint JSON : " + blueprintJson);
-			} catch (JsonProcessingException ex) {
-				logger.error(ex.getMessage());
-			}*/
-            
-            // Deploying using blueprint object
-            ResponseEntity<DockerServer> vmResponseEntity = vmServer.deploy(blueprint);
+            //Deploy Method has been changed. Need to remove this class.
+            ResponseEntity<DockerServer> vmResponseEntity = null;// vmServer.deploy(blueprint);
 
             if (vmResponseEntity.isErrors()) {
                 for (Message m : vmResponseEntity.getMessages()) {
