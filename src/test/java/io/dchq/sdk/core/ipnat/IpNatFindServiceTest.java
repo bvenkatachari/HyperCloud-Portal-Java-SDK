@@ -36,7 +36,7 @@ public class IpNatFindServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 
-	public IpNatFindServiceTest(String ipPoolName, EntitlementType entitlementType, String mask, String ipPoolId, String drescription, boolean isprifix, boolean success) {
+	public IpNatFindServiceTest(String ipPoolName, EntitlementType entitlementType, String mask, String vpcId, String drescription, boolean isprifix, boolean success) {
 		ipPool = new VpcIpPool();
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 		if (ipPoolName != null && !ipPoolName.isEmpty() && isprifix) {
@@ -57,9 +57,9 @@ public class IpNatFindServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "2c9180875dee60a2015dee9da49101db", "test description", true,true } });
+		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "21", "2c9180875dee60a2015dee9da49101db", "test description", true,true } });
 	}
-	@Ignore
+
 	@Test
 	public void findTest() {
 		logger.info("Create Ip/Nat name[{}] ", ipPool.getName());
