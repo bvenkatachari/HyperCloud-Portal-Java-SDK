@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -20,8 +19,9 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.network.IpPool;
+import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.security.EntitlementType;
+import com.dchq.schema.beans.one.vpc.VpcIpPool;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.IpNatService;
@@ -31,22 +31,26 @@ import io.dchq.sdk.core.ServiceFactory;
 @RunWith(Parameterized.class)
 public class IpNatFindAllServiceTest extends AbstractServiceTest {
 	private IpNatService ipnatService;
-	private IpPool ipPool;
-	private IpPool ipPoolCreated;
+	private VpcIpPool ipPool;
+	private VpcIpPool ipPoolCreated;
 	private boolean success;
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	int countBeforeCreate;
 	int countAfterCreate;
 
-	public IpNatFindAllServiceTest(String ipPoolName, EntitlementType entitlementType, String ipPoolId, String drescription, boolean isprifix, boolean success) {
-		ipPool = new IpPool();
+	public IpNatFindAllServiceTest(String ipPoolName, EntitlementType entitlementType, String mask, String vpcId, String drescription, boolean isprifix, boolean success) {
+		ipPool = new VpcIpPool();
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (ipPoolName != null && !ipPoolName.isEmpty() && isprifix) {
 			ipPoolName = (ipPoolName + prifix).toLowerCase();
 		}
 		ipPool.setName(ipPoolName);
+		ipPool.setMask(mask);
+		NameEntityBase namedEntityBased = new NameEntityBase();
+		namedEntityBased.setId(vpcId);
+		ipPool.setVirtualPrivateCloud(namedEntityBased);
 		this.success = success;
 	}
 
@@ -57,11 +61,11 @@ public class IpNatFindAllServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "402881845c9458a6015c945ac24c0004", "test description", true,true } });
+		return Arrays.asList(new Object[][] { { "testipnat",EntitlementType.OWNER, "21", "2c9180875dee60a2015dee9da49101db", "test description", true,true } });
 	}
 
 	public int testVPCPosition(String id) {
-		ResponseEntity<List<IpPool>> response = ipnatService.findAll(0, 500);
+		ResponseEntity<List<VpcIpPool>> response = ipnatService.findAll(0, 500);
 		assertNotNull(response);
 		for (Message message : response.getMessages()) {
 			logger.warn("Error [{}]  " + message.getMessageText());
@@ -70,7 +74,7 @@ public class IpNatFindAllServiceTest extends AbstractServiceTest {
 		assertEquals(false, response.isErrors());
 		int position = 0;
 		if (id != null) {
-			for (IpPool obj : response.getResults()) {
+			for (VpcIpPool obj : response.getResults()) {
 				position++;
 				if (obj.getId().equals(id)) {
 					logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
@@ -81,12 +85,11 @@ public class IpNatFindAllServiceTest extends AbstractServiceTest {
 		logger.info(" Total Number of Objects :{}", response.getResults().size());
 		return response.getResults().size();
 	}
-	@Ignore
 	@Test
 	public void findAllTest() {
 		logger.info("Create IP/Nat name[{}] ", ipPool.getName());
 		countBeforeCreate = testVPCPosition(null);
-		ResponseEntity<IpPool> response = ipnatService.create(ipPool);
+		ResponseEntity<VpcIpPool> response = ipnatService.create(ipPool);
 		Assert.assertNotNull(response);
 		for (Message msg : response.getMessages()) {
 			logger.warn("Error [{}]  " + msg.getMessageText());
@@ -99,22 +102,6 @@ public class IpNatFindAllServiceTest extends AbstractServiceTest {
 				this.ipPoolCreated = response.getResults();
 				logger.info("Create IP/Nat Successful..");
 			}
-			logger.info("IP/Nat state [{}]", ipPoolCreated.getIpStatus().name());
-			while (ipPoolCreated.getIpStatus().name().equals("PROVISIONING")
-					&& (System.currentTimeMillis() < endTime)) {
-				try {
-					// sleep for some time
-					Thread.sleep(10000);
-					response = ipnatService.findById(ipPoolCreated.getId());
-					Assert.assertEquals(false, response.isErrors());
-					Assert.assertNotNull(response.getResults());
-					this.ipPoolCreated = response.getResults();
-				} catch (InterruptedException e) {
-					// ignore
-				}
-
-			}
-			logger.info("IP/Nat state [{}]", ipPoolCreated.getIpStatus().name());
 			countAfterCreate = testVPCPosition(ipPoolCreated.getId());
 			assertEquals(countBeforeCreate + 1, countAfterCreate);
 
@@ -129,7 +116,7 @@ public class IpNatFindAllServiceTest extends AbstractServiceTest {
 	public void cleanUp() {
 		if (this.ipPoolCreated != null) {
 			logger.info("cleaning up...");
-			ResponseEntity<IpPool> responseDelete = ipnatService.delete(ipPoolCreated.getId());
+			ResponseEntity<VpcIpPool> responseDelete = ipnatService.delete(ipPoolCreated.getId());
 			// Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error IP/Nat deletion: [{}] ", message.getMessageText());
