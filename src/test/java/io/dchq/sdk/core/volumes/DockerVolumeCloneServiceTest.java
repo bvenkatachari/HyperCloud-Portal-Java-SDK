@@ -92,9 +92,9 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 				logger.info("clone docker volumne Successful..");
 			}
 			// get live status after clone a volume 
-			dockerVolumeCreated = getStatus(this.cloneVolumeCreated);
+			cloneVolumeCreated = getStatus(this.cloneVolumeCreated);
 			logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-			assertEquals(dockerVolumeCreated.getName(), this.cloneName);
+			assertEquals(cloneVolumeCreated.getName(), this.cloneName);
 		}
 		else
 		{
