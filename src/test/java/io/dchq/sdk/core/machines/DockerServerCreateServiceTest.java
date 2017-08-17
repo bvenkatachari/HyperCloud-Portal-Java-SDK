@@ -197,10 +197,9 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
         logger.info("Create Machine with Name [{}]", dockerServer.getName());
         ResponseEntity<DockerServer> response = dockerServerService.create(dockerServer);
 
-        String errorMessage = "";
+        
         for (Message message : response.getMessages()) {
             logger.warn("Error while Create request  [{}] ", message.getMessageText());
-            errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
         }
 
 
@@ -214,7 +213,6 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
 
             if (dockerServerResponseEntity.getResults() != null) {
 
-                String serverStatus = "";
                 for (DockerServer searchDocker : dockerServerResponseEntity.getResults())
                     dockerServerProvisioning = searchDocker;
 

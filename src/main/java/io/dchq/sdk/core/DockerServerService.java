@@ -1,10 +1,10 @@
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.blueprint.Blueprint;
-import com.dchq.schema.beans.one.provider.DockerServer;
-
 import java.util.List;
+
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.provider.SDIRequest;
 
 /**
  * <code>DockerServer</code> endpoint API calls.
@@ -34,7 +34,7 @@ public interface DockerServerService extends GenericService<DockerServer, Respon
      * @param blueprintId
      * @return
      */
-    ResponseEntity<DockerServer> deploy(Blueprint blueprintId);
+    ResponseEntity<List<DockerServer>> deploy(SDIRequest request);
 
 
     /**

@@ -427,6 +427,36 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
 
         return res.getBody();
     }
+    
+    /**
+     * Executes POST request
+     *
+     * @param entity     - not null
+     * @param urlPostfix - url
+     * @return
+     */
+    @Override
+    public Object doPost(Object entity, String urlPostfix, ParameterizedTypeReference referenceType) {
+
+        String url = baseURI + endpoint + urlPostfix;
+        URI uri = getUri(url);
+
+        HttpHeaders map = getHttpHeaders();
+
+        //set your entity to send
+        HttpEntity<Object> requestEntity = new HttpEntity<>(entity, map);
+
+
+        org.springframework.http.ResponseEntity<?> res =
+                template.exchange(
+                        url,
+                        HttpMethod.POST,
+                        requestEntity,
+                        referenceType
+                );
+
+        return res.getBody();
+    }
 
     /**
      * Executes GET request

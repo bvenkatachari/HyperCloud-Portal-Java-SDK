@@ -1,11 +1,12 @@
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.blueprint.Blueprint;
-import com.dchq.schema.beans.one.provider.DockerServer;
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.List;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.provider.SDIRequest;
 
 /**
  * Encapsulates DCHQ DockerServer related methods.
@@ -58,7 +59,7 @@ public class DockerServerServiceImpl extends GenericServiceImpl<DockerServer, Re
     }
 
     @Override
-    public ResponseEntity<DockerServer> deploy(Blueprint blueprint) {
-        return super.doPost(blueprint, "/sdi");
+    public ResponseEntity<List<DockerServer>> deploy(SDIRequest request) {
+        return (ResponseEntity<List<DockerServer>>) doPost(request, "sdi/", listTypeReference);
     }
 }

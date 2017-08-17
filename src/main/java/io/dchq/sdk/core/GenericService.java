@@ -96,6 +96,8 @@ interface GenericService<E, RL, RO> {
      * @return
      */
     RO doPost(Object entity, String urlPostfix);
+    
+    Object doPost(Object entity, String urlPostfix, ParameterizedTypeReference referenceType);
 
 
   //  Object doGet(String requestParams);
