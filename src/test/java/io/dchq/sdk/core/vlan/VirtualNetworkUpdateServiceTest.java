@@ -57,7 +57,7 @@ public class VirtualNetworkUpdateServiceTest extends AbstractServiceTest{
 	@Before
 	public void setUp()
 	{
-		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl, cloudadminusername, cloudadminpassword);
+		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 	
 	@Parameterized.Parameters
@@ -131,7 +131,7 @@ public class VirtualNetworkUpdateServiceTest extends AbstractServiceTest{
 			if(resultFindResponse.getResults() != null && !resultFindResponse.isErrors())
 			{
 				this.updatedVlan = resultFindResponse.getResults();
-				logger.info("Create VPC Successful..");
+				logger.info("Create Vlan Successful..");
 			}
 			Assert.assertEquals(updatedVlan.getName(), VirtualNetworkCreated.getName());
 

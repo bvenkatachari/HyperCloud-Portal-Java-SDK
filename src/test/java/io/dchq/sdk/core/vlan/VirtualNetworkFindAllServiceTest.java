@@ -61,7 +61,7 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 	@Before
 	public void setUp()
 	{
-		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl, cloudadminusername, cloudadminpassword);
+		vlanService = ServiceFactory.buildVirtualNetworkService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 	
 	@Parameterized.Parameters
