@@ -21,6 +21,7 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.container.Container;
 import com.dchq.schema.beans.one.inbox.MessageResolution;
 import com.dchq.schema.beans.one.inbox.MessageStatus;
 import com.dchq.schema.beans.one.provision.App;
@@ -44,8 +45,6 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 	private String skey = "LjVh2sEwJlycnmkdXHesjeky9OxAtYivnwJQQLuj";
 	private App appObject;
 	private MessageService messageService;
-	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>() {
-	};
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
@@ -128,6 +127,5 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 				logger.warn("Error App deletion: [{}] ", message.getMessageText());
 			}
 		}
-
 	}
 }
