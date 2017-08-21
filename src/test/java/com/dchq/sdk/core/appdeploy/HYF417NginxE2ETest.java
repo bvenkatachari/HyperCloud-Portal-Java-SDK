@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -22,6 +21,8 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.inbox.MessageResolution;
+import com.dchq.schema.beans.one.inbox.MessageStatus;
 import com.dchq.schema.beans.one.provision.App;
 
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -43,7 +44,8 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 	private String skey = "LjVh2sEwJlycnmkdXHesjeky9OxAtYivnwJQQLuj";
 	private App appObject;
 	private MessageService messageService;
-	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>(){};
+	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>() {
+	};
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
@@ -64,7 +66,7 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
 		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
-	@Ignore
+
 	@Test
 	public void deployNginx() {
 		logger.info("Start deploying");
@@ -72,7 +74,7 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 		ResponseEntity<Blueprint> blueprintResponse = blueprintService.findById(blueprintId);
 		assertNotNull(blueprintResponse);
 		assertEquals(false, blueprintResponse.isErrors());
-		
+
 		blueprint = blueprintResponse.getResults();
 		PkEntityBase dc = new PkEntityBase();
 		dc.setId(clusterId);
@@ -84,17 +86,24 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 			appObject = response.getResults();
 			logger.info("App deploy Successfully..");
 		}
-		logger.info("VLan state [{}]", appObject.getProvisionState());
-		
-		if(appObject.getProvisionState().name().equals("WAITING_APPROVAL"))
-		{
-	//		messageService.find("unread", listTypeReference);
-//			for(com.dchq.schema.beans.one.inbox.Message message :list.getResults())
-//			{
-//				System.out.println(message.getId());
-//			}
+		logger.info("App deployment state [{}]", appObject.getProvisionState());
+
+		if (appObject.getProvisionState().name().equals("WAITING_APPROVAL")) {
+
+			ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>> list = (ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>) messageService
+					.find("unread",
+							new ParameterizedTypeReference<ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>>() {
+							});
+
+			for (com.dchq.schema.beans.one.inbox.Message message : list.getResults()) {
+				message.setMessageStatus(MessageStatus.READ);
+				message.setMessageResolution(MessageResolution.APPROVED);
+				ResponseEntity<com.dchq.schema.beans.one.inbox.Message> re = messageService.update(message);
+				logger.info("Message approved {[]}", re.getResults().getBody());
+			}
 		}
-		while (appObject.getProvisionState().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
+		appObject = appService.findById(appObject.getId()).getResults();
+		while (appObject.getProvisionState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 			try {
 				// wait for some time
 				Thread.sleep(10000);
@@ -114,7 +123,7 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 	public void cleanUp() {
 		logger.info("Deleting app");
 		if (appObject != null) {
-			ResponseEntity<App> responseDelete = appService.delete(appObject.getId());
+			ResponseEntity<App> responseDelete = appService.doPost(appObject, appObject.getId()+"/destroy/true");
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error App deletion: [{}] ", message.getMessageText());
 			}
