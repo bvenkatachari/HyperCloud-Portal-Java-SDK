@@ -1,4 +1,4 @@
-package com.dchq.sdk.core.appdeploy;
+package io.dchq.sdk.core.appdeploy;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -35,7 +34,7 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
+public class HYF417NginxE2ETest extends AbstractServiceTest {
 
 	private AppService appService;
 	private BlueprintService blueprintService;
@@ -46,12 +45,10 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 	private String skey = "LjVh2sEwJlycnmkdXHesjeky9OxAtYivnwJQQLuj";
 	private App appObject;
 	private MessageService messageService;
-	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>() {
-	};
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
-	public MYF417ThreeTierE2ETest(String blueprintId, String clusterId) {
+	public HYF417NginxE2ETest(String blueprintId, String clusterId) {
 		this.blueprintId = blueprintId;
 		this.clusterId = clusterId;
 	}
@@ -59,10 +56,7 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
-				.asList(new Object[][] { 
-					{ "2c9180875d833a34015d87cba8a20c6c", "2c9180875de9240c015debea33690d5c" },
-					{ "402881864e1a36cc014e1a399cf90102", "2c9180875de9240c015debea33690d5c" },
-					{ "402881864e1a36cc014e1a399cf90102", "2c9180865d312fc4015d314b5d510069" }});
+				.asList(new Object[][] { { "2c9180865d3a5dc9015d3af3f6d10223", "2c9180865d312fc4015d314b5d510069" } });
 	}
 
 	@Before
@@ -71,9 +65,9 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
 		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
-	@Ignore
+
 	@Test
-	public void deploy3Tier() {
+	public void deployNginx() {
 		logger.info("Start deploying");
 		// Getting blueprint object
 		ResponseEntity<Blueprint> blueprintResponse = blueprintService.findById(blueprintId);
@@ -121,16 +115,24 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 			}
 
 		}
-		assertEquals("RUNNING", appObject.getProvisionState().name());
+		assertEquals(1, appObject.getContainers().size());
+		for (Container container : appObject.getContainers()) {
+			assertEquals("RUNNING", container.getContainerStatus().name());
+		}
 	}
 
 	@After
 	public void cleanUp() {
 		logger.info("Deleting app");
 		if (appObject != null) {
-			ResponseEntity<App> responseDelete = appService.doPost(appObject, appObject.getId()+"/destroy/true");
-			for (Message message : responseDelete.getMessages()) {
-				logger.warn("Error App deletion: [{}] ", message.getMessageText());
+			ResponseEntity<App> resp = null;
+			if (appObject.getProvisionState().name().equals("RUNNING")) {
+				resp = appService.doPost(appObject, appObject.getId() + "/destroy/false");
+			} else {
+				resp = appService.delete(appObject.getId());
+			}
+			for (Message message : resp.getMessages()) {
+				logger.warn("Error container app deletion: [{}] ", message.getMessageText());
 			}
 		}
 	}
