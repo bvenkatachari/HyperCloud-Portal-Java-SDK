@@ -62,14 +62,13 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() {
-		appService = ServiceFactory.buildAppService(rootUrl1, akey, skey);
-		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
-		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
+		appService = ServiceFactory.buildAppService(rootUrl1, cloudadminusername, cloudadminpassword);
+		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, cloudadminusername, cloudadminpassword);
+		messageService = ServiceFactory.buildMessageService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
-
 	@Ignore
 	@Test
-	public void deploy3Tier() {
+	public void deployNginx() {
 		logger.info("Start deploying");
 		// Getting blueprint object
 		ResponseEntity<Blueprint> blueprintResponse = blueprintService.findById(blueprintId);
@@ -80,6 +79,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 		PkEntityBase dc = new PkEntityBase();
 		dc.setId(clusterId);
 		blueprint.setDatacenter(dc);
+		// deploying blueprint "Swarm - Nginx Replicas 3" on "Sam_Automation_Cluster"
 		ResponseEntity<App> response = appService.deploy(blueprint);
 		assertNotNull(response);
 		assertEquals(false, response.isErrors());
@@ -117,7 +117,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 			}
 
 		}
-		assertEquals(3, appObject.getContainers());
+		assertEquals(1, appObject.getContainers());
 		for (Container container : appObject.getContainers()) {
 			assertEquals("RUNNING", container.getContainerStatus().name());
 		}
