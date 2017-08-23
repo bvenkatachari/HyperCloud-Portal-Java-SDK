@@ -35,7 +35,7 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
+public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 
 	private AppService appService;
 	private BlueprintService blueprintService;
@@ -46,12 +46,10 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 	private String skey = "LjVh2sEwJlycnmkdXHesjeky9OxAtYivnwJQQLuj";
 	private App appObject;
 	private MessageService messageService;
-	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>() {
-	};
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
-	public MYF417ThreeTierE2ETest(String blueprintId, String clusterId) {
+	public HYF418DockerSwarmE2ETest(String blueprintId, String clusterId) {
 		this.blueprintId = blueprintId;
 		this.clusterId = clusterId;
 	}
@@ -59,9 +57,7 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
-				.asList(new Object[][] { 
-					{ "2c9180875d833a34015d87cba8a20c6c", "2c9180865d312fc4015d314b5d510069" },
-					{ "402881864e1a36cc014e1a399cf90102", "2c9180865d312fc4015d314b5d510069" }});
+				.asList(new Object[][] { { "2c9180875dd5be0a015dd7aa6cef0514", "2c9180865d312fc4015d314b5d510069" }, });
 	}
 
 	@Before
@@ -70,6 +66,7 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
 		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
+
 	@Ignore
 	@Test
 	public void deploy3Tier() {
@@ -121,15 +118,14 @@ public class MYF417ThreeTierE2ETest extends AbstractServiceTest{
 
 		}
 		assertEquals(3, appObject.getContainers());
-		for(Container container: appObject.getContainers())
-		{
+		for (Container container : appObject.getContainers()) {
 			assertEquals("RUNNING", container.getContainerStatus().name());
 		}
 	}
 
 	@After
 	public void cleanUp() {
-		logger.info("Deleting app");
+		logger.info("Deleting app deployment");
 		if (appObject != null) {
 			ResponseEntity<App> resp = null;
 			if (appObject.getProvisionState().name().equals("RUNNING")) {
