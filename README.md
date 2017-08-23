@@ -12,7 +12,7 @@ The SDK is open-source and community driven effort. If you want to contribute pl
 
 You can interact with live REST API here:
 ```
-https://dchq.readme.io/
+https://api.hypergrid.com/
 ```
 
 # build SDK (requires JDK7+, Gradle 2.14.1)
