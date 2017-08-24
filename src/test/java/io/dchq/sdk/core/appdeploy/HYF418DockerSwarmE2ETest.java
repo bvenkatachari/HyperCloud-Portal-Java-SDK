@@ -47,7 +47,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 	private App appObject;
 	private MessageService messageService;
 	long startTime = System.currentTimeMillis();
-	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
+	long endTime = startTime + (60 * 60 * 160); // this is for 10 mints
 
 	public HYF418DockerSwarmE2ETest(String blueprintId, String clusterId) {
 		this.blueprintId = blueprintId;
@@ -57,16 +57,15 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
-				.asList(new Object[][] { { "2c9180875dd5be0a015dd7aa6cef0514", "2c9180865d312fc4015d314b5d510069" }, });
+				.asList(new Object[][] { { "2c9180875dd5be0a015dd7aa6cef0514", "2c9180865d312fc4015d313f364b003e" }, });
 	}
 
 	@Before
 	public void setUp() {
-		appService = ServiceFactory.buildAppService(rootUrl1, cloudadminusername, cloudadminpassword);
-		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, cloudadminusername, cloudadminpassword);
-		messageService = ServiceFactory.buildMessageService(rootUrl1, cloudadminusername, cloudadminpassword);
+		appService = ServiceFactory.buildAppService(rootUrl1, akey, skey);
+		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
+		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
-	@Ignore
 	@Test
 	public void deployNginx() {
 		logger.info("Start deploying");
@@ -117,7 +116,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 			}
 
 		}
-		assertEquals(1, appObject.getContainers());
+		assertEquals(3, appObject.getContainers());
 		for (Container container : appObject.getContainers()) {
 			assertEquals("RUNNING", container.getContainerStatus().name());
 		}
