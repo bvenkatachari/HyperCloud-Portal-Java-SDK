@@ -1,18 +1,18 @@
 <figure>
-<img src="http://hypergrid.com/wp-content/uploads/2016/07/HyperGridLogo-horiz-600px.png" alt="" />
+<img src="http://www.hypergrid.com/wp-content/themes/hypergrid/img/logo.png" alt="" />
 </figure>
 
 
 
-# HyperForm (formerly DCHQ) Java SDK
-HyperForm-Java-SDK simplifies using DCHQ REST API's. Providers high-level java abstraction for REST API's.
+# HyperCloud Portal Java SDK
+This Java SDK simplifies using HyperCloud Portal REST API's. Providers high-level java abstraction for REST API's.
 
 # OpenSource and Community-Led
- The SDK is open-source and community driven effort. If you want to contribute please reach out to us founders@dchq.io
+The SDK is open-source and community driven effort. If you want to contribute please reach out to us aafanah@hypergrid.com
 
 You can interact with live REST API here:
 ```
-https://dchq.readme.io/
+https://api.hypergrid.com/
 ```
 
 # build SDK (requires JDK7+, Gradle 2.14.1)
