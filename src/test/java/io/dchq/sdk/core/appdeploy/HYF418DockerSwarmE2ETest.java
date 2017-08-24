@@ -66,6 +66,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
 		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
+	@Ignore
 	@Test
 	public void deployNginx() {
 		logger.info("Start deploying");
