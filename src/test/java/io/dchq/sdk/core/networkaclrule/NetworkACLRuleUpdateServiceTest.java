@@ -66,7 +66,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true }
+				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", RuleAction.pass, true }
 			});
 	}
 

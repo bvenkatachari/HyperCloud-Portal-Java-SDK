@@ -84,7 +84,7 @@ public class SecurityGroupEntitledServiceTest extends SecurityGroupUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 				{ "securityGroup", subnetId, EntitlementType.OWNER, false, null, true,true },
-				{ "securityGroup", subnetId, EntitlementType.PUBLIC, false, null, true, true },
+				//{ "securityGroup", subnetId, EntitlementType.PUBLIC, false, null, true, true },
 				{ "securityGroup", subnetId, EntitlementType.CUSTOM, true, userId2, true, true },
 				{ "securityGroup", subnetId, EntitlementType.CUSTOM, false, USER_GROUP, true, true },
 				{ "securityGroup", null, EntitlementType.OWNER, false, null, true,false },
