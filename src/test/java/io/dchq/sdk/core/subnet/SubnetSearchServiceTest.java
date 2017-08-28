@@ -76,7 +76,7 @@ public class SubnetSearchServiceTest extends SubnetUtil {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
 			
-			 { "subnet", "10.50.5.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.OWNER, true }
+			 { "subnet", "10.0.1.1/24", "true", "10.50.5.2", "10.50.5.254", "8.8.8.8", EntitlementType.OWNER, true }
 			});
 	}
 

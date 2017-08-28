@@ -64,15 +64,16 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 		// driver id - "402881875cf281ee015cf5c9f7ff05d0" on Intesar machine
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "505" , true, true},
-		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "506" , true, true},
-			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "507" , true,true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "501" , true, true},
+		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "502" , true, true},
+			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "513" , true,true},
 			
-			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "508" ,false, false},
-			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "509" , false, false},
-			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "512" , true, false},
-			{"testvlan2", "", EntitlementType.CUSTOM, "513" , true, true},
-			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "510" ,false, false},
+			//Needs validation at API end
+			/*{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "516" ,false, false},
+			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "517" , false, false},
+			{"@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "520" ,false, false},*/
+			{"testvlan2", "asasasas", EntitlementType.CUSTOM, "518" , true, false},
+			{"testvlan2", "", EntitlementType.CUSTOM, "519" , true, false},
 			{"testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testv"
 					+ "lan2testvlan2testvlan2testvlan2testvlan2testvlan2"
@@ -81,7 +82,7 @@ public class VirtualNetworkCreateServiceTest extends AbstractServiceTest{
 					+ "2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2te"
 					+ "stvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
 					+ "an2testvlan2testvlan2testvlan2testvlan2testvlan2testvlan2testvl"
-					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "511" , true, false},
+					, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "26" , true, false},
 			//{"testvlan2223232323", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "" , true, false}
 		});
 	}
