@@ -5,13 +5,14 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -57,7 +58,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
-				.asList(new Object[][] { { "2c9180875dd5be0a015dd7aa6cef0514", "2c9180865d312fc4015d313f364b003e" }, });
+				.asList(new Object[][] { { "2c9180875e17ca51015e1946c15a1d85", "2c9180875e12bc86015e132e86520302" }, });
 	}
 
 	@Before
@@ -66,7 +67,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
 		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
 	}
-	@Ignore
+	
 	@Test
 	public void deployNginx() {
 		logger.info("Start deploying");
@@ -104,6 +105,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 			}
 		}
 		appObject = appService.findById(appObject.getId()).getResults();
+		logger.info("App deployment state [{}]", appObject.getProvisionState());
 		while (appObject.getProvisionState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 			try {
 				// wait for some time
@@ -117,7 +119,7 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 			}
 
 		}
-		assertEquals(3, appObject.getContainers());
+		assertEquals(3, appObject.getContainers().size());
 		for (Container container : appObject.getContainers()) {
 			assertEquals("RUNNING", container.getContainerStatus().name());
 		}
@@ -129,7 +131,11 @@ public class HYF418DockerSwarmE2ETest extends AbstractServiceTest {
 		if (appObject != null) {
 			ResponseEntity<App> resp = null;
 			if (appObject.getProvisionState().name().equals("RUNNING")) {
-				resp = appService.doPost(appObject, appObject.getId() + "/destroy/false");
+				Map<String , Object> map = new HashMap<>();
+				map.put("allSelected", true);
+				map.put("note", new String("destroying"));
+				map.put("containers", appObject.getContainers());
+				resp = appService.doPost(map, appObject.getId() + "/destroy/true");
 			} else {
 				resp = appService.delete(appObject.getId());
 			}
