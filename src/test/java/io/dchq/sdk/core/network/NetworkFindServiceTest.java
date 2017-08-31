@@ -8,9 +8,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -69,13 +67,9 @@ public class NetworkFindServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "testnetwork", "bridge", dockerServerId, true },
-			{ "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@########EEEEEEEEEEEEEEEE", "bridge", dockerServerId , true},
-			{ "as", "bridge", dockerServerId, true },
-			{ "as", "bridge", "", false },
-			{ "", "bridge", dockerServerId, false }});
+			{ "testnetwork", "bridge", dockerServerId, true }});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {

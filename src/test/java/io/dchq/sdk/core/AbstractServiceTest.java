@@ -69,7 +69,7 @@ public abstract class AbstractServiceTest {
   //  protected  static String bluePrintID = "2c9180865a4a48d9015a52b610c8080c"; //App & Machines Blueprints Test
     protected  static String clusterID = "2c9180865d312fc4015d314b5d510069";   //Cluster name : Sam_Automation_Cluster
     
-    protected static String dockerServerId = "2c9180865a6421f0015a646c20fe0685"; // qe-100
+    protected static String dockerServerId = "2c9180875e3673ab015e37352d37024d"; // VM-Network
     
     protected static String vpcId = "2c9180865d312fc4015d3158a5c00078";
     protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";

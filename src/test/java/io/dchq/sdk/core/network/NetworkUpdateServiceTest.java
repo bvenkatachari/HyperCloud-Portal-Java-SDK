@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -22,7 +20,6 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.base.UsernameEntityBase;
-import com.dchq.schema.beans.one.blueprint.RegistryAccount;
 import com.dchq.schema.beans.one.network.DockerNetwork;
 import com.dchq.schema.beans.one.network.DockerNetworkStatus;
 import com.dchq.schema.beans.one.security.EntitlementType;
@@ -77,7 +74,7 @@ public class NetworkUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId } });
 	}
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {

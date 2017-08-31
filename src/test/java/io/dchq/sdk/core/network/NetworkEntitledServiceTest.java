@@ -12,7 +12,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -24,6 +23,7 @@ import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.base.UsernameEntityBase;
 import com.dchq.schema.beans.one.network.DockerNetwork;
+import com.dchq.schema.beans.one.network.DockerNetworkStatus;
 import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -76,7 +76,7 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
-				{ "testnetwork"+prefix, "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, false },
+				{ "testnetwork1"+prefix, "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, false },
 				
 				// TODO failing due to blank name
 				//{ "", "bridge", dockerServerId, EntitlementType.PUBLIC, true, userId2, true },
@@ -85,7 +85,7 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 				// TODO failing due to null EntitlementType
 				//{ "testnetwork"+prefix, "bridge", dockerServerId, null, true, userId2, true },
 				
-				{ "testnetwork2", "bridge", dockerServerId, EntitlementType.CUSTOM, false, USER_GROUP, false },
+				{ "testnetwork2"+prefix, "bridge", dockerServerId, EntitlementType.CUSTOM, false, USER_GROUP, false },
 				// TODO failing due to blank name
 				//{ "", "bridge", dockerServerId, EntitlementType.CUSTOM, false, USER_GROUP, true },
 				//TODO failing due to null userid
@@ -93,7 +93,7 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 				// TODO failing due to null EntitlementType
 				//{ "testnetwork"+prefix, "bridge", dockerServerId, null, false, USER_GROUP, true },
 				
-				{ "testnetwork3", "bridge", dockerServerId, EntitlementType.OWNER, true, userId2, false },
+				{ "testnetwork3"+prefix, "bridge", dockerServerId, EntitlementType.OWNER, true, userId2, false },
 				// TODO failing due to blank name
 				//{ "", "bridge", dockerServerId, EntitlementType.OWNER, true, userId2, true },
 				//TODO failing due to null userid
@@ -116,6 +116,16 @@ public class NetworkEntitledServiceTest extends AbstractServiceTest {
 		}
 		try {
 			if (!error) {
+				while ((networkCreated!=null && networkCreated.getStatus() != DockerNetworkStatus.LIVE) && (System.currentTimeMillis() < endTime)) {
+					try {
+						Thread.sleep(5000);
+						networkCreated = networkService.findById(networkCreated.getId()).getResults();
+						logger.info("Network Status is [{}]", networkCreated.getStatus());
+					} catch (InterruptedException e) {
+						// TODO: handling exception
+					}
+				}
+				
 				if (network.getEntitlementType().equals(EntitlementType.PUBLIC)) {
 					ResponseEntity<DockerNetwork> findbyIdResponse = networkService.findById(networkCreated.getId());
 					for (Message message : findbyIdResponse.getMessages()) {

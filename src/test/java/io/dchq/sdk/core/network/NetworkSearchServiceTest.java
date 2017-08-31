@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -21,7 +19,6 @@ import org.junit.runners.Parameterized;
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
-import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.network.DockerNetwork;
 import com.dchq.schema.beans.one.network.DockerNetworkStatus;
 
@@ -72,12 +69,9 @@ public class NetworkSearchServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "testnetwork", "bridge", dockerServerId, true},
-			{ "testneaSasASasSaSasSsSsSsSAtwork22", "bridge", dockerServerId, true },
-			{ "t@@@########@@@@@@@estnetwork33", "bridge", dockerServerId, true },
-			{ "", "bridge", dockerServerId, false }});
+			{ "testnetwork", "bridge", dockerServerId, true}});
 	}
-	@Ignore
+	
 	@Test
 	public void createTest() {
 		try {
