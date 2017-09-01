@@ -73,7 +73,7 @@ public abstract class AbstractServiceTest {
     
     protected static String vpcId = "2c9180865d312fc4015d3158a5c00078";
     protected static String subnetId = "2c9180865d312fc4015d3160f3b2008c";
-    protected static String vlanId = "2c9180875e17ca51015e276783b773ad"; // VLAN-ID 515
+    protected static String vlanId = "2c9180875dc0e30d015dc1a5ff8804c7"; // 518
     
     //Test Suite data
     protected static String networkProviderId = "2c9180865d312fc4015d3134e4ab0006"; // SkyGridC02 (HNS)
