@@ -63,6 +63,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
         	//CentOS7HFT
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFT_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7HFT_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7_DCHQ_Docker_Swarm.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\CentOS7_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true, true},
         	//Ub1604HFT
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub1604HFT_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
@@ -77,7 +78,13 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
         	//Rhel73
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Rhel73_DCHQ_Agent.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Rhel73_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Rhel73_DCHQ_Docker_Swarm.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Rhel73_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true, true},
+        	//Debian
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Debian91HFT_DCHQ_Docker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Debian91HFT_DCHQ_Docker_Swarm.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, true},
+        	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Debian91HFT_NoDCHQ_NoDocker.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, true, true},
+        	
         	//Server 2012
         	{"automationtest", Boolean.FALSE, "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Server2012R2HFTemplate.vhdx", "Compute vmSwitch", 1, "2c9180865d312fc4015d3160f518008e", 300000, "", false, false, false},
         	//Server 2016
