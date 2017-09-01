@@ -68,7 +68,9 @@ public class NetworkCreateServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-			{ "testnetwork", "bridge", dockerServerId, true} });
+			{ "testnetwork", "bridge", dockerServerId, true},
+			{ "testnetwork1", "bridge", dockerServerId, true},
+			{ "testnetwork", "bridge", "", false} });
 	}
 
 	
