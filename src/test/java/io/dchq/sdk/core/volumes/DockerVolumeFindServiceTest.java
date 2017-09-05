@@ -122,14 +122,26 @@ public class DockerVolumeFindServiceTest extends AbstractServiceTest {
 	}
 
 	@After
-	public void cleanUp() {
+	public void clearUp() {
+
 		if (this.dockerVolumeCreated != null) {
 			logger.info("cleaning up...");
 			ResponseEntity<?> response = dockerVolumeService.delete(this.dockerVolumeCreated.getId());
 			for (Message message : response.getMessages()) {
-				logger.warn("Error docker volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+			}
+			DockerVolume dockerVolumeDelete =  (DockerVolume) response.getResults();
+			
+			while (dockerVolumeDelete.getStatus().equals("DESTROYING") && (System.currentTimeMillis() < endTime)) {
+				try {
+					Thread.sleep(10000);
+					dockerVolumeDelete = dockerVolumeService.findById(dockerVolumeDelete.getId()).getResults();
+				} catch (InterruptedException e) {
+					// TODO: handling exception
+				}
 			}
 		}
+
 	}
 
 }

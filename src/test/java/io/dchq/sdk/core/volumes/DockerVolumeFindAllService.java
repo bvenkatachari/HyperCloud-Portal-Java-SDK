@@ -156,7 +156,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 			while (dockerVolumeDelete.getStatus().equals("DESTROYING") && (System.currentTimeMillis() < endTime)) {
 				try {
 					Thread.sleep(10000);
-					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeDelete.getId()).getResults();
+					dockerVolumeDelete = dockerVolumeService.findById(dockerVolumeDelete.getId()).getResults();
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
