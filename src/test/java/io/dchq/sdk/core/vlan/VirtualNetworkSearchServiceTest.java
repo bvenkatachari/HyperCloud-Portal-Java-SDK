@@ -40,8 +40,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 	private VirtualNetworkService vlanService;
 	private VirtualNetwork virtualNetwork;
 	private VirtualNetwork VirtualNetworkCreated;
-	private VirtualNetwork findVlan;
-	private String vlanSearchByName;
+	
 	
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
@@ -129,7 +128,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 				}
 			}
 			logger.info("VLan status [{}]", VirtualNetworkCreated.getStatus().name());
-			ResponseEntity<List<VirtualNetwork>> resultFindResponse = vlanService.search(vlanSearchByName,0,1);
+			ResponseEntity<List<VirtualNetwork>> resultFindResponse = vlanService.search(VirtualNetworkCreated.getName(),0,1);
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());
 			assertNotNull(resultFindResponse.getResults());
@@ -140,9 +139,9 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 			Assert.assertNotNull(resultFindResponse);
 			Assert.assertEquals(false, resultFindResponse.isErrors());
 			
-			Assert.assertEquals(findVlan.getName(), searchedEntity.getName());
-			Assert.assertEquals(findVlan.getDriver(), searchedEntity.getDriver());
-			Assert.assertEquals(findVlan.getVlanId(), searchedEntity.getVlanId());
+			Assert.assertEquals(VirtualNetworkCreated.getName(), searchedEntity.getName());
+			Assert.assertEquals(VirtualNetworkCreated.getDriver(), searchedEntity.getDriver());
+			Assert.assertEquals(VirtualNetworkCreated.getVlanId(), searchedEntity.getVlanId());
 
 		} else {
 
