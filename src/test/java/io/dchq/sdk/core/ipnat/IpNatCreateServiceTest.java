@@ -85,7 +85,7 @@ public class IpNatCreateServiceTest extends AbstractServiceTest {
 				logger.info("Create IP/Nat Successfully..");
 			}
 			Assert.assertEquals(ipPoolCreated.getName(), ipPool.getName());
-			Assert.assertEquals(ipPoolCreated, ipPool.getMask());
+			Assert.assertEquals(ipPoolCreated.getMask(), ipPool.getMask());
 		} else {
 
 			Assert.assertEquals(true, resultResponse.isErrors());
