@@ -111,7 +111,9 @@ public class UsersCreateServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() throws Exception {
     	
     	List<String> authorities = new ArrayList<String>();
+    	authorities.add("ROLE_USER");
 		authorities.add("ROLE_ORG_ADMIN");
+		
 		
         return Arrays.asList(new Object[][]{
 
