@@ -69,9 +69,9 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		// driver id - "402881875cf281ee015cf5c9f7ff05d0" on Intesar machine
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "501" , true, true},
-		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "502" , true, true},
-			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "513" , true,true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "518" , true, true},
+		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "519" , true, true},
+			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "26" , true,true},
 			
 			//Needs validation at API end
 			/*{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "516" ,false, false},
@@ -165,9 +165,24 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		{
 			logger.info("cleaning up...");
 			ResponseEntity<VirtualNetwork> responseDelete = vlanService.update(VirtualNetworkCreated.getId(),"release/");
-			//Assert.assertEquals(false, responseDelete.isErrors());
+			
+			VirtualNetwork vlan = responseDelete.getResults();
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error vlan deletion: [{}] ", message.getMessageText());
+			}
+			
+			while(null != vlan && vlan.getStatus().name().equals("DESTROYING") && (System.currentTimeMillis() < endTime))
+			{
+				try {
+					// wait for some time
+					Thread.sleep(10000);
+					responseDelete = vlanService.findById(VirtualNetworkCreated.getId());
+					logger.info("VLan state [{}] while deleting", vlan.getStatus().name());	
+					vlan = responseDelete.getResults();
+					
+				} catch (InterruptedException e) {
+					
+				}
 			}
 		}
 	}
