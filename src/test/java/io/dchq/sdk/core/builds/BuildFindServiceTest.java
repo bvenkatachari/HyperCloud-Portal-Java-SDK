@@ -51,7 +51,7 @@ import io.dchq.sdk.core.ServiceFactory;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildCreateServiceTest extends AbstractServiceTest {
+public class BuildFindServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
 
@@ -80,7 +80,7 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildCreateServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildFindServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -119,17 +119,20 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
 	            assertNotNull(response.getResults().getId());
 	
 	            buildCreated = response.getResults();
-	            ResponseEntity<BuildTask> responseTask  = buildService.buildNow(buildCreated.getId());
-	            BuildTask buildTask=getTask(responseTask);
-	
-	            maxWaitTime=3*60*1000;
-	            waitTime=0;
-	                do{
-	                    wait(10000);
-	                    responseTask  = buildService.findBuildTaskById(buildTask.getId());
-	                    buildTask=getTask(responseTask);
-	                    
-	                }while(buildTask.getBuildTaskStatus().name().equals("PROCESSING"));
+	                
+	                
+                response = buildService.findById(this.buildCreated.getId());
+
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while find Security Group by Id request  [{}] ", message.getMessageText());
+				}
+				
+				assertNotNull(response);
+				assertEquals(false,response.isErrors());
+				assertNotNull(response.getResults().getId());
+				assertEquals(this.buildCreated.getRepository(), response.getResults().getRepository());
+				assertEquals(this.buildCreated.getGitCloneUrl(), response.getResults().getGitCloneUrl());
+				assertEquals(this.buildCreated.getTag(), response.getResults().getTag());
 	
 	        }
         
