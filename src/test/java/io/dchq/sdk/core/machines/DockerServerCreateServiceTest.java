@@ -113,7 +113,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
 			}else {
 			    this.dockerServer.setSkipAgentInstall("true");
 			}
-			this.dockerServer.setOperatingSystem("LINUX");
+			
 		}
     	else
     	{
@@ -133,7 +133,7 @@ public class DockerServerCreateServiceTest extends DockerServerTest {
     			}else {
     			    this.dockerServer.setSkipAgentInstall("true");
     			}
-    			this.dockerServer.setOperatingSystem("LINUX");
+    			
     		}
     		
     	}

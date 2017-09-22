@@ -33,7 +33,6 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.build.Build;
-import com.dchq.schema.beans.one.build.BuildTask;
 import com.dchq.schema.beans.one.build.BuildType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
@@ -158,22 +157,6 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 		}
     }
     
-	public BuildTask getTask(ResponseEntity<BuildTask> responseTask) {
-	
-	    String errorMessage = "";
-	    BuildTask buildTask =null;
-	    for (Message message : responseTask.getMessages()) {
-	        logger.warn("Error while Running Build Task request  [{}] ", message.getMessageText());
-	        errorMessage += ("Error while Running Build Task request  " + message.getMessageText());
-	    }
-	    if (responseTask.getResults() != null) {
-	        buildTask = responseTask.getResults();
-	        Assert.assertFalse("Machine Creation Replied with Error." + errorMessage, responseTask.isErrors());
-	
-	
-	    }
-	    return buildTask;
-	}
 	
     @After
     public void cleanUp() throws Exception  {

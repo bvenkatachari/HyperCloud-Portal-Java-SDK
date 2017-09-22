@@ -34,9 +34,13 @@ import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.build.Build;
 import com.dchq.schema.beans.one.build.BuildTask;
 import com.dchq.schema.beans.one.build.BuildType;
+import com.dchq.schema.beans.one.provider.DataCenter;
+import com.dchq.schema.beans.one.provider.DockerServer;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.BuildService;
+import io.dchq.sdk.core.DataCenterService;
+import io.dchq.sdk.core.DockerServerService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
@@ -51,13 +55,21 @@ import io.dchq.sdk.core.ServiceFactory;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildCreateServiceTest extends AbstractServiceTest {
+public class BuildCreateAndDeployServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
+    DataCenterService dataCenterService;
+    DockerServerService dockerServerService;
+    DockerServer dockerServerCreated;
+    long endTime;
+    
+    
 
     @org.junit.Before
     public void setUp() throws Exception {
         buildService = ServiceFactory.buildBuildService(rootUrl, cloudadminusername, cloudadminpassword);
+        dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, cloudadminusername, cloudadminpassword);
+        dockerServerService = ServiceFactory.buildDockerServerService(rootUrl, cloudadminusername, cloudadminpassword);
     }
 
     @Parameterized.Parameters
@@ -80,7 +92,7 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildCreateServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildCreateAndDeployServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -95,11 +107,15 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
         this.success = success;
 
 
+    	endTime = System.currentTimeMillis() + (60 * 60 * 90); // this is for 3 mints
     }
 
     
     @org.junit.Test
     public void testCreate() throws Exception {
+    	
+    	//Docker Server required to deploy Image
+    	createDockerServer(this.build.getCluster());
 
         ResponseEntity<Build> response = buildService.create(build);
 
@@ -122,20 +138,63 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
 	            ResponseEntity<BuildTask> responseTask  = buildService.buildNow(buildCreated.getId());
 	            BuildTask buildTask=getTask(responseTask);
 	
-	            maxWaitTime=3*60*1000;
-	            waitTime=0;
 	                do{
-	                    wait(10000);
+	                	try {
+	                        Thread.sleep(20000);
+	                    } catch (Exception e) {
+	                        logger.warn("Error @ Wait [{}] ", e.getMessage());
+	                    }
 	                    responseTask  = buildService.findBuildTaskById(buildTask.getId());
 	                    buildTask=getTask(responseTask);
 	                    
-	                }while(buildTask.getBuildTaskStatus().name().equals("PROCESSING"));
+	                }while(buildTask.getBuildTaskStatus().name().equals("PROCESSING")&& (System.currentTimeMillis() < endTime));
+	                
+	                
+	                assertEquals("SUCCESS", buildTask.getBuildTaskStatus().name());
 	
 	        }
         
        } else {
 			assertEquals(null, response.getResults());
 			assertEquals(true, response.isErrors());
+		}
+    }
+    
+    public void createDockerServer(String clusterId){
+    	
+    	ResponseEntity<DataCenter> response = dataCenterService.findById(clusterId);
+    	
+		DockerServer server = new DockerServer().withDatacenter(response.getResults()).withName("Docker_VM")
+				.withInactive(Boolean.FALSE).withImageId("C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_DCHQ_Docker_Swarm.vhdx").withSize(1)
+				.withEndpoint("2c9180865d312fc4015d3160f518008e").withHardwareId("cpu=1,memory=2GB,disk=20GB,generation=1").withNetworkId("Compute vmSwitch");
+		server.setGroup("Docker_VM");
+		server.setSkipAgentInstall("true");
+		
+		logger.info("Create Machine with Name [{}]", server.getName());
+		ResponseEntity<DockerServer> serverResponse = dockerServerService.create(server);
+		
+		maxWaitTime = 300000;
+		dockerServerCreated = serverResponse.getResults();
+		String serverStatus = dockerServerCreated.getDockerServerStatus().name();
+		
+		while(serverStatus.equals("PROVISIONING") && (System.currentTimeMillis() < endTime)){	
+			// Wait for some time until state changed from PROVISIONING to CONNECTED/PROVISIONED
+			wait(10000); //wait for 10 seconds
+			dockerServerCreated = dockerServerService.findById(dockerServerCreated.getId()).getResults();
+			serverStatus = dockerServerCreated.getDockerServerStatus().name();
+			 logger.info("Current Serverstatus   [{}] ", serverStatus);
+	
+		}
+		
+		while(serverStatus.equals("PROVISIONED") && (System.currentTimeMillis() < endTime)){	
+			/*Noticed, sometimes system takes time to change the status from ‘Provisioned’ to ‘Connected’ 
+			so we don’t have any exact number to wait. 
+			Our script will wait for 2-3 mins and if in that time status won’t change than test will fail. */
+			wait(10000); //wait for 10 seconds
+			dockerServerCreated = dockerServerService.findById(dockerServerCreated.getId()).getResults();
+			serverStatus = dockerServerCreated.getDockerServerStatus().name();
+			 logger.info("Current Serverstatus   [{}] ", serverStatus);
+	
 		}
     }
     
@@ -160,8 +219,15 @@ public class BuildCreateServiceTest extends AbstractServiceTest {
     public void cleanUp() throws Exception  {
         logger.info("cleaning up...");
 
-        if(buildCreated!=null) 
+        if(buildCreated!=null) {
         	buildService.delete(buildCreated.getId());
+        }
+        
+        if (dockerServerCreated != null) {
+            logger.info("Deleting Machine ");
+            dockerServerService.delete(dockerServerCreated.getId(), true);
+
+        }
 
 
     }
