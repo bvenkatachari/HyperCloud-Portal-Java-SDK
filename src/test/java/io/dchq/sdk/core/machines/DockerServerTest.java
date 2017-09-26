@@ -34,7 +34,7 @@ public class DockerServerTest extends AbstractServiceTest {
 
     public DataCenter getDataCenter(String datacenterName, boolean autoScale, EntitlementType entitlementType) {
         logger.info("Create Cluster with Name [{}]", datacenterName);
-        this.dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, username, password);
+        this.dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, cloudadminusername, cloudadminpassword);
         DataCenter dt = new DataCenter().withName(datacenterName).withAutoScale(autoScale).withBlueprintEntitlementType(entitlementType);
 
         ResponseEntity<DataCenter> responseEntity = dataCenterService.create(dt);
