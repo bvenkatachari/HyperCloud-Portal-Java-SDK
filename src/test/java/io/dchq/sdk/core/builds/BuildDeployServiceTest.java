@@ -43,19 +43,17 @@ import io.dchq.sdk.core.DataCenterService;
 import io.dchq.sdk.core.DockerServerService;
 import io.dchq.sdk.core.ServiceFactory;
 
-/**
- * Created by Abedeen on 04/05/16.
- */
+
 
 /**
- * Abstracts class for holding test credentials.
  *
- * @author Abedeen.
+ * @author Santosh Kumar.
  * @since 1.0
  */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildCreateAndDeployServiceTest extends AbstractServiceTest {
+public class BuildDeployServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
     DataCenterService dataCenterService;
@@ -92,7 +90,7 @@ public class BuildCreateAndDeployServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildCreateAndDeployServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildDeployServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -125,8 +123,7 @@ public class BuildCreateAndDeployServiceTest extends AbstractServiceTest {
 	            logger.warn("Error while Create request  [{}] ", message.getMessageText());
 	            errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
 	        }
-	        assertNotNull(response.getResults());
-	        assertNotNull(response.getResults().getId());
+	        
 	        Assert.assertNotNull(errorMessage,response.getResults());
 	
 	        if (response.getResults()!=null) {

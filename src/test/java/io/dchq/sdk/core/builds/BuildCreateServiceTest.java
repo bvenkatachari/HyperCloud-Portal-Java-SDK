@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -39,20 +38,23 @@ import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.BuildService;
 import io.dchq.sdk.core.ServiceFactory;
 
+
+
 /**
-*
-* @author Santosh Kumar.
-* @since 1.0
-*/
+ *
+ * @author Santosh Kumar.
+ * @since 1.0
+ */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildFindAllServiceTest extends AbstractServiceTest {
+public class BuildCreateServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
-
-    private int countBeforeCreate = 0, countAfterCreate = 0;
     
+    
+    
+
     @org.junit.Before
     public void setUp() throws Exception {
         buildService = ServiceFactory.buildBuildService(rootUrl, cloudadminusername, cloudadminpassword);
@@ -78,7 +80,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildFindAllServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildCreateServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -91,38 +93,12 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
         neb.setId(registryAccountId);
         build.setRegistryAccount(neb);
         this.success = success;
-
-
     }
-    
-    public int testBuildPosition(String id) {
-		ResponseEntity<List<Build>> response = buildService.findAll(0, 500);
-		for (Message message : response.getMessages()) {
-			logger.warn("Error [{}]  " + message.getMessageText());
-		}
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
-		assertEquals(false, response.isErrors());
-		int position = 0;
-		if (id != null) {
-			for (Build obj : response.getResults()) {
-				position++;
-				if (obj.getId().equals(id)) {
-					logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-					assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-				}
-			}
-		}
-		logger.info(" Total Number of Objects :{}", response.getResults().size());
-		return response.getResults().size();
-	}
 
     
     @org.junit.Test
     public void testCreate() throws Exception {
     	
-    	countBeforeCreate = testBuildPosition(null);
-
         ResponseEntity<Build> response = buildService.create(build);
 
       if (success) {
@@ -132,17 +108,14 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 	            errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
 	        }
 	        
+	        
 	        Assert.assertNotNull(errorMessage,response.getResults());
 	
 	        if (response.getResults()!=null) {
 	
 	            assertNotNull(response.getResults());
 	            assertNotNull(response.getResults().getId());
-	
 	            buildCreated = response.getResults();
-	                            
-                this.countAfterCreate = testBuildPosition(this.buildCreated.getId());
-                assertEquals(countBeforeCreate + 1, countAfterCreate);
 	
 	        }
         
@@ -152,15 +125,16 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 		}
     }
     
+    
 	
     @After
     public void cleanUp() throws Exception  {
         logger.info("cleaning up...");
 
-        if(buildCreated!=null) 
+        if(buildCreated!=null) {
         	buildService.delete(buildCreated.getId());
-
-
+        }
+        
     }
 
 }

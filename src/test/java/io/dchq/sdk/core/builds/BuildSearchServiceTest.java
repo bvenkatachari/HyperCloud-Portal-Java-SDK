@@ -47,12 +47,10 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildFindAllServiceTest extends AbstractServiceTest {
+public class BuildSearchServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
 
-    private int countBeforeCreate = 0, countAfterCreate = 0;
-    
     @org.junit.Before
     public void setUp() throws Exception {
         buildService = ServiceFactory.buildBuildService(rootUrl, cloudadminusername, cloudadminpassword);
@@ -62,7 +60,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
-                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
+                //{"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "","2c9180875e987035015e993d8b860119",false},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","",false},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","", "latestmine","2c9180875e987035015e993d8b860119",false},
@@ -78,7 +76,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildFindAllServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildSearchServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -94,34 +92,10 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 
 
     }
-    
-    public int testBuildPosition(String id) {
-		ResponseEntity<List<Build>> response = buildService.findAll(0, 500);
-		for (Message message : response.getMessages()) {
-			logger.warn("Error [{}]  " + message.getMessageText());
-		}
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
-		assertEquals(false, response.isErrors());
-		int position = 0;
-		if (id != null) {
-			for (Build obj : response.getResults()) {
-				position++;
-				if (obj.getId().equals(id)) {
-					logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-					assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-				}
-			}
-		}
-		logger.info(" Total Number of Objects :{}", response.getResults().size());
-		return response.getResults().size();
-	}
 
     
     @org.junit.Test
     public void testCreate() throws Exception {
-    	
-    	countBeforeCreate = testBuildPosition(null);
 
         ResponseEntity<Build> response = buildService.create(build);
 
@@ -140,9 +114,18 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 	            assertNotNull(response.getResults().getId());
 	
 	            buildCreated = response.getResults();
-	                            
-                this.countAfterCreate = testBuildPosition(this.buildCreated.getId());
-                assertEquals(countBeforeCreate + 1, countAfterCreate);
+	                
+	                
+	            ResponseEntity<List<Build>> searchResponse = buildService.search("TestImage", 0, 1);
+
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while find Build by Id request  [{}] ", message.getMessageText());
+				}
+				
+				assertNotNull(searchResponse);
+				assertEquals(false,searchResponse.isErrors());
+				assertNotNull(searchResponse.getResults().get(0).getId());
+				//assertEquals(this.buildCreated.getName(), searchResponse.getResults().get(0).getName());
 	
 	        }
         
@@ -152,6 +135,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 		}
     }
     
+	
 	
     @After
     public void cleanUp() throws Exception  {

@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -47,12 +46,10 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BuildFindAllServiceTest extends AbstractServiceTest {
+public class BuildUpdateServiceTest extends AbstractServiceTest {
 
     private BuildService buildService;
 
-    private int countBeforeCreate = 0, countAfterCreate = 0;
-    
     @org.junit.Before
     public void setUp() throws Exception {
         buildService = ServiceFactory.buildBuildService(rootUrl, cloudadminusername, cloudadminpassword);
@@ -78,7 +75,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildFindAllServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildUpdateServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
@@ -94,34 +91,10 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 
 
     }
-    
-    public int testBuildPosition(String id) {
-		ResponseEntity<List<Build>> response = buildService.findAll(0, 500);
-		for (Message message : response.getMessages()) {
-			logger.warn("Error [{}]  " + message.getMessageText());
-		}
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
-		assertEquals(false, response.isErrors());
-		int position = 0;
-		if (id != null) {
-			for (Build obj : response.getResults()) {
-				position++;
-				if (obj.getId().equals(id)) {
-					logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-					assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-				}
-			}
-		}
-		logger.info(" Total Number of Objects :{}", response.getResults().size());
-		return response.getResults().size();
-	}
 
     
     @org.junit.Test
     public void testCreate() throws Exception {
-    	
-    	countBeforeCreate = testBuildPosition(null);
 
         ResponseEntity<Build> response = buildService.create(build);
 
@@ -140,9 +113,23 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 	            assertNotNull(response.getResults().getId());
 	
 	            buildCreated = response.getResults();
-	                            
-                this.countAfterCreate = testBuildPosition(this.buildCreated.getId());
-                assertEquals(countBeforeCreate + 1, countAfterCreate);
+	            
+	            buildCreated.setTag("new_tag");
+	            buildCreated.setGitCloneUrl("new_gitUrl");
+	            buildCreated.setRepository("new_repo");
+	                
+                response = buildService.update(this.buildCreated);
+
+				for (Message message : response.getMessages()) {
+					logger.warn("Error while updating build  [{}] ", message.getMessageText());
+				}
+				
+				assertNotNull(response);
+				assertEquals(false,response.isErrors());
+				assertNotNull(response.getResults().getId());
+				assertEquals(this.buildCreated.getRepository(), response.getResults().getRepository());
+				assertEquals(this.buildCreated.getGitCloneUrl(), response.getResults().getGitCloneUrl());
+				assertEquals(this.buildCreated.getTag(), response.getResults().getTag());
 	
 	        }
         
@@ -152,6 +139,7 @@ public class BuildFindAllServiceTest extends AbstractServiceTest {
 		}
     }
     
+	
 	
     @After
     public void cleanUp() throws Exception  {

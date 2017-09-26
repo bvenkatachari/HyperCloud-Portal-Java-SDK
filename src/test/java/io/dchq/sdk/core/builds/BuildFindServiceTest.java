@@ -39,15 +39,11 @@ import io.dchq.sdk.core.BuildService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * Created by Abedeen on 04/05/16.
- */
+*
+* @author Santosh Kumar.
+* @since 1.0
+*/
 
-/**
- * Abstracts class for holding test credentials.
- *
- * @author Abedeen.
- * @since 1.0
- */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class BuildFindServiceTest extends AbstractServiceTest {
@@ -108,8 +104,7 @@ public class BuildFindServiceTest extends AbstractServiceTest {
 	            logger.warn("Error while Create request  [{}] ", message.getMessageText());
 	            errorMessage += ("Error while Create request  [{}] " + message.getMessageText());
 	        }
-	        assertNotNull(response.getResults());
-	        assertNotNull(response.getResults().getId());
+	        
 	        Assert.assertNotNull(errorMessage,response.getResults());
 	
 	        if (response.getResults()!=null) {
@@ -123,7 +118,7 @@ public class BuildFindServiceTest extends AbstractServiceTest {
                 response = buildService.findById(this.buildCreated.getId());
 
 				for (Message message : response.getMessages()) {
-					logger.warn("Error while find Security Group by Id request  [{}] ", message.getMessageText());
+					logger.warn("Error while find Build by Id request  [{}] ", message.getMessageText());
 				}
 				
 				assertNotNull(response);
