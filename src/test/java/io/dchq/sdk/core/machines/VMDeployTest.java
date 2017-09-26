@@ -53,7 +53,12 @@ public class VMDeployTest extends DockerServerTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
 				// MultiVM_2V, vhg01cluster(HCS),Sam_Docker_Swarm_Cluster
-				{ "2c9180875dcf94f1015dcfdf842502e9", "2c9180865d312fc4015d3160f518008e", "2c9180875dded97c015de03986f30a37", 300000 } });
+				{ "2c9180875dcf94f1015dcfdf842502e9", "2c9180865d312fc4015d3160f518008e", "2c9180875dded97c015de03986f30a37", 300000 },
+				// AWS Ubuntu 4GB, Amazon EC2
+				{ "2c9180875e03a363015e05c4e3df0a5e", "2c9180865d400da0015d42805e9b01e1", "", 300000 },
+				// Azure_Windows_2016, Microsoft Azure
+				{ "2c9180875e9da16c015e9e5729200253", "2c9180865d400da0015d4273880c01e0", "", 300000 }
+			});
 	}
 
 	@org.junit.Test
@@ -145,11 +150,11 @@ public class VMDeployTest extends DockerServerTest {
 	public void cleanUp() {
 
 		if (vms != null) {
-			for (DockerServer server : vms) {
+			/*for (DockerServer server : vms) {
 				logger.info("Deleting Machine "+server.getName());
 				dockerServerService.delete(server.getId(), true);
 				validateProvision(server, "DESTROYING");
-			}
+			}*/
 
 		}
 
