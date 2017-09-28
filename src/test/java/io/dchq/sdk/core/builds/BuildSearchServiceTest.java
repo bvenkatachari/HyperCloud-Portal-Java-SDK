@@ -60,7 +60,7 @@ public class BuildSearchServiceTest extends AbstractServiceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
-                //{"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
+                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "","2c9180875e987035015e993d8b860119",false},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","",false},
                 {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","", "latestmine","2c9180875e987035015e993d8b860119",false},
@@ -116,7 +116,7 @@ public class BuildSearchServiceTest extends AbstractServiceTest {
 	            buildCreated = response.getResults();
 	                
 	                
-	            ResponseEntity<List<Build>> searchResponse = buildService.search("TestImage", 0, 1);
+	            ResponseEntity<List<Build>> searchResponse = buildService.search(this.buildCreated.getName(), 0, 1);
 
 				for (Message message : response.getMessages()) {
 					logger.warn("Error while find Build by Id request  [{}] ", message.getMessageText());
@@ -125,7 +125,7 @@ public class BuildSearchServiceTest extends AbstractServiceTest {
 				assertNotNull(searchResponse);
 				assertEquals(false,searchResponse.isErrors());
 				assertNotNull(searchResponse.getResults().get(0).getId());
-				//assertEquals(this.buildCreated.getName(), searchResponse.getResults().get(0).getName());
+				assertEquals(this.buildCreated.getName(), searchResponse.getResults().get(0).getName());
 	
 	        }
         

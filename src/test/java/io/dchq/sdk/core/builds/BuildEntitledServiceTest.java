@@ -138,7 +138,7 @@ public class BuildEntitledServiceTest extends AbstractServiceTest {
 	                
 	                
 	            if (this.buildCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
-					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search("TestImage", 0,1);
+					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search(this.buildCreated.getName(), 0,1);
 					for (Message message : subnetSearchResponseEntity.getMessages()) {
 						logger.warn("Error while Search request  [{}] ", message.getMessageText());
 					}
@@ -148,7 +148,7 @@ public class BuildEntitledServiceTest extends AbstractServiceTest {
 					assertEquals(0, subnetSearchResponseEntity.getResults().size());
 				}
 				if (this.buildCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search("TestImage", 0,1);
+					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search(this.buildCreated.getName(), 0,1);
 					for (Message message : subnetSearchResponseEntity.getMessages()) {
 						logger.warn("Error while Search request  [{}] ", message.getMessageText());
 					}
@@ -158,7 +158,7 @@ public class BuildEntitledServiceTest extends AbstractServiceTest {
 					assertEquals(1, subnetSearchResponseEntity.getResults().size());
 				}
 				if (this.buildCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search("TestImage", 0,1);
+					ResponseEntity<List<Build>> subnetSearchResponseEntity = buildService2.search(this.buildCreated.getName(), 0,1);
 					for (Message message : subnetSearchResponseEntity.getMessages()) {
 						logger.warn("Error while Search request  [{}] ", message.getMessageText());
 					}

@@ -114,8 +114,9 @@ public class BuildUpdateServiceTest extends AbstractServiceTest {
 	
 	            buildCreated = response.getResults();
 	            
+	            buildCreated.setName(buildCreated.getName()+"_updated");
 	            buildCreated.setTag("new_tag");
-	            buildCreated.setGitCloneUrl("new_gitUrl");
+	            buildCreated.setGitCloneUrl("https://github.com/dockerfile/linux.git");
 	            buildCreated.setRepository("new_repo");
 	                
                 response = buildService.update(this.buildCreated);
@@ -127,6 +128,7 @@ public class BuildUpdateServiceTest extends AbstractServiceTest {
 				assertNotNull(response);
 				assertEquals(false,response.isErrors());
 				assertNotNull(response.getResults().getId());
+				assertEquals(this.buildCreated.getName(), response.getResults().getName());
 				assertEquals(this.buildCreated.getRepository(), response.getResults().getRepository());
 				assertEquals(this.buildCreated.getGitCloneUrl(), response.getResults().getGitCloneUrl());
 				assertEquals(this.buildCreated.getTag(), response.getResults().getTag());
