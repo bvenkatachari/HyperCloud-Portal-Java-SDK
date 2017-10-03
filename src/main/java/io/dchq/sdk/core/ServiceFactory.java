@@ -122,4 +122,9 @@ public class ServiceFactory {
     {
     	return new MessageServiceImpl(baseURL, username, password);
     }
+    
+    public static final BackupService buildBackupService(String baseURL, String username, String password)
+    {
+    	return new BackupServiceImpl(baseURL, username, password);
+    }
 }
