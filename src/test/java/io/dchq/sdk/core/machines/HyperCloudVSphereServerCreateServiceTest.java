@@ -147,9 +147,12 @@ public class HyperCloudVSphereServerCreateServiceTest extends DockerServerTest {
 				
 				
 				while(isConnected && serverStatus.equals("PROVISIONED") && (System.currentTimeMillis() < endTime)){	
-					/*Noticed, sometimes system takes time to change the status from ‘Provisioned’ to ‘Connected’ 
-					so we don’t have any exact number to wait. 
-					Our script will wait for 2-3 mins and if in that time status won’t change than test will fail. */
+					/*
+					 * Noticed, sometimes system takes time to change the status
+					 * from "Provisioned" to "Connected" so we don't have any exact
+					 * number to wait. Our script will wait for 2-3 mins and if in
+					 * that time status won't change than test will fail.
+					 */
 					wait(10000); //wait for 10 seconds
 					dockerServerCreated = dockerServerService.findById(dockerServerCreated.getId()).getResults();
 					serverStatus = dockerServerCreated.getDockerServerStatus().name();

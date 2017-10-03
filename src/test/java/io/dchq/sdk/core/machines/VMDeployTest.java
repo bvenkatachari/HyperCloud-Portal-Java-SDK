@@ -126,9 +126,9 @@ public class VMDeployTest extends DockerServerTest {
 			while (serverStatus.equals("PROVISIONED") && (System.currentTimeMillis() < endTime)) {
 				/*
 				 * Noticed, sometimes system takes time to change the status
-				 * from ‘Provisioned’ to ‘Connected’ so we don’t have any exact
+				 * from "Provisioned" to "Connected" so we don't have any exact
 				 * number to wait. Our script will wait for 2-3 mins and if in
-				 * that time status won’t change than test will fail.
+				 * that time status won't change than test will fail.
 				 */
 				try {
 		            Thread.sleep(10000); // wait for 10 seconds
