@@ -88,8 +88,8 @@ public class BuildEntitledServiceTest extends AbstractServiceTest {
     		String tag,String registryAccountId, EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId, boolean success)  throws Exception {
      
         this.build = new Build().withBuildType(buildType);
-        this.build.setCluster(clusterId);
-
+        build.setCluster(clusterId);
+        build.setName(imageName);
         build.setTag(tag);
         build.setGitCloneUrl(gitURL);
         build.setRepository(pustToRepository);

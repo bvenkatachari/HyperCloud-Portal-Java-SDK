@@ -80,8 +80,8 @@ public class BuildSearchServiceTest extends AbstractServiceTest {
      
         this.build = new Build()
                 .withBuildType(buildType);
-        this.build.setCluster(clusterId);
-
+        build.setCluster(clusterId);
+        build.setName(imageName);
         build.setTag(tag);
         build.setGitCloneUrl(gitURL);
         build.setRepository(pustToRepository);

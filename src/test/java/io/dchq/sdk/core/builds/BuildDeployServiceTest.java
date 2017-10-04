@@ -18,8 +18,12 @@ package io.dchq.sdk.core.builds;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -34,8 +38,10 @@ import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.build.Build;
 import com.dchq.schema.beans.one.build.BuildTask;
 import com.dchq.schema.beans.one.build.BuildType;
+import com.dchq.schema.beans.one.container.Env;
 import com.dchq.schema.beans.one.provider.DataCenter;
 import com.dchq.schema.beans.one.provider.DockerServer;
+import com.dchq.schema.beans.one.provision.PluginProfile;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.BuildService;
@@ -73,12 +79,18 @@ public class BuildDeployServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
-                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",true},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "","2c9180875e987035015e993d8b860119",false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","",false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","", "latestmine","2c9180875e987035015e993d8b860119",false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",false}
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", true},
+                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "POST",true},
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "","2c9180875e987035015e993d8b860119",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", false},
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", false},
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","", "latestmine","2c9180875e987035015e993d8b860119",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE",false},
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE",false}
                 
         });
     }
@@ -90,18 +102,42 @@ public class BuildDeployServiceTest extends AbstractServiceTest {
 
 
 
-    public BuildDeployServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, boolean success)  throws Exception {
+    public BuildDeployServiceTest(String imageName, BuildType buildType,String gitURL,String clusterId,String pustToRepository,String tag,String registryAccountId, 
+    		String pluginId, String pluginName, String envProp, String envVal, String envEval, String lifecycle, boolean success)  throws Exception {
      
         this.build = new Build()
                 .withBuildType(buildType);
-        this.build.setCluster(clusterId);
-
+        build.setCluster(clusterId);
+        build.setName(imageName);
         build.setTag(tag);
         build.setGitCloneUrl(gitURL);
         build.setRepository(pustToRepository);
         NameEntityBase neb = new NameEntityBase();
         neb.setId(registryAccountId);
         build.setRegistryAccount(neb);
+        
+        //PlugIn Details
+        PluginProfile pluginProfiles = new PluginProfile();
+        pluginProfiles.setPluginId(pluginId);
+        pluginProfiles.setName(pluginName);
+        pluginProfiles.setLifecycle(lifecycle);
+        
+        Env env = new Env();
+        env.setProp(envProp);
+        env.setVal(envVal);
+        env.setEval(envEval);
+        env.setHidden(false);
+        
+        Set<Env> envs = new HashSet<>();
+        envs.add(env);
+        
+        pluginProfiles.setEnvs(envs);
+        
+        List<PluginProfile> plugins = new ArrayList<>();
+        plugins.add(pluginProfiles);
+        
+        build.setPluginProfiles(plugins);
+        
         this.success = success;
 
 
