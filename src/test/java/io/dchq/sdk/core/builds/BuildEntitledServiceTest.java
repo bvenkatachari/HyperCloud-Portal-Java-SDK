@@ -97,6 +97,8 @@ public class BuildEntitledServiceTest extends AbstractServiceTest {
         neb.setId(registryAccountId);
         build.setRegistryAccount(neb);
         
+        build.setEntitlementType(entitlementType);
+        
         if (!StringUtils.isEmpty(entitledUserId) && isEntitlementTypeUser) {
 			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(entitledUserId);
 			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
