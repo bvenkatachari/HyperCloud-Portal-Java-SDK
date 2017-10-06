@@ -150,11 +150,11 @@ public class VMDeployTest extends DockerServerTest {
 	public void cleanUp() {
 
 		if (vms != null) {
-			/*for (DockerServer server : vms) {
+			for (DockerServer server : vms) {
 				logger.info("Deleting Machine "+server.getName());
 				dockerServerService.delete(server.getId(), true);
 				validateProvision(server, "DESTROYING");
-			}*/
+			}
 
 		}
 
