@@ -58,7 +58,7 @@ public class DataCenterSearchServiceTest extends AbstractServiceTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, username, password);
+        dataCenterService = ServiceFactory.buildDataCenterService(rootUrl, cloudadminusername, cloudadminpassword);
     }
 
     DataCenter dataCenter;

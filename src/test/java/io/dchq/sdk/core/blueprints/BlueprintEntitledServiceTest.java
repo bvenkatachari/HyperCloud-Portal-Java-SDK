@@ -153,7 +153,7 @@ public class BlueprintEntitledServiceTest extends AbstractServiceTest {
 				{ "User Visiblity By CUSTOM", BlueprintType.DOCKER_COMPOSE, " ", "description", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.CUSTOM, USER_GROUP, false, false },
 
 				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, " ", "description", "https://dchq.io", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
-				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", null, "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
+				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", null, "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, true },
 				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, " ", false, false },
 				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "6.0", "description", " ", Visibility.EDITABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
 				{ "User Visiblity By Owner", BlueprintType.DOCKER_COMPOSE, "ABC", "description", "https://dchq.io", Visibility.READABLE, "LB:\n image: nginx:latest", null, false, EntitlementType.OWNER, null, false, false },
