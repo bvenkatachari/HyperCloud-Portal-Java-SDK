@@ -88,10 +88,10 @@ public class VirtualNetworkEntitledServiceTest extends AbstractServiceTest {
 		// driver id - "402881875cf281ee015cf5c9f7ff05d0" on Intesar machine
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "501" , true, false, null, true},
-		    {"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "502" , true, false, null, true},
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "513" , true,true, userId2,true},
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "519" , true,false, USER_GROUP,true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "401" , true, false, null, true},
+		    {"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "402" , true, false, null, true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "512" , true,true, userId2,true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "402" , true,false, USER_GROUP,true},
 			
 			
 		});

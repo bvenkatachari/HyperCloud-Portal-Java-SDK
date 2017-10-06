@@ -69,9 +69,9 @@ public class VirtualNetworkFindAllServiceTest extends AbstractServiceTest{
 		// driver id - "402881875cf281ee015cf5c9f7ff05d0" on Intesar machine
 		
 		return Arrays.asList(new Object[][]{ 
-			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "518" , true, true},
-		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "519" , true, true},
-			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "26" , true,true},
+			{"testvlan", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "401" , true, true},
+		{"testvlan1", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "402" , true, true},
+			{"testvlan2", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "512" , true,true},
 			
 			//Needs validation at API end
 			/*{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "516" ,false, false},

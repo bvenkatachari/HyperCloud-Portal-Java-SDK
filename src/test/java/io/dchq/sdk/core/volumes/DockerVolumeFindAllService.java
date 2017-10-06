@@ -67,9 +67,9 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
+			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
+			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
+			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
 			
 		});
 	}
@@ -147,21 +147,26 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 
 		if (this.dockerVolumeCreated != null) {
 			logger.info("cleaning up...");
+			
+			endTime = System.currentTimeMillis()  + (60 * 60 * 50);
+			
 			ResponseEntity<?> response = dockerVolumeService.delete(this.dockerVolumeCreated.getId());
 			for (Message message : response.getMessages()) {
 				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
 			}
 			DockerVolume dockerVolumeDelete =  (DockerVolume) response.getResults();
 			
-			while (dockerVolumeDelete.getStatus().equals("DESTROYING") && (System.currentTimeMillis() < endTime)) {
+			do{
+				
 				try {
 					Thread.sleep(10000);
 					dockerVolumeDelete = dockerVolumeService.findById(dockerVolumeDelete.getId()).getResults();
 				} catch (InterruptedException e) {
 					// TODO: handling exception
 				}
-			}
-			assertEquals(countBeforeCreate, countAfterCreate - 1);
+				
+			}while (dockerVolumeDelete.getStatus().equals("DESTROYING") && (System.currentTimeMillis() < endTime));
+				
 		}
 
 	}

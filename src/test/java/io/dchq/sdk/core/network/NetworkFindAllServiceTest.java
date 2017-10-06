@@ -64,7 +64,8 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { { "testnetwork", "bridge", dockerServerId, true },
+		return Arrays.asList(new Object[][] { 
+			{ "testnetwork", "bridge", dockerServerId, true },
 			{ "testnetwork1", "bridge", dockerServerId, true },
 			{ "testnetwork", "bridge", "", false }});
 	}
@@ -141,26 +142,32 @@ public class NetworkFindAllServiceTest extends AbstractServiceTest {
 
 	@After
 	public void cleanUp() {
+		
 		if (this.networkCreated != null) {
+			endTime = System.currentTimeMillis()  + (60 * 60 * 50);
+			
 			logger.info("cleaning up...");
 			ResponseEntity<DockerNetwork> response = networkService.delete(this.networkCreated.getId());
 			networkDeleted = response.getResults();
 			for (Message message : response.getMessages()) {
 				logger.warn("Error network deletion: [{}] ", message.getMessageText());
 			}
-			assertEquals(countBeforeCreate, countAfterCreate - 1);
 
-			while (networkDeleted != null && networkDeleted.getStatus() != DockerNetworkStatus.REMOVED
-					&& (System.currentTimeMillis() < endTime)) {
-				response = networkService.findById(this.networkCreated.getId());
-				networkDeleted = response.getResults();
+			do{
+				
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+				
+				response = networkService.findById(this.networkCreated.getId());
+				networkDeleted = response.getResults();
+			 } while (networkDeleted != null && networkDeleted.getStatus() != DockerNetworkStatus.REMOVED
+					&& (System.currentTimeMillis() < endTime)) ;
+				
+				
 		}
 	}
 }
