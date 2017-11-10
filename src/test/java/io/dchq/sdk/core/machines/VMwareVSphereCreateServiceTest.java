@@ -37,15 +37,12 @@ import com.dchq.schema.beans.one.security.EntitlementType;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * Created by Abedeen on 04/05/16.
- */
+*
+* @author Santosh Kumar.
+* @since 1.0
+*
+*/
 
-/**
- * Abstracts class for holding test credentials.
- *
- * @author Abedeen.
- * @since 1.0
- */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class VMwareVSphereCreateServiceTest extends DockerServerTest {

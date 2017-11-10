@@ -1,5 +1,13 @@
 package io.dchq.sdk.core.dto.backup;
 
+
+/**
+*
+* @author Santosh Kumar.
+* @since 1.0
+*
+*/
+
 public class BackupRequest {
 	
 	String jobName;

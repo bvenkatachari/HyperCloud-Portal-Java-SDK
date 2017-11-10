@@ -45,7 +45,6 @@ public class DockerServerDeployServiceTest extends DockerServerTest {
 		sdi = new SDIRequest();
 		sdi.setBlueprint(blueprintId);
 		sdi.setCloudProvider(cloudProviderId);
-		// sdi.setCluster(clusterId);
 		maxWaitTime = tinout;
 	}
 
