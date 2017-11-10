@@ -1,13 +1,12 @@
 package io.dchq.sdk.core;
 
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.base.PkEntityBase;
-import com.dchq.schema.beans.one.build.Build;
-import com.dchq.schema.beans.one.build.BuildTask;
+import java.util.List;
+
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.io.Serializable;
-import java.util.List;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.build.Build;
+import com.dchq.schema.beans.one.build.BuildTask;
 
 /**
  * This class encapsulates Build related methods

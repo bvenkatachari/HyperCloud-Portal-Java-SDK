@@ -48,7 +48,7 @@ import io.dchq.sdk.core.ServiceFactory;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class VSphereServerCreateServiceTest extends DockerServerTest {
+public class HyperCloudVMwareCreateServiceTest extends DockerServerTest {
 
 
     @org.junit.Before
@@ -59,14 +59,14 @@ public class VSphereServerCreateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"VSphere", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "dvp-vlan-1181", 1, "2c9180875eaa3c49015eb8285b3c6f2d", 300000, "", false, true, true},
-        	{"VSphere", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-W2K16-DC-200v2", "dvp-vlan-1181", 1, "2c9180875eaa3c49015eb8285b3c6f2d", 300000, "", false, false, false}
+        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "VN_501,vlanId=501", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, true, true},
+        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-W2K16-DC-200v2", "VN_501,vlanId=501", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, false, false}
         	
         });
     }
 
 
-    public VSphereServerCreateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success, boolean installAgent, boolean isConnected) {
+    public HyperCloudVMwareCreateServiceTest(String serverName, Boolean activeFlag, String hardwareID, String image, String networkId, int size, String endpoint, int tinout, String clusterName, boolean success, boolean installAgent, boolean isConnected) {
     	String postfix = RandomStringUtils.randomAlphabetic(3);
     	if(clusterName !=null && !clusterName.isEmpty())
 		{

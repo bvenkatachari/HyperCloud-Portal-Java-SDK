@@ -6,6 +6,10 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 
+import io.dchq.sdk.core.dto.backup.BackupRequest;
+import io.dchq.sdk.core.dto.backup.VMBackup;
+import io.dchq.sdk.core.dto.backup.VMRestore;
+
 /**
 *
 * @author Santosh Kumar.
@@ -14,11 +18,11 @@ import com.dchq.schema.beans.base.ResponseEntity;
 */
 
 public class BackupServiceImpl extends
-GenericServiceImpl<Object, ResponseEntity<List<Object>>, ResponseEntity<Object>> implements BackupService {
+GenericServiceImpl<BackupRequest, ResponseEntity<List<Object>>, ResponseEntity<Object>> implements BackupService {
 	
 	
 	
-	public static final String ENDPOINT = "backups/job/";
+	public static final String ENDPOINT = "backups/";
 
 	/**
 	 * @param baseURI
@@ -37,15 +41,23 @@ GenericServiceImpl<Object, ResponseEntity<List<Object>>, ResponseEntity<Object>>
 	}
 
 	@Override
-	public ResponseEntity<Object> createBackup(String backup) {
-		return super.doPost(backup, "addvm");
+	public ResponseEntity<Object> createBackup(BackupRequest backup) {
+		return super.doPost(backup, "job/addvm");
 	}
 	
 	@Override
-	public ResponseEntity<Object> deleteBackup(String backup) {
-		return super.doPost(backup, "delvm");
+	public ResponseEntity<Object> deleteBackup(BackupRequest backup) {
+		return super.doPost(backup, "job/delvm");
 	}
 	
+	@Override
+	public ResponseEntity<List<VMBackup>> findAllBackupVMs(int page, int size) {
+		return super.findAll(page, size, "vm", new ParameterizedTypeReference<ResponseEntity<List<VMBackup>>>() {});
+	}
 	
+	@Override
+	public ResponseEntity<Object> restoreBackup(VMRestore restore) {
+		return super.doPost(restore, "vm/restore");
+	}
 
 }

@@ -36,6 +36,8 @@ interface GenericService<E, RL, RO> {
 
     RL findAll(int page, int size);
     
+    <T> T findAll(int page, int size, String urlPostfix, ParameterizedTypeReference<T> responseType);
+    
     RL findAllEntitled(int page, int size);
 
     /**
