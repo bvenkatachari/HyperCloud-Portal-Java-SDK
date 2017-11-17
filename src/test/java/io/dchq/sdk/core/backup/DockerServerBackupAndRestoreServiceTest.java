@@ -13,7 +13,6 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -58,12 +57,19 @@ public class DockerServerBackupAndRestoreServiceTest extends AbstractServiceTest
 	}
 
 	public DockerServerBackupAndRestoreServiceTest(String backupProvider, String jobName, String serverName,
-			String hardwareId, String image, String networkId, String endpoint, boolean success) {
+			String hardwareId, String image, String networkId, String endpoint, boolean installAgent, boolean success) {
 
 		server = new DockerServer().withName(serverName).withInactive(Boolean.FALSE).withImageId(image).withSize(1)
 				.withEndpoint(endpoint).withHardwareId(hardwareId).withNetworkId(networkId);
 		server.setGroup(serverName);
-		server.setSkipAgentInstall("true");
+		
+		if(installAgent){
+			this.server.setSkipAgentInstall("false");
+			this.server.setImageUsername("hf");
+			this.server.setImagePassword("HyperGrid123");
+		}else {
+		    this.server.setSkipAgentInstall("true");
+		}
 
 		Map<String, String> cloudParams = new HashMap<>();
 		cloudParams.put("backup_provider", backupProvider);
@@ -81,15 +87,15 @@ public class DockerServerBackupAndRestoreServiceTest extends AbstractServiceTest
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
 				// HyperCloudVMware
-				{ "Veeam", "Testing_VmWare_Job", "HyperCloudVMware_Backup", "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7",
-						"VN_501,vlanId=501", "2c9180875e9f1385015ea08e862d02e5", true },
+				{ "Veeam", "Only_Automation_HyperV-VMware_Job", "HyperCloudVMware_Backup", "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7",
+						"VN_501,vlanId=501", "2c9180875e9f1385015ea08e862d02e5", true, true },
 				// HyperCloud Hyper-V
-				{ "Veeam", "Testing_JOb", "HyperCloudHyperV_Backup", "cpu=1,memory=2GB,disk=20GB,generation=1",
+				{ "Veeam", "Only_Automation_Hyper-V_Job", "HyperCloudHyperV_Backup", "cpu=1,memory=2GB,disk=20GB,generation=1",
 						"C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_DCHQ_Docker_Swarm.vhdx",
-						"Compute vmSwitch", "2c9180865d312fc4015d3160f518008e", true } });
+						"Compute vmSwitch", "2c9180865d312fc4015d3160f518008e", false, true } });
 	}
 
-	@Ignore
+
 	@Test
 	public void createBackupAndRestore() {
 		try {
