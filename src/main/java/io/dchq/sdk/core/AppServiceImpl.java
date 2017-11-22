@@ -107,8 +107,8 @@ public class AppServiceImpl extends GenericServiceImpl<App, ResponseEntity<List<
     }
 
     @Override
-    public ResponseEntity<App> destroy(String appId) {
-        return super.doPost(new ArrayList<>(), "/" + appId + "/destroy");
+    public ResponseEntity<App> destroy(AppLifecycleProfile profile, String appId) {
+        return super.doPost(profile, "/" + appId + "/destroy/false");
     }
 
     @Override

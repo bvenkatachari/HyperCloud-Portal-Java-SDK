@@ -104,7 +104,7 @@ public interface AppService extends GenericService<App, ResponseEntity<List<App>
      * @param appId
      * @return
      */
-    ResponseEntity<App> destroy(String appId);
+    ResponseEntity<App> destroy(AppLifecycleProfile profile, String appId);
 
     /**
      * Stop App Service.

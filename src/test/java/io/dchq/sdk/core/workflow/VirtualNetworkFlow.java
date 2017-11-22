@@ -15,6 +15,7 @@ import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.provider.DataCenter;
 import com.dchq.schema.beans.one.provider.DockerServer;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
 import com.dchq.schema.beans.one.provision.ProvisionState;
 import com.dchq.schema.beans.one.security.EntitlementType;
 import com.dchq.schema.beans.one.vlan.VirtualNetwork;
@@ -479,7 +480,10 @@ public class VirtualNetworkFlow extends AbstractServiceTest {
 
 		if (app != null) {
 			logger.info("cleaning up App...");
-			appService.destroy(app.getId());
+			AppLifecycleProfile profile = new AppLifecycleProfile();
+        	profile.setNote("Destroy");
+        	profile.setAllSelected(true);
+			appService.destroy(profile, app.getId());
 
 			app = appService.findById(app.getId()).getResults();
 			while ((app.getProvisionState() != ProvisionState.DESTROYED) && (System.currentTimeMillis() < endTime)) {

@@ -101,7 +101,10 @@ public class AppBaseImpl extends AbstractServiceTest implements AppBase {
         ResponseEntity<App> response = null;
         if (app != null) {
 
-            response = appService.destroy(app.getId());
+        	AppLifecycleProfile profile = new AppLifecycleProfile();
+        	profile.setNote("Destroy");
+        	profile.setAllSelected(true);
+            response = appService.destroy(profile, app.getId());
             System.out.println("Print App ID:  " + app.getId());
 
             app = appService.findById(app.getId()).getResults();
