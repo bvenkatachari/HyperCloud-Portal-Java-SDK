@@ -597,6 +597,34 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
     }
     
     /**
+     * Executes PUT request with url postfix
+     *
+     * @param entity - not null
+     * @return
+     */
+    @Override
+    public RO update(Object entity, String urlPostfix) {
+
+        String url = baseURI + endpoint + urlPostfix;
+
+        HttpHeaders map = getHttpHeaders();
+
+        //set your entity to send
+        HttpEntity<Object> requestEntity = new HttpEntity<>(entity, map);
+
+
+        org.springframework.http.ResponseEntity<RO> res =
+                template.exchange(
+                        url,
+                        HttpMethod.PUT,
+                        requestEntity,
+                        singleTypeReference
+                );
+
+        return res.getBody();
+    }
+    
+    /**
      * Executes Update request with url postfix
      *
      * @param id - not null
@@ -696,6 +724,34 @@ abstract class GenericServiceImpl<E,RL,RO > implements GenericService<E,RL,RO> {
 
         //set your entity to send
         HttpEntity<E> requestEntity = new HttpEntity<>(map);
+
+
+        org.springframework.http.ResponseEntity<RO> res =
+                template.exchange(
+                        url,
+                        HttpMethod.DELETE,
+                        requestEntity,
+                        singleTypeReference
+                );
+
+        return res.getBody();
+    }
+    
+    /**
+     * Executes Delete request with url postfix
+     *
+     * @param entity - not null
+     * @return
+     */
+    @Override
+    public RO delete(Object entity, String urlPostfix) {
+
+        String url = baseURI + endpoint + urlPostfix;
+
+        HttpHeaders map = getHttpHeaders();
+
+        //set your entity to send
+        HttpEntity<Object> requestEntity = new HttpEntity<>(entity, map);
 
 
         org.springframework.http.ResponseEntity<RO> res =

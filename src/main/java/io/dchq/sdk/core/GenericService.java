@@ -161,4 +161,8 @@ interface GenericService<E, RL, RO> {
      * @return
      */
     RO update(String id, String urlPostfix);
+
+	Object update(Object entity, String urlPostfix);
+
+	Object delete(Object entity, String urlPostfix);
 }

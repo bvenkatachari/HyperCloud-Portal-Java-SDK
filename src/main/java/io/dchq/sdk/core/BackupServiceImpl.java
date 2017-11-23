@@ -6,7 +6,10 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 
+import io.dchq.sdk.core.dto.backup.BackupJob;
 import io.dchq.sdk.core.dto.backup.BackupRequest;
+import io.dchq.sdk.core.dto.backup.CreateBackupJob;
+import io.dchq.sdk.core.dto.backup.DeleteBackupJob;
 import io.dchq.sdk.core.dto.backup.VMBackup;
 import io.dchq.sdk.core.dto.backup.VMRestore;
 
@@ -58,6 +61,21 @@ GenericServiceImpl<BackupRequest, ResponseEntity<List<Object>>, ResponseEntity<O
 	@Override
 	public ResponseEntity<Object> restoreBackup(VMRestore restore) {
 		return super.doPost(restore, "vm/restore");
+	}
+	
+	@Override
+	public ResponseEntity<Object> createBackUpJob(CreateBackupJob job) {
+		return super.update(job, "job");
+	}
+	
+	@Override
+	public ResponseEntity<List<BackupJob>> findAllBackUpJobs(int page, int size) {
+		return super.findAll(page, size, "job", new ParameterizedTypeReference<ResponseEntity<List<BackupJob>>>() {});
+	}
+	
+	@Override
+	public ResponseEntity<Object> deleteBackUpJob(DeleteBackupJob job) {
+		return super.delete(job,"job");
 	}
 
 }
