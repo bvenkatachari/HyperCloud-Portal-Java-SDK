@@ -58,13 +58,8 @@ public class CostPoliciesCreateServiceTest extends AbstractServiceTest {
 	private PriceProfile priceProfileCreated;
 	private boolean success;
 
-	public CostPoliciesCreateServiceTest(
-			String name, 
-			PriceUnit priceUnit, 
-			Double value, 
-			String currency,
-			boolean success
-		) {
+	public CostPoliciesCreateServiceTest(String name, PriceUnit priceUnit, Double value, String currency,
+			boolean success) {
 		// random name
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		name = prefix + "-" + name;
@@ -79,15 +74,16 @@ public class CostPoliciesCreateServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		return Arrays.asList(new Object[][] { 
-			{ "apitest", PriceUnit.HOURLY, 1.00, "$", false } 
-		
+		return Arrays.asList(new Object[][] { { "costprofile", PriceUnit.HOURLY, 1.00, "$", false },
+				{ "costprofile", PriceUnit.MONTHLY, 1.00, "$", false },
+				{ "costprofile", PriceUnit.ONE_TIME, 1.00, "$", false }
+
 		});
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		service = ServiceFactory.buildCostPoliciesService(rootUrl, username, password);
+		service = ServiceFactory.buildCostPoliciesService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 
 	@Test
