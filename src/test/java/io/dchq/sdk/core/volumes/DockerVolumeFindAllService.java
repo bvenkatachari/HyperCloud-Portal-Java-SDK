@@ -47,7 +47,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		if(volumeName!=null )
 		{
-			volumeName = prefix.toLowerCase() + "-" + volumeName;
+			volumeName = prefix.toLowerCase() + volumeName;
 		}
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setName(volumeName);
@@ -67,9 +67,9 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
-			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
-			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
-			{ "testvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
+			{ "allvolume", "2c9180865d35d99c015d363715c100e1", "2", EntitlementType.OWNER, false },
+			{ "allvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
+			{ "allvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
 			
 		});
 	}
@@ -96,6 +96,8 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 		return response.getResults().size();
 	}
 
+
+
 	@Test
 	public void findAll() {
 
@@ -116,16 +118,7 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 					logger.info("Create docker volumne Successful..");
 				}
 
-				while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
-					try {
-						Thread.sleep(10000);
-						dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
-						assertNotNull(dockerVolumeCreated);
-						logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
-					} catch (InterruptedException e) {
-						// TODO: handling exception
-					}
-				}
+				dockerVolumeCreated = getStatus(this.dockerVolumeCreated);
 				logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 				assertNotNull(response.getResults());
 				assertNotNull(response.getResults().getId());
@@ -142,6 +135,21 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 
 	}
 
+	private DockerVolume getStatus(DockerVolume volume)
+	{
+		while (volume.getStatus().equals("PROVISIONING") || volume.getStatus().equals("CLONING") && (System.currentTimeMillis() < endTime)) {
+			try {
+				Thread.sleep(10000);
+				volume = dockerVolumeService.findById(volume.getId()).getResults();
+				assertNotNull(volume);
+				logger.info("Volume Status is [{}]", volume.getStatus());
+			} catch (InterruptedException e) {
+				// TODO: handling exception
+			}
+		}
+		return volume;
+	}
+	
 	@After
 	public void clearUp() {
 
@@ -152,20 +160,8 @@ public class DockerVolumeFindAllService extends AbstractServiceTest {
 			
 			ResponseEntity<?> response = dockerVolumeService.delete(this.dockerVolumeCreated.getId());
 			for (Message message : response.getMessages()) {
-				logger.warn("Error volume deletion: [{}] ", message.getMessageText());
+				logger.warn("Error network deletion: [{}] ", message.getMessageText());
 			}
-			DockerVolume dockerVolumeDelete =  (DockerVolume) response.getResults();
-			
-			do{
-				
-				try {
-					Thread.sleep(10000);
-					dockerVolumeDelete = dockerVolumeService.findById(dockerVolumeDelete.getId()).getResults();
-				} catch (InterruptedException e) {
-					// TODO: handling exception
-				}
-				
-			}while (dockerVolumeDelete.getStatus().equals("DESTROYING") && (System.currentTimeMillis() < endTime));
 				
 		}
 

@@ -13,18 +13,19 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.springframework.util.StringUtils;
+
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.NameEntityBase;
 import com.dchq.schema.beans.one.base.UsernameEntityBase;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.security.EntitlementType;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerVolumeService;
 import io.dchq.sdk.core.ServiceFactory;
@@ -87,9 +88,9 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
+			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
+			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
+			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
 			
 		});
 	}

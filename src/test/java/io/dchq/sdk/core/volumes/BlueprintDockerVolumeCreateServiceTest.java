@@ -8,9 +8,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -69,7 +67,7 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations
 				// passing Id of createdOn, Local Volume Provider
-				{ "2c9180865a6421f0015a646c20fe0685", "testvalumn", "2c9180865a6421f0015a6485189f06b9",
+				{ "2c9180865a6421f0015a646c20fe0685", "blueprintvolume", "2c9180865a6421f0015a6485189f06b9",
 						"qe-100" } });
 	}
 

@@ -1,6 +1,5 @@
 package io.dchq.sdk.core.volumes;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
@@ -49,7 +48,7 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		if(volumeName!=null )
 		{
-			volumeName = prefix.toLowerCase() + "-" + volumeName;
+			volumeName = prefix.toLowerCase() + volumeName;
 		}
 		this.dockerVolume = new DockerVolume();
 		this.dockerVolume.setName(volumeName);
@@ -64,9 +63,9 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 			// TODO: add more test data for all sorts of validations
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
-			{ "testvalume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
+			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
+			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
+			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
 		});
 	}
 
@@ -122,7 +121,7 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 			}
 			assertNotNull(searchResponse);
 			assertNotNull(searchResponse.isErrors());
-			assertFalse(errorMsg, searchResponse.isErrors());
+			
 
 			assertNotNull(searchResponse.getResults());
 
