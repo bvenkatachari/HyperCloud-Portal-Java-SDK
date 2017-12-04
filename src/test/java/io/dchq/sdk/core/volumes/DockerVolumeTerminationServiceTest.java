@@ -32,8 +32,8 @@ import io.dchq.sdk.core.MessageService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * @Author Saurabh Bhatia
- * @updater Jagdeep Jain
+ * Santosh Kumar
+ * 
  */
 
 
