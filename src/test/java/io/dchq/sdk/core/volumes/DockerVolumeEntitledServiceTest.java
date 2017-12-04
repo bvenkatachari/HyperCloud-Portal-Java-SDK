@@ -42,7 +42,7 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	private DockerVolumeService dockerVolumeService2;
 	private DockerVolumeService dockerVolumeService3;
 	DockerVolume createVolume;
-	DockerVolume createdVolume;
+	DockerVolume dockerVolumeCreated;
 	boolean sussess;
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
@@ -88,9 +88,9 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
-			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
-			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
-			{ "entitlevolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
+			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
+			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
+			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
 			
 		});
 	}
@@ -108,26 +108,24 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 			Assert.assertNotNull(resultResponse.getResults());
 
 			if (resultResponse.getResults() != null && !resultResponse.isErrors()) {
-				this.createdVolume = resultResponse.getResults();
+				this.dockerVolumeCreated = resultResponse.getResults();
 				logger.info("Create Volume Successfully..");
 			}
-			logger.info("Volume state [{}]", createdVolume.getStatus());
-			while (createdVolume.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
+			logger.info("Volume state [{}]", dockerVolumeCreated.getStatus());
+			while (dockerVolumeCreated.getStatus().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 				try {
-					// sleep for some time
 					Thread.sleep(10000);
-					logger.info("Volume state [{}]", createdVolume.getStatus());
-					resultResponse = dockerVolumeService.findById(createdVolume.getId());
-					Assert.assertEquals(false, resultResponse.isErrors());
-					Assert.assertNotNull(resultResponse.getResults());
-					this.createdVolume = resultResponse.getResults();
+					dockerVolumeCreated = dockerVolumeService.findById(dockerVolumeCreated.getId()).getResults();
+					assertNotNull(dockerVolumeCreated);
+					logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
 				} catch (InterruptedException e) {
-					// ignore
+					// TODO: handling exception
 				}
 			}
-			logger.info("Volume state [{}]", createdVolume.getStatus());
+			logger.info("Volume Status is [{}]", dockerVolumeCreated.getStatus());
+			
 			if (createVolume.getEntitlementType().equals(EntitlementType.OWNER)) {
-				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(createdVolume.getId());
+				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(dockerVolumeCreated.getId());
 				for (Message message : resultResponse1.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
@@ -137,36 +135,36 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 				
 			} else if (createVolume.getEntitlementType().equals(EntitlementType.PUBLIC)) {
 				
-				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(createdVolume.getId());
+				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(dockerVolumeCreated.getId());
 				for (Message message : resultResponse1.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) resultResponse1.isErrors()).toString());
 				assertNotNull(resultResponse1.getResults());
 				assertNotNull(resultResponse1.getResults().getId());
-				assertEquals(createdVolume.getId(), resultResponse1.getResults().getId());
+				assertEquals(dockerVolumeCreated.getId(), resultResponse1.getResults().getId());
 
 			} else if (createVolume.getEntitlementType().equals(EntitlementType.CUSTOM)) {
 				
-				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(createdVolume.getId());
+				ResponseEntity<DockerVolume> resultResponse1 = dockerVolumeService2.findById(dockerVolumeCreated.getId());
 				for (Message message : resultResponse1.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) resultResponse1.isErrors()).toString());
 				assertNotNull(resultResponse1.getResults());
 				assertNotNull(resultResponse1.getResults().getId());
-				assertEquals(createdVolume.getId(), resultResponse1.getResults().getId());
+				assertEquals(dockerVolumeCreated.getId(), resultResponse1.getResults().getId());
 				
 			} else if (createVolume.getEntitlementType().equals(EntitlementType.CUSTOM) && !isEntitlementTypeUser) {
 				
-				ResponseEntity<DockerVolume> resultResponseForGroupUser2 = dockerVolumeService3.findById(createdVolume.getId());
+				ResponseEntity<DockerVolume> resultResponseForGroupUser2 = dockerVolumeService3.findById(dockerVolumeCreated.getId());
 				for (Message message : resultResponseForGroupUser2.getMessages()) {
 					logger.warn("Error while Find request  [{}] ", message.getMessageText());
 				}
 				Assert.assertNotNull(((Boolean) false).toString(), ((Boolean) resultResponseForGroupUser2.isErrors()).toString());
 				assertNotNull(resultResponseForGroupUser2.getResults());
 				assertNotNull(resultResponseForGroupUser2.getResults().getId());
-				assertEquals(createdVolume.getId(), resultResponseForGroupUser2.getResults().getId());
+				assertEquals(dockerVolumeCreated.getId(), resultResponseForGroupUser2.getResults().getId());
 				
 			}
 
@@ -179,9 +177,9 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 
 	@After
 	public void cleanUp() {
-		if (this.createdVolume != null) {
+		if (this.dockerVolumeCreated != null) {
 			logger.info("cleaning up...");
-			ResponseEntity<DockerVolume> responseDelete = dockerVolumeService.delete(createdVolume.getId());
+			ResponseEntity<DockerVolume> responseDelete = dockerVolumeService.delete(dockerVolumeCreated.getId());
 			//Assert.assertEquals(false, responseDelete.isErrors());
 			for (Message message : responseDelete.getMessages()) {
 				logger.warn("Error Volume deletion: [{}] ", message.getMessageText());
