@@ -42,7 +42,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 
 	
 	public NetworkACLRuleUpdateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
-			RuleAction action, boolean success) {
+			int ruleOrder,RuleAction action, boolean success) {
 
 		//Create Network ACL
 		networkACL = getNetworkACL();
@@ -56,6 +56,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 		rule.setProtocol(protocol);
 		rule.setIp(ip);
 		rule.setPort(portRange);
+		rule.setRuleOrder(ruleOrder);
 		rule.setAction(action);
 		
 		this.success = success;
@@ -65,8 +66,8 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", RuleAction.pass, true }
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 15, RuleAction.pass, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", 18, RuleAction.pass, true }
 			});
 	}
 
@@ -99,6 +100,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 				this.ruleCreated.setProtocol("any");
 				this.ruleCreated.setIp("any");
 				this.ruleCreated.setPort("");
+				this.ruleCreated.setRuleOrder(20);
 				this.ruleCreated.setAction(RuleAction.block);
 				
 				// Updating Rule Name
@@ -119,6 +121,7 @@ public class NetworkACLRuleUpdateServiceTest extends NetworkACLRuleUtil {
 					assertEquals(updatedRule.getProtocol(), this.ruleCreated.getProtocol());
 					assertEquals(updatedRule.getIp(), this.ruleCreated.getIp());
 					assertEquals(updatedRule.getPort(), this.ruleCreated.getPort());
+					assertEquals(updatedRule.getRuleOrder(), this.ruleCreated.getRuleOrder());
 					assertEquals(updatedRule.getAction(), this.ruleCreated.getAction());
 				}
 

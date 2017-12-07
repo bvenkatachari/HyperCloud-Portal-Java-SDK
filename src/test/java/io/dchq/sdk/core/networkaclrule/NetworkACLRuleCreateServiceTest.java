@@ -41,7 +41,7 @@ public class NetworkACLRuleCreateServiceTest extends NetworkACLRuleUtil {
 	}
 
 	
-	public NetworkACLRuleCreateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
+	public NetworkACLRuleCreateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange, int ruleOrder,
 			RuleAction action, boolean isprifix, boolean success) {
 
 		//Create Network ACL
@@ -58,6 +58,7 @@ public class NetworkACLRuleCreateServiceTest extends NetworkACLRuleUtil {
 		rule.setProtocol(protocol);
 		rule.setIp(ip);
 		rule.setPort(portRange);
+		rule.setRuleOrder(ruleOrder);
 		rule.setAction(action);
 		
 		this.success = success;
@@ -67,29 +68,21 @@ public class NetworkACLRuleCreateServiceTest extends NetworkACLRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true }
-				/*
-				 * N/W ACL Rule gets created for the blank values, special character & invalid values.
-				 * */
-				/*{ "", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false },
-				{ "rule", RuleBoundType.in, "abcd", "10.0.0.0/24", "0-4500", RuleAction.pass, true, false },
-				{ "rule", RuleBoundType.in, "tcp", "12345", "0-4500", RuleAction.pass, true, false },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "12345", RuleAction.pass, true, false },
-				{ "@@@@@@@@@@@@@@", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false }*/
+				{ "rule", RuleBoundType.in, "any", "any", "", 10, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", 11, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", 12, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 13, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "any", "", 14, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", 15, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", 16, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 17, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", 18, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "", 19, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", 20, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", 21, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", 22, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", 23,RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", 24, RuleAction.block, true, true }
 			});
 	}
 

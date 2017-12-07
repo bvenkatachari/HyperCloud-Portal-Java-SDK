@@ -42,7 +42,7 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleUtil {
 
 	
 	public SecurityGroupRuleCreateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
-			RuleAction action, boolean isprifix, boolean success) {
+			int ruleOrder, RuleAction action, boolean isprifix, boolean success) {
 
 		//Create Security Group
 		securityGroup = getSecurityGroup();
@@ -57,6 +57,7 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleUtil {
 		rule.setProtocol(protocol);
 		rule.setIp(ip);
 		rule.setPort(portRange);
+		rule.setRuleOrder(ruleOrder);
 		rule.setAction(action);
 		
 		this.success = success;
@@ -66,29 +67,21 @@ public class SecurityGroupRuleCreateServiceTest extends SecurityGroupRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.in, "any", "any", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", RuleAction.pass, true, true },
-				{ "rule", RuleBoundType.out, "any", "any", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", RuleAction.block, true, true },
-				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", RuleAction.block, true, true }
-				/*
-				 * Security Group Rule gets created for the blank values, special character & invalid values.
-				 * */
-				/*{ "", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false },
-				{ "rule", RuleBoundType.in, "abcd", "10.0.0.0/24", "0-4500", RuleAction.pass, true, false },
-				{ "rule", RuleBoundType.in, "tcp", "12345", "0-4500", RuleAction.pass, true, false },
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "12345", RuleAction.pass, true, false },
-				{ "@@@@@@@@@@@@@@", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, false, false }*/
+				{ "rule", RuleBoundType.in, "any", "any", "", 200, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", 201, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", 202, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 203, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.in, "any", "any", "", 204, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "any", "10.0.0.0/24", "", 205, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "", 206, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 207, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", 208, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "", 209, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", 210, RuleAction.pass, true, true },
+				{ "rule", RuleBoundType.out, "any", "any", "", 211, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "any", "10.0.0.0/24", "", 212, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "", 213, RuleAction.block, true, true },
+				{ "rule", RuleBoundType.out, "tcp", "10.0.0.0/24", "0-4500", 214, RuleAction.block, true, true }
 			});
 	}
 

@@ -42,7 +42,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 
 	
 	public SecurityGroupRuleUpdateServiceTest(String ruleName, RuleBoundType bound, String protocol, String ip, String portRange,
-			RuleAction action, boolean success) {
+			int ruleOrder, RuleAction action, boolean success) {
 
 		//Create Security Group
 		securityGroup = getSecurityGroup();
@@ -56,6 +56,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 		rule.setProtocol(protocol);
 		rule.setIp(ip);
 		rule.setPort(portRange);
+		rule.setRuleOrder(ruleOrder);
 		rule.setAction(action);
 		
 		this.success = success;
@@ -65,8 +66,8 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] { 
-				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", RuleAction.pass, true },
-				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", RuleAction.pass, true }
+				{ "rule", RuleBoundType.in, "tcp", "10.0.0.0/24", "0-4500", 251, RuleAction.pass, true },
+				{ "rule", RuleBoundType.out, "tcp", "any", "0-4500", 255,  RuleAction.pass, true }
 			});
 	}
 
@@ -98,6 +99,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 				this.ruleCreated.setProtocol("any");
 				this.ruleCreated.setIp("any");
 				this.ruleCreated.setPort("");
+				this.ruleCreated.setRuleOrder(300);
 				this.ruleCreated.setAction(RuleAction.block);
 
 				// Updating Rule Name
@@ -118,6 +120,7 @@ public class SecurityGroupRuleUpdateServiceTest extends SecurityGroupRuleUtil {
 					assertEquals(updatedRule.getProtocol(), this.ruleCreated.getProtocol());
 					assertEquals(updatedRule.getIp(), this.ruleCreated.getIp());
 					assertEquals(updatedRule.getPort(), this.ruleCreated.getPort());
+					assertEquals(updatedRule.getRuleOrder(), this.ruleCreated.getRuleOrder());
 					assertEquals(updatedRule.getAction(), this.ruleCreated.getAction());
 				}
 
