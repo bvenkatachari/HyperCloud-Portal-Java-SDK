@@ -6,6 +6,8 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
+import com.dchq.schema.beans.one.dockervolume.SDVolumeRequest;
+
 
 /**
  * @Author Saurabh Bhatia on 2/17/2017.
@@ -43,5 +45,10 @@ public class DockerVolumeServiceImpl extends GenericServiceImpl<DockerVolume, Re
     @Override
     public ResponseEntity<DockerVolume> detachVolume(String volumeId, String machineId) {
         return super.doPost(null, volumeId+"/detach/"+machineId);
+    }
+    
+    @Override
+    public ResponseEntity<DockerVolume> createBlueprintVolume(SDVolumeRequest blueprint) {
+        return super.doPost(blueprint, "sdv");
     }
 }

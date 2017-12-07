@@ -1,24 +1,30 @@
 package io.dchq.sdk.core.apps;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.container.Container;
-import com.dchq.schema.beans.one.container.ContainerState;
 import com.dchq.schema.beans.one.container.ContainerStatus;
-import com.dchq.schema.beans.one.provision.*;
+import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
+import com.dchq.schema.beans.one.provision.AppScaleInProfile;
+import com.dchq.schema.beans.one.provision.AppScaleOutProfile;
+import com.dchq.schema.beans.one.provision.ClusterProfile;
+import com.dchq.schema.beans.one.provision.ProvisionState;
+
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.AppService;
 import io.dchq.sdk.core.BlueprintService;
 import io.dchq.sdk.core.ServiceFactory;
-import org.junit.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * Created by Saurabh Bhatia on 2/27/2017.

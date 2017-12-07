@@ -23,14 +23,12 @@ import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
 import com.dchq.schema.beans.one.container.Container;
-import com.dchq.schema.beans.one.inbox.MessageResolution;
-import com.dchq.schema.beans.one.inbox.MessageStatus;
 import com.dchq.schema.beans.one.provision.App;
+import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.AppService;
 import io.dchq.sdk.core.BlueprintService;
-import io.dchq.sdk.core.MessageService;
 import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -41,36 +39,33 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 	private BlueprintService blueprintService;
 	private Blueprint blueprint;
 	private String blueprintId;
-	private String clusterId;
-	private String akey = "taIEQ6VPlsDe1NHwwnEv";
-	private String skey = "LjVh2sEwJlycnmkdXHesjeky9OxAtYivnwJQQLuj";
+
 	private App appObject;
-	private MessageService messageService;
+	
 	ParameterizedTypeReference<ResponseEntity<List<Message>>> listTypeReference = new ParameterizedTypeReference<ResponseEntity<List<Message>>>() {
 	};
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 50); // this is for 3 mints
 
-	public HYF417ThreeTierE2ETest(String blueprintId, String clusterId) {
+	public HYF417ThreeTierE2ETest(String blueprintId) {
 		this.blueprintId = blueprintId;
-		this.clusterId = clusterId;
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
 				.asList(new Object[][] { 
-					{ "2c9180875d833a34015d87cba8a20c6c", "2c9180865d312fc4015d314b5d510069" },
-					{ "402881864e1a36cc014e1a399cf90102", "2c9180865d312fc4015d314b5d510069" }});
+					{ "402881864e1a36cc014e1a399cf90113"},
+					{ "402881864e1a36cc014e1a399cf90102"}});
 	}
 
 	@Before
 	public void setUp() {
-		appService = ServiceFactory.buildAppService(rootUrl1, akey, skey);
-		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, akey, skey);
-		messageService = ServiceFactory.buildMessageService(rootUrl1, akey, skey);
+		appService = ServiceFactory.buildAppService(rootUrl1, cloudadminusername, cloudadminpassword);
+		blueprintService = ServiceFactory.buildBlueprintService(rootUrl1, cloudadminusername, cloudadminpassword);
+		
 	}
-	@Ignore
+	
 	@Test
 	public void deploy3Tier() {
 		logger.info("Start deploying");
@@ -81,7 +76,7 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 
 		blueprint = blueprintResponse.getResults();
 		PkEntityBase dc = new PkEntityBase();
-		dc.setId(clusterId);
+		dc.setId(clusterID);
 		blueprint.setDatacenter(dc);
 		ResponseEntity<App> response = appService.deploy(blueprint);
 		assertNotNull(response);
@@ -92,20 +87,7 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 		}
 		logger.info("App deployment state [{}]", appObject.getProvisionState());
 
-		if (appObject.getProvisionState().name().equals("WAITING_APPROVAL")) {
-
-			ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>> list = (ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>) messageService
-					.find("unread",
-							new ParameterizedTypeReference<ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>>() {
-							});
-
-			for (com.dchq.schema.beans.one.inbox.Message message : list.getResults()) {
-				message.setMessageStatus(MessageStatus.READ);
-				message.setMessageResolution(MessageResolution.APPROVED);
-				ResponseEntity<com.dchq.schema.beans.one.inbox.Message> re = messageService.update(message);
-				logger.info("Message approved {[]}", re.getResults().getBody());
-			}
-		}
+		
 		appObject = appService.findById(appObject.getId()).getResults();
 		while (appObject.getProvisionState().name().equals("PROVISIONING") && (System.currentTimeMillis() < endTime)) {
 			try {
@@ -132,8 +114,11 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 		logger.info("Deleting app");
 		if (appObject != null) {
 			ResponseEntity<App> resp = null;
-			if (appObject.getProvisionState().name().equals("RUNNING")) {
-				resp = appService.doPost(appObject, appObject.getId() + "/destroy/false");
+			if (!appObject.getProvisionState().name().equals("RUNNING")) {
+				AppLifecycleProfile appProfile = new AppLifecycleProfile();
+				appProfile.setNote("Destroy");
+				appProfile.setAllSelected(true);
+				resp = appService.doPost(appProfile, appObject.getId() + "/destroy/false");
 			} else {
 				resp = appService.delete(appObject.getId());
 			}

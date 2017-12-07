@@ -137,7 +137,6 @@ public class DockerVolumeTerminationServiceTest extends AbstractServiceTest {
 								new ParameterizedTypeReference<ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>>() {
 								});
 
-				//String notificationMessage = "Action is pending for Docker Volume '"+dockerVolumeCreated.getName()+"'  for task type 'DESTROY";
 				for (com.dchq.schema.beans.one.inbox.Message message : list.getResults()) {
 					if(message.getEntityType().equals(EntityType.DOCKER_VOLUME_DESTROY)){
 						message.setMessageStatus(MessageStatus.READ);
@@ -187,8 +186,15 @@ public class DockerVolumeTerminationServiceTest extends AbstractServiceTest {
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() {/*
 		
-		//Volume is getting deleted by approving message.
-	}
+		//Volume is should be deleted by approving message. In case it's not deleted then retry
+		if (this.dockerVolumeCreated != null) {
+			logger.info("cleaning up...");
+			ResponseEntity<?> response = dockerVolumeService.delete(this.dockerVolumeCreated.getId());
+			for (Message message : response.getMessages()) {
+				logger.warn("Error docker volume deletion: [{}] ", message.getMessageText());
+			}
+		}
+	*/}
 }

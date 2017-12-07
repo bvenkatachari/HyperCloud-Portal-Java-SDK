@@ -4,21 +4,29 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
+import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.dockervolume.SDVolumeRequest;
+import com.dchq.schema.beans.one.inbox.EntityType;
+import com.dchq.schema.beans.one.inbox.MessageResolution;
+import com.dchq.schema.beans.one.inbox.MessageStatus;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.DockerVolumeService;
+import io.dchq.sdk.core.MessageService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
@@ -29,9 +37,10 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest {
+public class BlueprintVolumeTerminationServiceTest extends AbstractServiceTest {
 
 	private DockerVolumeService dockerVolumeService;
+	private MessageService messageService;
 
 	SDVolumeRequest sdv;
 	DockerVolume dockerVolumeCreated;
@@ -42,14 +51,16 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 	@org.junit.Before
 	public void setUp() throws Exception {
 		dockerVolumeService = ServiceFactory.buildDockerVolumeService(rootUrl1, cloudadminusername, cloudadminpassword);
+		messageService = ServiceFactory.buildMessageService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
-	public BlueprintDockerVolumeCreateServiceTest(String blueprintId, String providerId) {
+	public BlueprintVolumeTerminationServiceTest(String blueprintId, String providerId) {
 		
 		sdv = new SDVolumeRequest();
 		sdv.setBlueprint(blueprintId);
 		sdv.setProvider(providerId);
 		sdv.setYaml("Volume: \n  size: 1");
+		//sdv.setTerminationProtection(TerminationProtection.ENABLED);
 		
 		
 		
@@ -59,11 +70,12 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
+			     //QA_Automation_Volume_Blueprint, vhg01(HBS)
 				{ "2c9180865fe7c46e016020c5194a634c", "2c9180865d35d99c015d363715c100e1"} 
 				});
 	}
 
-	
+	@Ignore
 	@Test
 	public void testCreate() {
 		try {
@@ -97,13 +109,49 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 					assertNotNull(dockerVolumeCreated.getId());
 				}
 			}
+			
+			//Delete this volume
+			dockerVolumeService.delete(this.dockerVolumeCreated.getId());
+			
+			@SuppressWarnings("unchecked")
+			ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>> list = (ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>) messageService
+					.find("open",
+							new ParameterizedTypeReference<ResponseEntity<List<com.dchq.schema.beans.one.inbox.Message>>>() {
+							});
+
+			for (com.dchq.schema.beans.one.inbox.Message message : list.getResults()) {
+				if(message.getEntityType().equals(EntityType.DOCKER_VOLUME_DESTROY)){
+					message.setMessageStatus(MessageStatus.READ);
+					message.setMessageResolution(MessageResolution.APPROVED);
+					ResponseEntity<com.dchq.schema.beans.one.inbox.Message> re = messageService.update(message);
+					logger.info("Message approved {}", re.getResults().getBody());
+					break;
+				}
+			}
+			
+			//Wait for 30 seconds for volume to be deleted completely
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			response = dockerVolumeService.findById(dockerVolumeCreated.getId());
+			
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
+			Assert.assertTrue(response.getResults().getInactive());
+			Assert.assertTrue(response.getResults().getDeleted());
 		} catch (Exception e) {
 
 		}
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() {/*
+		
+		//Volume is should be deleted by approving message. In case it's not deleted then retry
 		if (this.dockerVolumeCreated != null) {
 			logger.info("cleaning up...");
 			ResponseEntity<?> response = dockerVolumeService.delete(this.dockerVolumeCreated.getId());
@@ -111,5 +159,5 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 				logger.warn("Error network deletion: [{}] ", message.getMessageText());
 			}
 		}
-	}
+	*/}
 }

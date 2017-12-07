@@ -26,7 +26,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -93,8 +93,7 @@ public class DockerServerTerminationServiceTest extends DockerServerTest {
     }
 
 
-    @Ignore
-    @org.junit.Test
+    @Test
 	public void testCreate() throws Exception {
 
 		logger.info("Create Machine with Name [{}]", dockerServer.getName());
@@ -159,9 +158,9 @@ public class DockerServerTerminationServiceTest extends DockerServerTest {
 				}
 			}
 			
-			//Wait for 30 seconds for volume to be deleted completely
+			//Wait for 60 seconds for Docker server to be deleted completely
 			try {
-				Thread.sleep(30000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -189,10 +188,17 @@ public class DockerServerTerminationServiceTest extends DockerServerTest {
    
 
     @After
-    public void cleanUp() {
+    public void cleanUp() {/*
     	
-    	
-    }
+    	logger.info("cleaning up...");
+    	//Docker server is should be deleted by approving message. In case it's not deleted then retry
+        if (dockerServerCreated != null) {
+            logger.info("Deleting Machine ");
+            dockerServerService.delete(dockerServerCreated.getId(), true);
+            validateProvision(dockerServerCreated, "DESTROYING");
+
+        }
+    */}
 
 
 }

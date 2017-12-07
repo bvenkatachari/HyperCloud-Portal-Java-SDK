@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -68,8 +68,8 @@ public class BlueprintVMTerminationServiceTest extends DockerServerTest {
 			});
 	}
 
-	@Ignore
-	@org.junit.Test
+	
+	@Test
 	public void testVMDeploy() throws Exception {
 
 		logger.info("Deploying VM Blueprint");
@@ -117,15 +117,15 @@ public class BlueprintVMTerminationServiceTest extends DockerServerTest {
 						}
 					}
 					
-					//Wait for 30 seconds for volume to be deleted completely
+					//Wait for 60 seconds for Docker server to be deleted completely
 					try {
-						Thread.sleep(30000);
+						Thread.sleep(60000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
-					ResponseEntity<DockerServer> response2 = dockerServerService.findById(dockerServerCreated.getId());
+					ResponseEntity<DockerServer> response2 = dockerServerService.findById(server.getId());
 					
 					assertNotNull(response2);
 					assertNotNull(response2.isErrors());
@@ -187,8 +187,17 @@ public class BlueprintVMTerminationServiceTest extends DockerServerTest {
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() {/*
 		
-		//VM will be deleted by approving messages
-	}
+		logger.info("cleaning up...");
+    	//Docker server is should be deleted by approving message. In case it's not deleted then retry
+		if (vms != null) {
+			for (DockerServer server : vms) {
+				logger.info("Deleting Machine "+server.getName());
+				dockerServerService.delete(server.getId(), true);
+				validateProvision(server, "DESTROYING");
+			}
+
+		}
+	*/}
 }
