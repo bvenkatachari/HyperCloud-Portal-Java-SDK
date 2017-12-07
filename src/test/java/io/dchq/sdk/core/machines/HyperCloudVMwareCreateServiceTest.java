@@ -56,8 +56,8 @@ public class HyperCloudVMwareCreateServiceTest extends DockerServerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "VN_501,vlanId=501", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, true, true},
-        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-W2K16-DC-200v2", "VN_501,vlanId=501", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, false, false}
+        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "dvpvlan26,vlanId=26", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, true, true},
+        	{"HyperCloudVMware", Boolean.FALSE, "cpu=4,memory=1GB,disk=40GB", "VMT-W2K16-DC-200v2", "dvpvlan26,vlanId=26", 1, "2c9180875e9f1385015ea08e862d02e5", 300000, "", false, false, false}
         	
         });
     }

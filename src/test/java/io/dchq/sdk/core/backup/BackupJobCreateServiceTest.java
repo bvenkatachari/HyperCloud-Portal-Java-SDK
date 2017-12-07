@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -58,8 +59,9 @@ public class BackupJobCreateServiceTest extends AbstractServiceTest {
 	public BackupJobCreateServiceTest(String jobName, String jobDesc, String repoName, String freq, String time, String fullBackup, String retainBackups, 
 			String serverName, String hardwareId, String image, String networkId, String endpoint, boolean installAgent, boolean success) {
 
+		String postfix = RandomStringUtils.randomAlphabetic(3);
 		createBackupJob = new CreateBackupJob();
-		createBackupJob.setJobName(jobName);
+		createBackupJob.setJobName(jobName+postfix);
 		createBackupJob.setJobDesc(jobDesc);
 		createBackupJob.setRepoName(repoName);
 		createBackupJob.setFreq(freq);
@@ -90,9 +92,9 @@ public class BackupJobCreateServiceTest extends AbstractServiceTest {
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][] {
-			//HyperCloud Hyper-V
+			//HyperCloud VMWare
 			{"Backup_Job", "This job is by Admin", "Default Backup Repository","Monthly", "23:30", "true", "7",
-				 "HyperCloudHyperV_Backup", "cpu=1,memory=2GB,disk=20GB,generation=1", "C:\\ClusterStorage\\HyperCloud_Templates\\Default\\Ub14HFT_DCHQ_Docker_Swarm.vhdx", "Compute vmSwitch", "2c9180865d312fc4015d3160f518008e", false, true}
+				 "HyperCloudVMware_Backup", "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "dvpvlan26,vlanId=26", "2c9180875e9f1385015ea08e862d02e5", true, true}
 			});
 	}
 	
