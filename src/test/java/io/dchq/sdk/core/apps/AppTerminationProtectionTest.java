@@ -21,6 +21,7 @@ import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
 import com.dchq.schema.beans.one.base.PkEntityBase;
 import com.dchq.schema.beans.one.blueprint.Blueprint;
+import com.dchq.schema.beans.one.common.TerminationProtection;
 import com.dchq.schema.beans.one.inbox.EntityType;
 import com.dchq.schema.beans.one.inbox.MessageResolution;
 import com.dchq.schema.beans.one.inbox.MessageStatus;
@@ -80,7 +81,7 @@ public class AppTerminationProtectionTest extends AbstractServiceTest {
 		PkEntityBase dc = new PkEntityBase();
 		dc.setId(clusterID);
 		blueprint.setDatacenter(dc);
-		//blueprint.setTerminationProtection(TerminationProtection.ENABLED);
+		blueprint.setTerminationProtection(TerminationProtection.ENABLED);
 		
 		ResponseEntity<App> response = appService.deploy(blueprint);
 		assertNotNull(response);

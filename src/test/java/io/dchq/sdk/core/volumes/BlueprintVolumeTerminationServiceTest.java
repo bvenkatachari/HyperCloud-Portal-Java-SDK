@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -18,6 +17,7 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.common.TerminationProtection;
 import com.dchq.schema.beans.one.dockervolume.DockerVolume;
 import com.dchq.schema.beans.one.dockervolume.SDVolumeRequest;
 import com.dchq.schema.beans.one.inbox.EntityType;
@@ -59,23 +59,20 @@ public class BlueprintVolumeTerminationServiceTest extends AbstractServiceTest {
 		sdv = new SDVolumeRequest();
 		sdv.setBlueprint(blueprintId);
 		sdv.setProvider(providerId);
-		sdv.setYaml("Volume: \n  size: 1");
-		//sdv.setTerminationProtection(TerminationProtection.ENABLED);
-		
-		
-		
+		sdv.setYaml("Volume:\n      size: 1");
+		sdv.setTerminationProtection(TerminationProtection.ENABLED);
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-			     //QA_Automation_Volume_Blueprint, vhg01(HBS)
-				{ "2c9180865fe7c46e016020c5194a634c", "2c9180865d35d99c015d363715c100e1"} 
+			     //QA_Volume_Automation, vhg01(HBS)
+				{ "2c918086602f7b8c016034b7b9492d4b", "2c9180875e9f1385015ea2b00adb24e0"} 
 				});
 	}
 
-	@Ignore
+
 	@Test
 	public void testCreate() {
 		try {
