@@ -67,8 +67,8 @@ public class BlueprintVolumeTerminationServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-			     //QA_Volume_Automation, vhg01(HBS)
-				{ "2c918086602f7b8c016034b7b9492d4b", "2c9180875e9f1385015ea2b00adb24e0"} 
+			     //QA_Volume_Automation,  vhg01cluster (HCS)
+				{ "2c918086602f7b8c016034b7b9492d4b", "2c9180865d312fc4015d3160f518008e"} 
 				});
 	}
 

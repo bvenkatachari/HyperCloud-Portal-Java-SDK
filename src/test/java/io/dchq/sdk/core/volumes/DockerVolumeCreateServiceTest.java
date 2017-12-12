@@ -68,9 +68,9 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations		
-				{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false },
-				{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
-				{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
+				{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.OWNER, false },
+				{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.PUBLIC, false },
+				{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.CUSTOM, false },
 				// TODO volume name should not be blank
 				//{ "", "2c9180865bb2559a015bd99819254459", "2", EntitlementType.OWNER, true },
 				// TODO not accept only special characters
@@ -81,7 +81,7 @@ public class DockerVolumeCreateServiceTest extends AbstractServiceTest {
 				{ "sadasdasdaaaaaaaassssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaaaasdadasdad"
 				 		+ "asdasdasddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
 				 		+ "asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-				 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true }
+				 		+ "asdddddddddddddddddddddddddddddddd", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.CUSTOM, true }
 								
 		});
 		

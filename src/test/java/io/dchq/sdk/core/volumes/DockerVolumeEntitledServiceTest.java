@@ -88,9 +88,9 @@ public class DockerVolumeEntitledServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
-			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.OWNER, false, null, false },
-			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false, null, false },
-			{ "createvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, true, userId2, false },
+			{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.OWNER, false, null, false },
+			{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.PUBLIC, false, null, false },
+			{ "createvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.CUSTOM, true, userId2, false },
 			
 		});
 	}

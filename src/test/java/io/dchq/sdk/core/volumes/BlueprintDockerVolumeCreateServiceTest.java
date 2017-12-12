@@ -59,7 +59,7 @@ public class BlueprintDockerVolumeCreateServiceTest extends AbstractServiceTest 
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] {
-				{ "2c9180865fe7c46e016020c5194a634c", "2c9180865d35d99c015d363715c100e1"} 
+				{ "2c9180865fe7c46e016020c5194a634c", "2c9180865d312fc4015d3160f518008e"} 
 				});
 	}
 

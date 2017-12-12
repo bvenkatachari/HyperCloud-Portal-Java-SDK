@@ -68,9 +68,9 @@ public class DockerVolumeResizeServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 				// TODO: add more test data for all sorts of validations		
-				{ "resizevolume", "2c9180865d35d99c015d363715c100e1",	"2", "3", EntitlementType.OWNER, false },
-				{ "resizevolume", "2c9180865d35d99c015d363715c100e1",	"2", "4", EntitlementType.PUBLIC, false },
-				{ "resizevolume", "2c9180865d35d99c015d363715c100e1",	"2", "5", EntitlementType.CUSTOM, false },
+				{ "resizevolume", "2c9180865d312fc4015d3160f518008e",	"2", "3", EntitlementType.OWNER, false },
+				{ "resizevolume", "2c9180865d312fc4015d3160f518008e",	"2", "4", EntitlementType.PUBLIC, false },
+				{ "resizevolume", "2c9180865d312fc4015d3160f518008e",	"2", "5", EntitlementType.CUSTOM, false },
 								
 		});
 		

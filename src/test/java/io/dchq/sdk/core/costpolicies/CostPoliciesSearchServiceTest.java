@@ -44,7 +44,7 @@ public class CostPoliciesSearchServiceTest extends AbstractServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		service = ServiceFactory.buildCostPoliciesService(rootUrl, cloudadminusername, cloudadminpassword);
+		service = ServiceFactory.buildCostPoliciesService(rootUrl1, cloudadminusername, cloudadminpassword);
 	}
 
 	public CostPoliciesSearchServiceTest(String name, PriceUnit priceUnit, Double value, String currency,

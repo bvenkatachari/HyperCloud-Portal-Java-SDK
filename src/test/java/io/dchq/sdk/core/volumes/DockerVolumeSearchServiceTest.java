@@ -63,9 +63,9 @@ public class DockerVolumeSearchServiceTest extends AbstractServiceTest {
 
 		return Arrays.asList(new Object[][] {
 			// TODO: add more test data for all sorts of validations
-			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"5", EntitlementType.OWNER, false },
-			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.PUBLIC, false },
-			{ "searchvolume", "2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false },
+			{ "searchvolume", "2c9180865d312fc4015d3160f518008e",	"5", EntitlementType.OWNER, false },
+			{ "searchvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.PUBLIC, false },
+			{ "searchvolume", "2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.CUSTOM, false },
 		});
 	}
 

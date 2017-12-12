@@ -53,9 +53,9 @@ public class DockerVolumeCloneServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 
 		return Arrays.asList(new Object[][] { 
-			{ "clonevolume", "clonename", "2c9180865d35d99c015d363715c100e1", "2", EntitlementType.OWNER, false },
-			{ "clonevolume", "clonename", "2c9180865d35d99c015d363715c100e1", "2", EntitlementType.PUBLIC, false },
-			{ "clonevolume", "clonename","2c9180865d35d99c015d363715c100e1",	"2", EntitlementType.CUSTOM, false }
+			{ "clonevolume", "clonename", "2c9180865d312fc4015d3160f518008e", "2", EntitlementType.OWNER, false },
+			{ "clonevolume", "clonename", "2c9180865d312fc4015d3160f518008e", "2", EntitlementType.PUBLIC, false },
+			{ "clonevolume", "clonename","2c9180865d312fc4015d3160f518008e",	"2", EntitlementType.CUSTOM, false }
 		});
 	}
 
