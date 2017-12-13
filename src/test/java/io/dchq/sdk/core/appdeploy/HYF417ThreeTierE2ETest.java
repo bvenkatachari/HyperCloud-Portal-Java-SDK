@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -55,7 +54,7 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays
 				.asList(new Object[][] { 
-					{ "402881864e1a36cc014e1a399cf90113"},
+					{ "402881864e1a36cc014e1a399cf90117"},
 					{ "402881864e1a36cc014e1a399cf90102"}});
 	}
 
@@ -102,7 +101,8 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 			}
 
 		}
-		assertEquals(3, appObject.getContainers());
+		appObject = appService.findById(appObject.getId()).getResults();
+		assertEquals(3, appObject.getContainers().size());
 		for(Container container: appObject.getContainers())
 		{
 			assertEquals("RUNNING", container.getContainerStatus().name());
@@ -113,15 +113,11 @@ public class HYF417ThreeTierE2ETest extends AbstractServiceTest{
 	public void cleanUp() {
 		logger.info("Deleting app");
 		if (appObject != null) {
-			ResponseEntity<App> resp = null;
-			if (!appObject.getProvisionState().name().equals("RUNNING")) {
-				AppLifecycleProfile appProfile = new AppLifecycleProfile();
-				appProfile.setNote("Destroy");
-				appProfile.setAllSelected(true);
-				resp = appService.doPost(appProfile, appObject.getId() + "/destroy/false");
-			} else {
-				resp = appService.delete(appObject.getId());
-			}
+			AppLifecycleProfile appProfile = new AppLifecycleProfile();
+			appProfile.setNote("Destroy");
+			appProfile.setAllSelected(true);
+			ResponseEntity<App>  resp = appService.doPost(appProfile, appObject.getId() + "/destroy/false");
+		
 			for (Message message : resp.getMessages()) {
 				logger.warn("Error container app deletion: [{}] ", message.getMessageText());
 			}

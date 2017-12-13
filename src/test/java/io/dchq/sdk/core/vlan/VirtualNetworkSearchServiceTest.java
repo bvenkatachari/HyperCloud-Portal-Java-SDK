@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -94,6 +95,7 @@ public class VirtualNetworkSearchServiceTest extends AbstractServiceTest{
 		});
 	}
 	
+	@Ignore
 	@Test
 	public void searchTest()
 	{

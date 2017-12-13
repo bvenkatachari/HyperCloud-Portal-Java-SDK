@@ -105,14 +105,12 @@ public class HYF417NginxE2ETest extends AbstractServiceTest {
 		logger.info("Deleting app");
 		if (appObject != null) {
 			ResponseEntity<App> resp = null;
-			if (!appObject.getProvisionState().name().equals("RUNNING")) {
-				AppLifecycleProfile appProfile = new AppLifecycleProfile();
-				appProfile.setNote("Destroy");
-				appProfile.setAllSelected(true);
-				resp = appService.doPost(appProfile, appObject.getId() + "/destroy/false");
-			} else {
-				resp = appService.delete(appObject.getId());
-			}
+			
+			AppLifecycleProfile appProfile = new AppLifecycleProfile();
+			appProfile.setNote("Destroy");
+			appProfile.setAllSelected(true);
+			resp = appService.doPost(appProfile, appObject.getId() + "/destroy/false");
+			
 			for (Message message : resp.getMessages()) {
 				logger.warn("Error container app deletion: [{}] ", message.getMessageText());
 			}

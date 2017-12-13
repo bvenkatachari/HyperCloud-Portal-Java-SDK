@@ -27,6 +27,7 @@ import com.dchq.schema.beans.one.inbox.MessageResolution;
 import com.dchq.schema.beans.one.inbox.MessageStatus;
 import com.dchq.schema.beans.one.provision.App;
 import com.dchq.schema.beans.one.provision.AppLifecycleProfile;
+import com.dchq.schema.beans.one.provision.ProvisionState;
 
 import io.dchq.sdk.core.AbstractServiceTest;
 import io.dchq.sdk.core.AppService;
@@ -147,8 +148,7 @@ public class AppTerminationProtectionTest extends AbstractServiceTest {
 		
 		assertNotNull(response2);
 		assertNotNull(response2.isErrors());
-		Assert.assertTrue(response2.getResults().getInactive());
-		Assert.assertTrue(response2.getResults().getDeleted());
+		Assert.assertEquals(ProvisionState.DESTROYED, response2.getResults().getProvisionState());
 		
 	}
 

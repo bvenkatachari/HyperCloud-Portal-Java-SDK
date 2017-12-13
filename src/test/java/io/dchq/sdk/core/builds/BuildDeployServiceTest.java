@@ -79,17 +79,17 @@ public class BuildDeployServiceTest extends AbstractServiceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c91808660493b5101604ea3ca7a2e8f","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", true},
-                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                {"TestImage1", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c91808660493b5101604ea3ca7a2e8f","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "POST",true},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "","2c9180875e987035015e993d8b860119",
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c91808660493b5101604ea3ca7a2e8f","1679/sam", "","2c9180875e987035015e993d8b860119",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","",
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c91808660493b5101604ea3ca7a2e8f","1679/sam", "latestmine","",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE", false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c9180875e9da16c015e9dd2d2ca008c","", "latestmine","2c9180875e987035015e993d8b860119",
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"https://github.com/dockerfile/ubuntu.git","2c91808660493b5101604ea3ca7a2e8f","", "latestmine","2c9180875e987035015e993d8b860119",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE",false},
-                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"","2c9180875e9da16c015e9dd2d2ca008c","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
+                {"TestImage", BuildType.GITHUB_PUBLIC_REPO,"","2c91808660493b5101604ea3ca7a2e8f","1679/sam", "latestmine","2c9180875e987035015e993d8b860119",
                 	"2c9180875d973621015d975b44d4009a", "Echo","VM_NAME", "testing", "Docker_VM", "PRE",false}
                 
         });

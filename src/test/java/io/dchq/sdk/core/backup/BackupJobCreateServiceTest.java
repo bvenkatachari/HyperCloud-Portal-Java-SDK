@@ -93,7 +93,7 @@ public class BackupJobCreateServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] {
 			//HyperCloud VMWare
 			{"Backup_Job", "This job is by Admin", "Default Backup Repository","Monthly", "23:30", "true", "7",
-				 "HyperCloudVMware_Backup", "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "dvpvlan26,vlanId=26", "2c9180875e9f1385015ea08e862d02e5", true, true}
+				 "HyperCloudVMware_Backup", "cpu=4,memory=1GB,disk=40GB", "VMT-CentOS7", "dvpvlan26,vlanId=26", "2c91808660493b5101604ea724c92ec5", true, true}
 			});
 	}
 	
