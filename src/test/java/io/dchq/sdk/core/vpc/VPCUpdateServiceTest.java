@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -81,6 +82,8 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 			{"testvpccc", "sadsadad", null, EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/22", "descriptions test" , true, false},
 		});
 	}
+	
+	@Ignore
 	@Test
 	public void updateTest()
 	{
