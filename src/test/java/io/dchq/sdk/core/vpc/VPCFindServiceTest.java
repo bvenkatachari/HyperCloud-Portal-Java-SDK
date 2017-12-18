@@ -42,7 +42,8 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	
-	public VPCFindServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,boolean isprifix, boolean success) {
+	public VPCFindServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description,
+			String firewallIp, String firewallUsername, String firewallPassword,boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (vpcName != null && !vpcName.isEmpty() && isprifix) {
@@ -56,6 +57,9 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 		entity.withId(providerId);
 		createVPC.setProvider(entity);
 		createVPC.setDescription(description);
+		createVPC.setFirewallIp(firewallIp);
+		createVPC.setFirewallUsername(firewallUsername);
+		createVPC.setFirewallPassword(firewallPassword);
 		this.sussess = success;
 	}
 	
@@ -68,15 +72,15 @@ public class VPCFindServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][]{ 
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" ,"10.100.15.102","PFFAadmin123","password-hidden", true, true},
 			// Negative scenario, passing empty/null for name
-			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
-			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
+			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false, false},
+			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", "10.100.15.102","PFFAadmin123","password-hidden",false ,false},
+			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
+			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
+			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
 		});
 	}
 	

@@ -50,7 +50,8 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 	boolean isEntitlementTypeUser;
 
 	public VPCEntitledServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr,
-			String description, boolean isEntitlementTypeUser,String entitledUserId,  boolean isprifix, boolean success) {
+			String description, String firewallIp, String firewallUsername, String firewallPassword,
+			boolean isEntitlementTypeUser,String entitledUserId,  boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (vpcName != null && !vpcName.isEmpty() && isprifix) {
@@ -77,6 +78,9 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 		entity.withId(providerId);
 		createVPC.setProvider(entity);
 		createVPC.setDescription(description);
+		createVPC.setFirewallIp(firewallIp);
+		createVPC.setFirewallUsername(firewallUsername);
+		createVPC.setFirewallPassword(firewallPassword);
 		this.sussess = success;
 		this.isEntitlementTypeUser = isEntitlementTypeUser;
 	}
@@ -92,11 +96,11 @@ public class VPCEntitledServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][] { 
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , false,  null, true, true}, 
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , false,  null, true, true},
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true,  userId2, true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false,  null, true, true}, 
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false,  null, true, true},
+			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true,  userId2, true, true},
 			// Bug in create API using below data as VPC never going live status
-			//{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false,  USER_GROUP, true, true},
+			//{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false,  USER_GROUP, true, true},
 			
 		});
 	}

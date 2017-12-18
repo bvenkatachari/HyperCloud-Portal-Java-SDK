@@ -41,7 +41,8 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime + (60 * 60 * 160); // this is for aprox 10 mints
 	
-	public VPCCreateServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description, boolean isprifix, boolean success)
+	public VPCCreateServiceTest(String vpcName, String providerId, EntitlementType entitlementType, String ipv4Cidr, String description, 
+			String firewallIp, String firewallUsername, String firewallPassword, boolean isprifix, boolean success)
 	{
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
@@ -56,6 +57,9 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 		entity.withId(providerId);
 		createVPC.setProvider(entity);
 		createVPC.setDescription(description);
+		createVPC.setFirewallIp(firewallIp);
+		createVPC.setFirewallUsername(firewallUsername);
+		createVPC.setFirewallPassword(firewallPassword);
 		this.sussess = success;
 
 	}
@@ -66,25 +70,24 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 	}
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() throws Exception {
-		// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
 		return Arrays.asList(new Object[][]{ 
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc", "2c9180865d312fc4015d3160f6230092", EntitlementType.OWNER, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden", true, true},
+			{"testvpc", "2c9180865d312fc4015d3160f6230092", EntitlementType.PUBLIC, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
+			{"testvpc", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
 			// Negative scenario, passing empty/null for name  
-			{"", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
-			{null, "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", false ,false},
+			{"", "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false, false},
+			{null, "2c9180865d312fc4015d3160f6230092", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test", "10.100.15.102","PFFAadmin123","password-hidden",false ,false},
 			// Bug in create API accepting special character for VPC name, should accept only alphanumeric
-			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , false, false},
+			//{"@@@@@@@@@@@@@@@@@@@@@@@@@@", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false, false},
 			// Negative scenario for provider
-			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
-			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , true, false},
+			{"testvpccc", "sssssssssssssssssssss", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
+			{"testvpccc", "", EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden", true, false},
+			{"testvpccc", null, EntitlementType.CUSTOM, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden", true, false},
 			// Bug in create API accepting invalid IP address
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , true, false},
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , true, false},
+			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
+			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
 			// Bug in create API accepting null EntitledType
-			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , true, false},
+			//{"testvpccc", "2c9180865d312fc4015d314da1ca006a", null, "10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
 		});
 	}
 
@@ -124,9 +127,12 @@ public class VPCCreateServiceTest extends AbstractServiceTest {
 			}
 			logger.info("VPC state [{}]", createdVPC.getState().name());
 			Assert.assertEquals("LIVE", createdVPC.getState().name());
-			Assert.assertEquals(createdVPC.getName(), createVPC.getName());
-			Assert.assertEquals(createdVPC.getProvider().getId(), createVPC.getProvider().getId());
-			Assert.assertEquals(createdVPC.getIpv4Cidr(), createVPC.getIpv4Cidr());
+			Assert.assertEquals(createVPC.getName(), createdVPC.getName());
+			Assert.assertEquals(createVPC.getProvider().getId(), createdVPC.getProvider().getId());
+			Assert.assertEquals(createVPC.getIpv4Cidr(), createdVPC.getIpv4Cidr());
+			Assert.assertEquals(createVPC.getFirewallIp(), createdVPC.getFirewallIp());
+			Assert.assertEquals(createVPC.getFirewallUsername(), createdVPC.getFirewallUsername());
+			Assert.assertEquals(createVPC.getFirewallPassword(), createdVPC.getFirewallPassword());
 
 		} else {
 

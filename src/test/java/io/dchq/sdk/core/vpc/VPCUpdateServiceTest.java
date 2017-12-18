@@ -44,7 +44,8 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 	long startTime = System.currentTimeMillis();
 	long endTime = startTime +(60 * 60 * 160); // this is for aprox 10 mints
 	
-	public VPCUpdateServiceTest(String vpcName, String nameForEdit, String providerId, EntitlementType entitlementType, String ipv4Cidr, String ipv4CidrForEdit, String description, boolean isprifix, boolean success) {
+	public VPCUpdateServiceTest(String vpcName, String nameForEdit, String providerId, EntitlementType entitlementType, String ipv4Cidr, String ipv4CidrForEdit, String description,
+			String firewallIp, String firewallUsername, String firewallPassword,boolean isprifix, boolean success) {
 		String prifix = RandomStringUtils.randomAlphabetic(3);
 
 		if (vpcName != null && !vpcName.isEmpty() && isprifix) {
@@ -59,6 +60,9 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 		entity.withId(providerId);
 		createVPC.setProvider(entity);
 		createVPC.setDescription(description);
+		createVPC.setFirewallIp(firewallIp);
+		createVPC.setFirewallUsername(firewallUsername);
+		createVPC.setFirewallPassword(firewallPassword);
 		this.ipv4CidrForEdit = ipv4CidrForEdit;
 		this.sussess = success;
 	}
@@ -71,15 +75,15 @@ public class VPCUpdateServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() throws Exception {
 		return Arrays.asList(new Object[][]{ 
 			// provider id "8a818a105c83f42a015c83fd71240014" Intesar's machine
-			{"testvpc","testvpcupdate", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc", "testvpcupdated", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , true, true},
-			{"testvpc","testvpctest", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , true, true},
+			{"testvpc","testvpcupdate", "2c9180865d312fc4015d314da1ca006a", EntitlementType.OWNER, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
+			{"testvpc", "testvpcupdated", "2c9180865d312fc4015d314da1ca006a", EntitlementType.PUBLIC, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
+			{"testvpc","testvpctest", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/24", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
 			// Bug in system IPV4 CIDR field should not be editing
-			//{"testvpc","testvpctest", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/20", "descriptions test" , true, true},
+			//{"testvpc","testvpctest", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/20", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, true},
 			// Negative scenario, passing empty/null for name
-			{"","", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test" , false, false},
-			{null, "", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test", false ,false},
-			{"testvpccc", "sadsadad", null, EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/22", "descriptions test" , true, false},
+			{"","", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",false, false},
+			{null, "", "2c9180865d312fc4015d314da1ca006a", EntitlementType.CUSTOM, "10.0.0.0/24", "", "descriptions test", "10.100.15.102","PFFAadmin123","password-hidden",false ,false},
+			{"testvpccc", "sadsadad", null, EntitlementType.CUSTOM, "10.0.0.0/24","10.0.0.0/22", "descriptions test" , "10.100.15.102","PFFAadmin123","password-hidden",true, false},
 		});
 	}
 	
