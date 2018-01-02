@@ -41,13 +41,11 @@ import io.dchq.sdk.core.CostPoliciesService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
- * @author Jagdeep Jain
- * @since 1.0 
- */
-
-/**
- * Cost Policies: Create
- */
+*
+* @author Santosh Kumar.
+* @since 1.0
+*
+*/
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
