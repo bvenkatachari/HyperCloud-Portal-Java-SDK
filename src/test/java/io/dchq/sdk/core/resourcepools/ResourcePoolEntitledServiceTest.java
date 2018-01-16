@@ -125,7 +125,7 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 		assertNotNull(response.getResults().getId());
 		
 		if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
-			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 1);
 	
 			for (Message message : rpResponseEntity.getMessages()) {
 				logger.warn("Error [{}] ", message.getMessageText());
@@ -140,7 +140,7 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 			assertEquals(resourcePoolCreated.getMem(), searchedEntity.getMem());
 			assertEquals(resourcePoolCreated.getDisk(), searchedEntity.getDisk());
 		} else if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
-			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 1);
 	
 			for (Message message : rpResponseEntity.getMessages()) {
 				logger.warn("Error [{}] ", message.getMessageText());
@@ -155,7 +155,7 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 			assertEquals(resourcePoolCreated.getMem(), searchedEntity.getMem());
 			assertEquals(resourcePoolCreated.getDisk(), searchedEntity.getDisk());
 		} else if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
-			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 1);
 	
 			for (Message message : rpResponseEntity.getMessages()) {
 				logger.warn("Error [{}] ", message.getMessageText());

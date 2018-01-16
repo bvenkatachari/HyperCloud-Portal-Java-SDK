@@ -15,168 +15,107 @@
  */
 package io.dchq.sdk.core.groups;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.security.UserGroup;
-import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.UserGroupService;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.*;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.security.UserGroup;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.UserGroupService;
 
 /**
- * @author Intesar Mohammed
- * @updater SaurabhB
+ * 
+ *
+ * @author Santosh Kumar
  * @since 1.0
+ *
  */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class UserGroupSearchServiceTest extends AbstractServiceTest {
 
+	private UserGroupService userGroupService;
+	private UserGroup userGroup;
+	private UserGroup userGroupCreated;
 
-    private UserGroupService userGroupService;
-    private  String   messageText;
+	@org.junit.Before
+	public void setUp() throws Exception {
+		userGroupService = ServiceFactory.builduserGroupService(rootUrl1, tenant_username, tenant_password);
+	}
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-        userGroupService = ServiceFactory.builduserGroupService(rootUrl, cloudadminusername, cloudadminpassword);
-    }
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { 
+			{ "GroupName", false }
+		});
+	}
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-        	{"Sam_D",  false},
-            {"Find_Group", false},
-            //TODO Group name should not start with special character 
-           // {"(Find-Group)", true},
-            {"Find Group123", false},
-            {"123", false},
-            // TODO Group name should contains special characters
-            //{"Find Group!@#", true},
-            {"    Find Group", false},
-            // TODO Group name should contains special characters
-            //{"%Find Group%", true},
-            {"12345678gROUP", false},
-            // TODO Group name should be blank
-            //{"   ", true},
-           // TODO Group name should contains special characters
-           // {"@Test321$_@Group$", true},
-            // TODO Group name should contains special characters
-           // {"  @Find   -Group_", true},
-            //check with Empty Group Name
-            {"", true},
-            
-          //TODO Group name should not be blank spaces. 
-            //{"    ", false, true},
-    		
-            // Group Name Length 256.
-            {"tQ9ukuIEBiYsSGkM1cRfES7DctIaE1W3GJ3K4WCQQxwYcNPy6NArpf2RFCEUXfmmmRkMVsvkh3TDQwWdxcyuWbbzX8xgxcfX6XwvCqVkbLE7rQ348EInhBNkIupRSvsMKaR51KFrVS7cNMi1WmJsNxWA3vEaKczJ2EHSauHx7Rs3Ln8UiEcjazU2qluzdaoQCTNBayw4VFJAAPVFHLG3wNV9OPjRUj39mNjCZBsZQJI1g2NYw6gQ1qkhqNOcWeFw", true},
-        });
-    }
+	public UserGroupSearchServiceTest(String groupName, boolean active) {
 
-    private UserGroup userGroup;
-    private boolean errors;
-    private UserGroup userGroupCreated;
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		groupName = groupName + prefix;
+		this.userGroup = new UserGroup().withName(groupName).withInactive(active);
+	}
 
-    public UserGroupSearchServiceTest(String gname, boolean errors) {
+	@org.junit.Test
+	public void testCreate() throws Exception {
 
-        // random group Name
-        if (gname == null){
-            throw new IllegalArgumentException("Group Name==null");
-        }
+		logger.info("Create Group with Group Name [{}]", userGroup.getName());
+		ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
 
-        if (!gname.isEmpty()) {
-            String prefix = RandomStringUtils.randomAlphabetic(3);
-            gname = prefix + gname;
-            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
-        }
+		for (Message m : response.getMessages()) {
+			logger.warn("[{}]", m.getMessageText());
+		}
+		
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		assertNotNull(response.getResults().getId());
 
-        this.userGroup = new UserGroup().withName(gname);
-        this.errors = errors;
-    }
+		if (response.getResults() != null)
+			userGroupCreated = response.getResults();
+		
+		ResponseEntity<List<UserGroup>> usergroupResponseEntity = userGroupService.search(userGroupCreated.getName(), 0, 1);
 
-    @Test
-    public void testSearch() throws Exception {
+		for (Message message : usergroupResponseEntity.getMessages()) {
+			logger.warn("Error [{}] ", message.getMessageText());
+		}
+		assertNotNull(usergroupResponseEntity);
+		assertNotNull(usergroupResponseEntity.getResults());
+		assertEquals(1, usergroupResponseEntity.getResults().size());
+		UserGroup searchedEntity = usergroupResponseEntity.getResults().get(0);
+		
 
-        logger.info("Creating Group with Group Name [{}]", userGroup.getName());
-        ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
+		Assert.assertEquals("Group Name does not match input value", userGroupCreated.getName(), searchedEntity.getName());
+		Assert.assertEquals("User group Active/Inactive status does not match input Value", userGroupCreated.getInactive(),
+				searchedEntity.getInactive());
 
-        if (response.isErrors()) {
-            logger.warn("Message from Server... {}", response.getMessages().get(0).getMessageText());
-            Assert.assertEquals(response.getMessages().get(0).getMessageText() ,true, response.isErrors());
-        }
+	}
 
-        if(!this.errors)
-		{
+	@After
+	public void cleanUp() {
+		logger.info("cleaning up user group...");
 
-        	assertNotNull(response);
-            assertNotNull(response.isErrors());
-            Assert.assertNotNull(((Boolean) errors).toString(), ((Boolean) response.isErrors()).toString());
-            
-			if (!response.isErrors() && response.getResults() != null) {
-				userGroupCreated = response.getResults();
-				assertNotNull(response.getResults());
-				assertNotNull(response.getResults().getId());
-				Assert.assertNotNull(userGroup.getName(), userGroupCreated.getName());
+		if (userGroupCreated != null) {
+			ResponseEntity<UserGroup> deleteResponse = userGroupService.delete(userGroupCreated.getId());
+			for (Message m : deleteResponse.getMessages()) {
+				logger.warn("[{}]", m.getMessageText());
 			}
-
-			// let's search for the group
-			ResponseEntity<List<UserGroup>> userGroupsResponseEntity = userGroupService
-					.search(userGroupCreated.getName(), 0, 1);
-			assertNotNull(userGroupsResponseEntity);
-			assertNotNull(userGroupsResponseEntity.isErrors());
-
-			for (Message message : userGroupsResponseEntity.getMessages()) {
-				logger.warn("Error while Create request  [{}] ", message.getMessageText());
-				messageText += message.getMessageText() + "\n";
-			}
-
-			assertFalse("Test : " + messageText, userGroupsResponseEntity.isErrors());
-			assertNotNull(userGroupsResponseEntity.getResults());
-			System.out.println("Page Size : " + userGroupsResponseEntity.getResults().size());
-			assertEquals(1, userGroupsResponseEntity.getResults().size());
-
-			UserGroup searchedEntity = userGroupsResponseEntity.getResults().get(0);
-			assertEquals(userGroupCreated.getId(), searchedEntity.getId());
-			assertEquals(userGroupCreated.getName(), searchedEntity.getName());
-		} 
-        else
-        {
-			assertEquals(null, response.getResults());
-			assertEquals(true, response.isErrors());
-        }
-    }
-
-    @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (userGroupCreated != null) {
-            ResponseEntity<UserGroup> deleteResponse  =  userGroupService.delete(userGroupCreated.getId());
-            if (deleteResponse.getResults() != null)
-           //     userGroupDeleted = deleteResponse.getResults();
-            for (Message m : deleteResponse.getMessages()){
-                logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();}
-           // Assert.assertFalse(messageText ,deleteResponse.isErrors());
-            //        Assert.assertEquals(messageText ,error, deleteResponse.isErrors());
-        }
-        }
+		}
+	}
 }
-
-
-
-

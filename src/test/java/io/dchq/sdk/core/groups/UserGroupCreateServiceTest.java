@@ -54,14 +54,14 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
 
 	@org.junit.Before
 	public void setUp() throws Exception {
-		userGroupService = ServiceFactory.builduserGroupService(rootUrl, tenant_username, tenant_password);
+		userGroupService = ServiceFactory.builduserGroupService(rootUrl1, tenant_username, tenant_password);
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { 
-			{ "GroupName", true },
-			{ "GroupName", false }
+			{ "GroupName", false },
+			{ "GroupName", true }
 		});
 	}
 
@@ -78,17 +78,17 @@ public class UserGroupCreateServiceTest extends AbstractServiceTest {
 		logger.info("Create Group with Group Name [{}]", userGroup.getName());
 		ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
 
-		assertNotNull(response);
-		assertNotNull(response.isErrors());
-
 		for (Message m : response.getMessages()) {
 			logger.warn("[{}]", m.getMessageText());
 		}
+		
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		assertNotNull(response.getResults().getId());
 
 		if (response.getResults() != null)
 			userGroupCreated = response.getResults();
 
-		assertNotNull(response.getResults().getId());
 		Assert.assertEquals("Group Name does not match input value", userGroup.getName(), userGroupCreated.getName());
 		Assert.assertEquals("User group Active/Inactive status does not match input Value", userGroup.getInactive(),
 				userGroupCreated.getInactive());

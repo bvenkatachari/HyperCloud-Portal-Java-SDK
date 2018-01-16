@@ -13,193 +13,144 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.dchq.sdk.core.groups;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.security.UserGroup;
-import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.UserGroupService;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.security.UserGroup;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.UserGroupService;
 
 /**
- * <code>UserGroupService</code> Integration Tests.
+ * 
  *
- * @author c b          bIntesar Mohammed
- * @updater Saurabh B.
+ * @author Santosh Kumar
  * @since 1.0
- * <p/>
- * UserGroup:
-Create (ROLE_ORG_ADMIN)
-invalid: dup name
+ *
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class UserGroupFindAllServiceTest extends AbstractServiceTest {
 
-    private UserGroupService service;
-    private String messageText;
+	private UserGroupService userGroupService;
+	private UserGroup userGroup;
+	private UserGroup userGroupCreated;
+	
+	private int countBeforeCreate;
+	private int countAfterCreate;
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-        service = ServiceFactory.builduserGroupService(rootUrl, username, password);
-    }
+	@org.junit.Before
+	public void setUp() throws Exception {
+		userGroupService = ServiceFactory.builduserGroupService(rootUrl1, tenant_username, tenant_password);
+	}
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"Sam_D",  false},
-                {"Find_Group", false},
-                //TODO Group name should not start with special character 
-               // {"(Find-Group)", true},
-                {"Find Group123", false},
-                {"123", false},
-                // TODO Group name should contains special characters
-                //{"Find Group!@#", true},
-                {"    Find Group", false},
-                // TODO Group name should contains special characters
-                //{"%Find Group%", true},
-                {"12345678gROUP", false},
-                // TODO Group name should be blank
-                //{"   ", true},
-               // TODO Group name should contains special characters
-               // {"@Test321$_@Group$", true},
-                // TODO Group name should contains special characters
-               // {"  @Find   -Group_", true},
-                //check with Empty Group Name
-                //{"", true},
-                
-              //TODO Group name should not be blank spaces. 
-                //{"    ", false, true},
-        		
-                // Group Name Length 256.
-                //{"tQ9ukuIEBiYsSGkM1cRfES7DctIaE1W3GJ3K4WCQQxwYcNPy6NArpf2RFCEUXfmmmRkMVsvkh3TDQwWdxcyuWbbzX8xgxcfX6XwvCqVkbLE7rQ348EInhBNkIupRSvsMKaR51KFrVS7cNMi1WmJsNxWA3vEaKczJ2EHSauHx7Rs3Ln8UiEcjazU2qluzdaoQCTNBayw4VFJAAPVFHLG3wNV9OPjRUj39mNjCZBsZQJI1g2NYw6gQ1qkhqNOcWeFw", true},
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { 
+			{ "GroupName", false }
+		});
+	}
 
-        });
-    }
+	public UserGroupFindAllServiceTest(String groupName, boolean active) {
 
-    private UserGroup userGroup;
-    private boolean error;
-    private UserGroup userGroupCreated;
-    private int countBeforeCreate=0,countAfterCreate=0,countAfterDelete=0;
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		groupName = groupName + prefix;
+		this.userGroup = new UserGroup().withName(groupName).withInactive(active);
+	}
+	
+	public int testUserGroupPosition(String id) {
+		ResponseEntity<List<UserGroup>> response = null;
+		try {
+			response = userGroupService.findAll(0, 5000);
+			for (Message message : response.getMessages()) {
+				logger.warn("Error [{}]  " + message.getMessageText());
+			}
+			assertNotNull(response);
+			assertNotNull(response.isErrors());
+			assertEquals(false, response.isErrors());
+			int position = 0;
+			if (id != null) {
+				for (UserGroup obj : response.getResults()) {
+					position++;
+					if (obj.getId().equals(id)) {
+						logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
+						assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
+					}
+				}
+			}
+			logger.info(" Total Number of Objects :{}", response.getResults().size());
+		} catch (Exception e) {
 
-
-    public UserGroupFindAllServiceTest(String gname, boolean error) {
-
-        // random group Name
-        if (gname == null){
-            throw new IllegalArgumentException("Group Name==null");
-        }
-
-        if (!gname.isEmpty()) {
-            String prefix = RandomStringUtils.randomAlphabetic(3);
-            gname = prefix + gname;
-            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
-        }
-
-        this.userGroup = new UserGroup().withName(gname);
-        this.error = error;
-
-    }
-
-    public int testGroupPosition(String id) {
-        ResponseEntity<List<UserGroup>> response = service.findAll(0,100);
-
-        String errors = "";
-        for (Message message : response.getMessages())
-            errors += ("Error while Find All request: " + message.getMessageText() + "\n");
-
-        Assert.assertEquals(errors ,error, response.isErrors());
-
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-        assertThat(false, is(equals(response.isErrors())));
-        int position=0;
-        if(id!=null) {
-
-            for (UserGroup obj : response.getResults()) {
-                position++;
-                if(obj.getId().equals(id) ){
-                    logger.info(" User Group Object Matched in FindAll {}  at Position : {}", id, position);
-                    assertEquals("Recently Created User Group is not at Positon 1 :"+obj.getId(),1, position);
-                }
-            }
-        }
-
-        logger.info(" Total Number of User Groups :{}",response.getResults().size());
-        return response.getResults().size();
-    }
-
-    @Test
-    public void testFindAll() {
-
-        countBeforeCreate=testGroupPosition(null);
-        logger.info("Create Group with Group Name [{}]", userGroup.getName());
-        ResponseEntity<UserGroup> response = service.create(userGroup);
-
-        if (!error) {
-
-        	for (Message message : response.getMessages()){
-                logger.warn("Error while Create request  [{}] ", message.getMessageText());
-
-            messageText = message.getMessageText();}
-
-            // check response is not null
-            // check response has no errors
-            // check response has user entity with ID
-            // check all data send
-
-            assertNotNull(response);
-            assertNotNull(response.isErrors());
-            assertEquals(messageText, error, response.isErrors());
-            
-            assertNotNull(response.getResults());
-            assertNotNull(response.getResults().getId());
-            this.userGroupCreated = response.getResults();
-            logger.info("Create request successfully completed for user Group Name [{}]",userGroupCreated.getName());
-            assertEquals(userGroup.getName(), userGroupCreated.getName());
-
-            logger.info("FindAll User Group by Id [{}]", userGroupCreated.getId());
-            this.countAfterCreate = testGroupPosition(userGroupCreated.getId());
-            assertEquals("Count of FInd all user between before and after create does not have diffrence of 1 for UserId :"+userGroupCreated.getId(),countBeforeCreate, countAfterCreate-1);
-        }
-        else
-        {
-        	assertEquals(null, response.getResults());
-			assertEquals(true, response.isErrors());
-        }
-
-    }
-    @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (userGroupCreated != null) {
-            ResponseEntity<UserGroup> deleteResponse  =  service.delete(userGroupCreated.getId());
-            if (deleteResponse.getResults() != null)
-                //     userGroupDeleted = deleteResponse.getResults();
-                for (Message m : deleteResponse.getMessages()){
-                    logger.warn("[{}]", m.getMessageText());
-                    messageText = m.getMessageText();}
-            Assert.assertFalse(messageText ,deleteResponse.isErrors());
-            //        Assert.assertEquals(messageText ,error, deleteResponse.isErrors());
-        }
-    }
+		}
+		if (response == null)
+			if (id == null)
+				return 0;
+			else
+				return 1;
+		else
+			return response.getResults().size();
+	}
 
 
+	@org.junit.Test
+	public void testFindAll() throws Exception {
+		
+		this.countBeforeCreate = testUserGroupPosition(null);
+
+		logger.info("Create Group with Group Name [{}]", userGroup.getName());
+		ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
+
+		for (Message m : response.getMessages()) {
+			logger.warn("[{}]", m.getMessageText());
+		}
+		
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		assertNotNull(response.getResults().getId());
+
+		if (response.getResults() != null)
+			userGroupCreated = response.getResults();
+
+		Assert.assertEquals("Group Name does not match input value", userGroup.getName(), userGroupCreated.getName());
+		Assert.assertEquals("User group Active/Inactive status does not match input Value", userGroup.getInactive(),
+				userGroupCreated.getInactive());
+		
+		this.countAfterCreate = testUserGroupPosition(userGroupCreated.getId());
+		
+		assertEquals(
+				"Count of Find all Users Group between before and after create does not have diffrence of 1 for UserGroupId :"
+						+ userGroupCreated.getId(),
+				countBeforeCreate + 1, countAfterCreate);
+
+	}
+
+	@After
+	public void cleanUp() {
+		logger.info("cleaning up user group...");
+
+		if (userGroupCreated != null) {
+			ResponseEntity<UserGroup> deleteResponse = userGroupService.delete(userGroupCreated.getId());
+			for (Message m : deleteResponse.getMessages()) {
+				logger.warn("[{}]", m.getMessageText());
+			}
+		}
+	}
 }
