@@ -22,4 +22,6 @@ public interface RegistryAccountService extends GenericService<RegistryAccount, 
     
     /*Test Registry Account connection*/
     ResponseEntity<String> testConnection(RegistryAccount registry);
+    
+    ResponseEntity<List<RegistryAccount>> findAZByRegistryAccountId(String id);
 }

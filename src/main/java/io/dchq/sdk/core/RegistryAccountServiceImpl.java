@@ -50,5 +50,10 @@ public class RegistryAccountServiceImpl extends GenericServiceImpl<RegistryAccou
     public ResponseEntity<String> testConnection(RegistryAccount registry) {
         return (ResponseEntity<String>) post(registry, "test-connection/", testconnectionReference);
     }
+    
+    @Override
+    public ResponseEntity<List<RegistryAccount>> findAZByRegistryAccountId(String id) {
+        return findAll("azs/" + id, listTypeReference);
+    }
 
 }

@@ -83,10 +83,6 @@ public class ServiceFactory {
         return new CostPoliciesServiceImpl(baseURI, username, password);
     }
     
-    public static final QuotaPolicyService  buildQuotaPolicyService(String baseURI, String username, String password) {
-        return new QuotaPolicyServiceImpl(baseURI, username, password);
-    }
-    
     public static final VPCService buildVPCService(String baseURL, String username, String password){
     	return new VPCServiceImpl(baseURL, username, password);
     }
@@ -126,5 +122,10 @@ public class ServiceFactory {
     public static final BackupService buildBackupService(String baseURL, String username, String password)
     {
     	return new BackupServiceImpl(baseURL, username, password);
+    }
+    
+    public static final ResourcePoolService buildResourcePoolService(String baseURL, String username, String password)
+    {
+    	return new ResourcePoolServiceImpl(baseURL, username, password);
     }
 }

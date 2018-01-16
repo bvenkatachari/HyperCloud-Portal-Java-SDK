@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -32,15 +31,12 @@ import io.dchq.sdk.core.TenantService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class TenantFindAllServiceTest extends AbstractServiceTest {
+public class TenantCreateServiceTest extends AbstractServiceTest {
 
 	private TenantService tenantService;
 
 	private Tenant tenant;
 	private Tenant tenantCreated;
-	
-	private int countBeforeCreate;
-	private int countAfterCreate;
 
 	@org.junit.Before
 	public void setUp() throws Exception {
@@ -48,7 +44,7 @@ public class TenantFindAllServiceTest extends AbstractServiceTest {
 
 	}
 
-	public TenantFindAllServiceTest(String name, String contactName, String email, String contactPhone) {
+	public TenantCreateServiceTest(String name, String contactName, String email, String contactPhone) {
 
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		name = name + " " + prefix;
@@ -66,46 +62,10 @@ public class TenantFindAllServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { { "Tenant", "TenantName", "tenant@hypergrid.com", "9898989898" } });
 	}
-	
-	public int testTenantPosition(String id) {
-		ResponseEntity<List<Tenant>> response = null;
-		try {
-			response = tenantService.findAll(0, 5000);
-			for (Message message : response.getMessages()) {
-				logger.warn("Error [{}]  " + message.getMessageText());
-			}
-			assertNotNull(response);
-			assertNotNull(response.isErrors());
-			assertEquals(false, response.isErrors());
-			int position = 0;
-			if (id != null) {
-				for (Tenant obj : response.getResults()) {
-					position++;
-					if (obj.getId().equals(id)) {
-						logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
-						assertEquals("Recently Created Object is not at Positon 1 :" + obj.getId(), 1, position);
-					}
-				}
-			}
-			logger.info(" Total Number of Objects :{}", response.getResults().size());
-		} catch (Exception e) {
-
-		}
-		if (response == null)
-			if (id == null)
-				return 0;
-			else
-				return 1;
-		else
-			return response.getResults().size();
-	}
-
 
 	@org.junit.Test
-	public void testFindAll() throws Exception {
+	public void testCreate() throws Exception {
 
-		this.countBeforeCreate = testTenantPosition(null);
-		
 		logger.info("Create Tenant with Tenant Name [{}]", tenant.getName());
 		ResponseEntity<Tenant> response = tenantService.create(tenant);
 
@@ -122,12 +82,6 @@ public class TenantFindAllServiceTest extends AbstractServiceTest {
 		assertEquals(tenant.getContactName(), tenantCreated.getContactName());
 		assertEquals(tenant.getContactPhone(), tenantCreated.getContactPhone());
 		assertEquals(tenant.getContactEmail(), tenantCreated.getContactEmail());
-		
-		this.countAfterCreate = testTenantPosition(tenantCreated.getId());
-		assertEquals(
-				"Count of Find all Tenant between before and after create does not have diffrence of 1 for TenantId :"
-						+ tenantCreated.getId(),
-				countBeforeCreate + 1, countAfterCreate);
 
 	}
 

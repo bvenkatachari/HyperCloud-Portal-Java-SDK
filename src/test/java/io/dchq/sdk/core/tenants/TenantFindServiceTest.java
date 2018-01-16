@@ -1,167 +1,108 @@
 package io.dchq.sdk.core.tenants;
 
-/**
- * Created by Saurabh Bhatia on 1/24/2017.
- */
-
-
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.security.Tenant;
-import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.TenantService;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.security.Tenant;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.TenantService;
 
 /**
- * Abstracts class for holding test credentials.
- * Make Sure User has Cloud-Admin rights to create tenants
- * @author SaurabhB.
+ * 
  *
- * */
+ * @author Santosh Kumar.
+ * @since 1.0
+ *
+ */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class TenantFindServiceTest extends AbstractServiceTest {
 
-    private TenantService tenantService;
+	private TenantService tenantService;
 
-    private Tenant tenant;
-    private boolean error;
-    private Tenant tenantCreated;
-    private Tenant tenantFindByID;
-    private String messageText;
+	private Tenant tenant;
+	private Tenant tenantCreated;
 
-    //Building API URL with credentials for authorization.
-    @org.junit.Before
-    public void setUp() throws Exception {
-        tenantService = ServiceFactory.buildTenantService(rootUrl, cloudadminusername, cloudadminpassword);
+	@org.junit.Before
+	public void setUp() throws Exception {
+		tenantService = ServiceFactory.buildTenantService(rootUrl, cloudadminusername, cloudadminpassword);
 
-    }
+	}
 
-    //Constructor
-    public TenantFindServiceTest(String tenantname, boolean error) {
+	public TenantFindServiceTest(String name, String contactName, String email, String contactPhone) {
 
-        // random tenantName
-        if (tenantname == null){
-            throw new IllegalArgumentException("Tenant Name==null");
-        }
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		name = name + " " + prefix;
 
-        if (!tenantname.isEmpty()) {
+		tenant = new Tenant();
+		tenant.setName(name);
+		tenant.setContactName(contactName);
+		tenant.setEmail(email);
+		tenant.setContactPhone(contactPhone);
+		tenant.setContactEmail(email);
+		tenant.setPassword(RandomStringUtils.randomAlphabetic(12));
+	}
 
-            String prefix = RandomStringUtils.randomAlphabetic(3);
-            tenantname = prefix + tenantname;
-            tenantname = org.apache.commons.lang3.StringUtils.lowerCase(tenantname);
-        }
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { { "Tenant", "TenantName", "tenant@hypergrid.com", "9898989898" } });
+	}
 
+	@org.junit.Test
+	public void testFind() throws Exception {
 
-        this.tenant = new Tenant().withName(tenantname);
-        this.error = error;
-    }
+		logger.info("Create Tenant with Tenant Name [{}]", tenant.getName());
+		ResponseEntity<Tenant> response = tenantService.create(tenant);
 
-    /*
-    * Test Data creation
-    * Name: Not-Empty, Max_Length:Short-Text, Unique per System.
-    * */
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-               {"TenantFindService", false},
-                {"TenantFindService", false},
-                {" ", false},
-                {null, false},
-                {"TenantFindService", true},
-                {"12345", false},
-                {"@#@#", false},
-                {"Tenant_FindService", false},
-                {" ", true},
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Create request  [{}] ", message.getMessageText());
+		}
 
-                // Passing Empty string as tenant Name
-                //      {"", false}
-        });
-    }
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		this.tenantCreated = response.getResults();
+		assertNotNull(response.getResults().getId());
+		
+		// find service call by getId
+		response = tenantService.findById(tenantCreated.getId());
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Finding Quota  [{}] ", message.getMessageText());
+		}
 
-    //Main test, create tenant and fetch the Tenant ID.
-    @Ignore
-    @org.junit.Test
-    public void testFind() throws Exception {
+		Tenant findEntity = response.getResults();
 
-        logger.info("Create Tenant with Tenant Name [{}]", tenant.getName());
-        ResponseEntity<Tenant> response = tenantService.create(tenant);
+		assertEquals(tenantCreated.getName(), findEntity.getName());
+		assertEquals(tenantCreated.getContactName(), findEntity.getContactName());
+		assertEquals(tenantCreated.getContactPhone(), findEntity.getContactPhone());
+		assertEquals(tenantCreated.getContactEmail(), findEntity.getContactEmail());
 
-        for (Message message : response.getMessages()) {
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-            messageText = message.getMessageText();
-        }
+	}
 
-        //check for null response
-        assertNotNull(response);
-        //check for null error
-        assertNotNull(response.isErrors());
-        //check for error message
-        Assert.assertEquals(messageText ,error, response.isErrors());
+	@After
+	public void cleanUp() {
+		logger.info("cleaning up Tenant...");
 
-        if (!response.isErrors() && response.getResults() != null) {
-            tenantCreated = response.getResults();
-            //check for null result
-            assertNotNull(response.getResults());
-            //check for null ID
-            assertNotNull(response.getResults().getId());
-            //check for tenant name
-            Assert.assertNotNull(tenant.getName(), tenantCreated.getName());
+		if (tenantCreated != null) {
+			ResponseEntity<Tenant> deleteResponse = tenantService.delete(tenantCreated.getId());
 
-            logger.info("Find Request for Tenant with Tenant ID [{}]", tenantCreated.getId());
-            response = tenantService.findById(tenantCreated.getId());
-
-            for (Message message : response.getMessages()){
-                logger.warn("Error while Find request  [{}] ", message.getMessageText());
-                messageText = message.getMessageText();}
-
-            //check for error message
-            Assert.assertEquals(messageText ,error, response.isErrors());
-            //check for null response
-            assertNotNull(response);
-            //check for null error
-            assertNotNull(response.isErrors());
-
-            if (!response.isErrors()) {
-                tenantFindByID=response.getResults();
-                //check for null result
-                Assert.assertNotNull(response.getResults());
-                //Match Tenant name Find by ID
-                assertEquals(tenantCreated.getName(), tenantFindByID.getName());
-
-            }
-        }
-    }
-
-    //Clean-Up script will Delete the above created tenant
-  @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (tenantCreated != null) {
-            ResponseEntity<Tenant> deleteResponse  =  tenantService.delete(tenantCreated.getId());
-
-            for (Message m : deleteResponse.getMessages()){
-                logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();}
-            //Check for error message
-            Assert.assertFalse(messageText ,deleteResponse.isErrors());
-        }
-    }
-
+			for (Message m : deleteResponse.getMessages()) {
+				logger.warn("[{}]", m.getMessageText());
+			}
+		}
+	}
 }

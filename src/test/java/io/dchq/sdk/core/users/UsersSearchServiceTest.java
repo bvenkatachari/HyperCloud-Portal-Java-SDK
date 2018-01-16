@@ -17,16 +17,18 @@
 package io.dchq.sdk.core.users;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -40,143 +42,100 @@ import io.dchq.sdk.core.ServiceFactory;
 import io.dchq.sdk.core.UserService;
 
 /**
- * <code>UsersService</code> Integration Tests.
+ * 
  *
- * @author Intesar Mohammed
- * @updater Jagdeep Jain
+ * @author Santosh Kumar.
  * @since 1.0
+ *
  */
+
 /**
- * Users: Search
+ * Users: Create
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class UsersSearchServiceTest extends AbstractServiceTest {
 
-    private UserService service;
-    private Users users;
-    private boolean success;
-    private Users userCreated;
-    private String errorMessage;
+	private UserService service;
+	private Users user;
+	private Users userCreated;
 
-    public UsersSearchServiceTest(
-    		String fn, 
-    		String ln, 
-    		String username, 
-    		String email, 
-    		String pass, 
-    		String errorMessage, 
-    		boolean success
-    		) 
-    {
-        // random user name
-        String prefix = RandomStringUtils.randomAlphabetic(3);
-        if(username!=null && !username.isEmpty())
-        {
-        	username = prefix + username;
-        }
-        if(email !=null && !email.isEmpty())
-        {
-        	email = prefix + "-" + email;
-        }
-        // lower case
-        username = org.apache.commons.lang3.StringUtils.lowerCase(username);
-        email = org.apache.commons.lang3.StringUtils.lowerCase(email);
-        this.users = new Users().withFirstname(fn).withLastname(ln).withUsername(username).withEmail(email).withPassword(pass);
-        this.users.setInactive(false);
-        this.success = success;
-        this.errorMessage = errorMessage;
-    }
-    
-	@Parameterized.Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] {
+	public UsersSearchServiceTest(String firstName, String lastName, String userName, String password, String email,
+			List<String> authorities) {
 
-				{ "fn", "ln", "user", "user" + "@dchq.io", "pass1234", "", false },
-               { "Hyper ", "User", "hyperuser", "user@hyperuser.com", "pass", "  ", false },
-                // TODO all negative test cases are failing. 
-//                { "@@@@", "1234", "hyperuser", "user@hyperuser.com", "pass", "  ", true },
-//                { "Hyper-Hyper", "User", "hyperuser", "user@hyperuser.com", "pass", " ", true },
-//                { "12345", "00000", "hyperuser", "user@hyperuser.com", "pass", "  ", true },
-//                { "Hyper", null, null, "user@hyperuser.com", "pass", "  ", true },
-//                { "  ", "   ", "hyperuser", "user@hyperuser.com", "pass", "  ", true },
-//                { " Hyper ", "User", "hyperuser", "12345", " ", "  ", true },
-//                { "_Hyper", "User", "hyperuser", null, "pass", "  ", true },
-//                { "Hyper", null, null, null, "pass", "  ", true },
-//                { "Hyper", null, "hyperuser", null, "pass", "  ", true },
-//                { "Hyper", "12345", "12345", "user@hyperuser.com", "pass", "  ", true },
-//                { "Hyper", "12345", "hyperuser", "12345", "pass", "  ", true },
-//                { "12345", "12345", "hyperuser", "user@hyperuser.com", "pass", "  ", true },
-//                { null, null, null, "user@hyperuser.com", "pass", "  ", true },
-//                { null, null, "hyperuser", null, "pass", "  ", true },
-//                { "12345", "User", "hyperuser", "12345", "pass", "  ", true },
-//                { "Hyper", "User", null, null, "pass", "  ", true },
-//                { " ", "12345", "hyperuser", null, "pass", "  ", true },
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		userName = userName + prefix;
 
-        });
+		user = new Users();
+		user.setFirstname(firstName);
+		user.setLastname(lastName);
+		user.setUsername(userName);
+		user.setPassword(password);
+		user.setEmail(email);
+		user.setAuthorities(authorities);
+		user.setEnabled(true);
+		user.setInactive(false);
+
 	}
 
-    @Before
-    public void setUp() throws Exception {
-        service = ServiceFactory.buildUserService(rootUrl, username, password);
-    }
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() throws Exception {
 
-    @Test
-    public void testSearch() {
-        logger.info("Create user fn [{}] ln [{}] username [{}]", users.getFirstname(), users.getLastname(), users.getUsername());
-        ResponseEntity<Users> response = service.create(users);
-        for (Message message : response.getMessages()) {
-            logger.warn("Error while Create request  [{}] ", message.getMessageText());
-            errorMessage+=message.getMessageText()+"\n";
-        }
-        if (!response.isErrors() && response.getResults()!=null) {
-            this.userCreated = response.getResults();
-            logger.info("Created Object Successfully with id  [{}] ",userCreated.getId());
-        }
-        /* check response:
-         * 1. is not null
-         * 2. has no errors
-         * 3. has user entity with ID
-         * 4. all data sent
-         */
-        assertNotNull(response);
-        assertNotNull(response.isErrors());
-		if (!success) {
-			assertNotNull(response.getResults());
-			assertNotNull(response.getResults().getId());
-			assertEquals(users.getFirstname(), response.getResults().getFirstname());
-			assertEquals(users.getLastname(), response.getResults().getLastname());
-			assertEquals(users.getUsername(), response.getResults().getUsername());
-			assertEquals(users.getEmail(), response.getResults().getEmail());
-			// password should always be empty
-			assertThat("", is(response.getResults().getPassword()));
+		List<String> authorities = new ArrayList<String>();
+		authorities.add("ROLE_USER");
 
-			logger.warn("Search Object wth username  [{}] ", userCreated.getUsername());
-			ResponseEntity<List<Users>> userSearchResponseEntity = service.search(userCreated.getUsername(), 0, 1);
-			errorMessage = "";
-			for (Message message : userSearchResponseEntity.getMessages()) {
-				logger.warn("Error while Create request  [{}] ", message.getMessageText());
-				errorMessage += message.getMessageText() + "\n";
-			}
-			assertNotNull(userSearchResponseEntity);
-			assertNotNull(userSearchResponseEntity.isErrors());
-			assertFalse(errorMessage, userSearchResponseEntity.isErrors());
-			assertNotNull(userSearchResponseEntity.getResults());
-			assertEquals(1, userSearchResponseEntity.getResults().size());
-			Users searchedEntity = userSearchResponseEntity.getResults().get(0);
-			assertEquals(userCreated.getId(), searchedEntity.getId());
-			assertEquals(userCreated.getUsername(), searchedEntity.getUsername());
+		return Arrays.asList(new Object[][] {
+				{ "FirstName", "LastName", "UserName", "password", "user10@hypergrid.com", authorities } });
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		service = ServiceFactory.buildUserService(rootUrl, tenant_username, tenant_password);
+	}
+
+	@Test
+	public void testCreate() {
+		logger.info("Create user fn [{}] ln [{}] username [{}]", user.getFirstname(), user.getLastname(),
+				user.getUsername());
+
+		ResponseEntity<Users> response = service.create(user);
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Create request  [{}] ", message.getMessageText());
 		}
-		else
-		{
-			assertEquals(null, response.getResults());
-			assertEquals(true, response.isErrors());
+		if (response.getResults() != null) {
+			this.userCreated = response.getResults();
+			logger.info("Create user Successful..");
 		}
-    }
 
-    @After
-    public void cleanUp() {
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+
+		assertNotNull(response.getResults());
+		assertNotNull(response.getResults().getId());
+
+		ResponseEntity<List<Users>> userResponseEntity = service.search(userCreated.getUsername(), 0, 1);
+
+		for (Message message : userResponseEntity.getMessages()) {
+			logger.warn("Error [{}] ", message.getMessageText());
+		}
+		assertNotNull(userResponseEntity);
+		assertNotNull(userResponseEntity.getResults());
+		assertEquals(1, userResponseEntity.getResults().size());
+		Users searchedEntity = userResponseEntity.getResults().get(0);
+
+		assertEquals(userCreated.getFirstname(), searchedEntity.getFirstname());
+		assertEquals(userCreated.getLastname(), searchedEntity.getLastname());
+		assertEquals(userCreated.getUsername().toLowerCase(), searchedEntity.getUsername());
+		assertEquals(user.getEmail(), searchedEntity.getEmail());
+
+		assertEquals(userCreated.getPhoneNumber(), searchedEntity.getPhoneNumber());
+
+		assertEquals(tenantId, searchedEntity.getTenantPk());
+	}
+
+	@After
+	public void cleanUp() {
 		if (userCreated != null) {
 			logger.info("cleaning up...");
 			ResponseEntity<?> response = service.delete(userCreated.getId());
@@ -184,7 +143,6 @@ public class UsersSearchServiceTest extends AbstractServiceTest {
 				logger.warn("Error user deletion: [{}] ", message.getMessageText());
 			}
 		}
-    }
-
+	}
 
 }

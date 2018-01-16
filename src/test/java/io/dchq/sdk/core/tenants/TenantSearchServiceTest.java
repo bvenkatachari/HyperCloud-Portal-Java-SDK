@@ -1,163 +1,111 @@
 package io.dchq.sdk.core.tenants;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.security.Tenant;
-import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.TenantService;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.junit.runners.Parameterized;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.FixMethodOrder;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.security.Tenant;
+
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.TenantService;
 
 /**
- * Created by Saurabh Bhatia on 1/24/2017.
- */
-
-
-/**
- * Abstracts class for holding test credentials.
- * Make Sure User has Cloud-Admin rights to create tenants
- * @author SaurabhB.
+ * 
  *
- * */
+ * @author Santosh Kumar.
+ * @since 1.0
+ *
+ */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class TenantSearchServiceTest extends AbstractServiceTest {
 
-    private TenantService tenantService;
+	private TenantService tenantService;
 
-    private Tenant tenant;
-    private boolean error;
-    private Tenant tenantCreated;
-    private String messageText;
+	private Tenant tenant;
+	private Tenant tenantCreated;
 
-    //Building API URL with credentials for authorization.
-    @org.junit.Before
-    public void setUp() throws Exception {
-        tenantService = ServiceFactory.buildTenantService(rootUrl, cloudadminusername, cloudadminpassword);
+	@org.junit.Before
+	public void setUp() throws Exception {
+		tenantService = ServiceFactory.buildTenantService(rootUrl, cloudadminusername, cloudadminpassword);
 
-    }
+	}
 
-    //Constructor
-    public TenantSearchServiceTest(String tenantname, boolean error) {
+	public TenantSearchServiceTest(String name, String contactName, String email, String contactPhone) {
 
-        // random tenantName
-        if (tenantname == null){
-            throw new IllegalArgumentException("Tenant Name==null");
-        }
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		name = name + " " + prefix;
 
-        if (!tenantname.isEmpty()) {
+		tenant = new Tenant();
+		tenant.setName(name);
+		tenant.setContactName(contactName);
+		tenant.setEmail(email);
+		tenant.setContactPhone(contactPhone);
+		tenant.setContactEmail(email);
+		tenant.setPassword(RandomStringUtils.randomAlphabetic(12));
+	}
 
-            String prefix = RandomStringUtils.randomAlphabetic(3);
-            tenantname = prefix + tenantname;
-            tenantname = org.apache.commons.lang3.StringUtils.lowerCase(tenantname);
-        }
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { { "Tenant", "TenantName", "tenant@hypergrid.com", "9898989898" } });
+	}
 
+	@org.junit.Test
+	public void testSearch() throws Exception {
 
-        this.tenant = new Tenant().withName(tenantname);
-        this.error = error;
-    }
+		logger.info("Create Tenant with Tenant Name [{}]", tenant.getName());
+		ResponseEntity<Tenant> response = tenantService.create(tenant);
 
-    /*
-   * Test Data creation
-   * Name: Not-Empty, Max_Length:Short-Text.
-   * */
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {"TenantSearchTest", false},
-                {" ", false},
-                {null, false},
-                {"Tenant_SearchTest", false},
-                {"@#@#", false},
-                {"12345", false},
+		for (Message message : response.getMessages()) {
+			logger.warn("Error while Create request  [{}] ", message.getMessageText());
+		}
 
-        });
-    }
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		this.tenantCreated = response.getResults();
+		assertNotNull(response.getResults().getId());
+		
+		ResponseEntity<List<Tenant>> tenantResponseEntity = tenantService.search(tenantCreated.getName(), 0, 1);
 
-    //Main test, create tenant and search by name.
-    @Ignore
-    @Test
-    public void testSearch() throws Exception {
+		for (Message message : tenantResponseEntity.getMessages()) {
+			logger.warn("Error [{}] ", message.getMessageText());
+		}
+		assertNotNull(tenantResponseEntity);
+		assertNotNull(tenantResponseEntity.getResults());
+		assertEquals(1, tenantResponseEntity.getResults().size());
+		Tenant searchedEntity = tenantResponseEntity.getResults().get(0);
 
-        logger.info("Create Tenant with Tenant Name [{}]", tenant.getName());
-        ResponseEntity<Tenant> response = tenantService.create(tenant);
+		assertEquals(tenantCreated.getName(), searchedEntity.getName());
+		assertEquals(tenantCreated.getContactName(), searchedEntity.getContactName());
+		assertEquals(tenantCreated.getContactPhone(), searchedEntity.getContactPhone());
+		assertEquals(tenantCreated.getContactEmail(), searchedEntity.getContactEmail());
 
-        if (response.getResults() != null)
-            tenantCreated = response.getResults();
+	}
 
-        //check for null response
-        assertNotNull(response);
-        //check response error in not null
-        assertNotNull(response.isErrors());
+	@After
+	public void cleanUp() {
+		logger.info("cleaning up Tenant...");
 
-        for (Message m : response.getMessages()) {
-            logger.warn("[{}]", m.getMessageText());
-            messageText = m.getMessageText();
-        }
+		if (tenantCreated != null) {
+			ResponseEntity<Tenant> deleteResponse = tenantService.delete(tenantCreated.getId());
 
-        //Through Error message if error boolean value doesn't match.
-        Assert.assertEquals(messageText, error, response.isErrors());
-
-        if (!response.isErrors()) {
-            //Check for null value results
-            assertNotNull("Response is null ", response.getResults());
-            //Check tenant id is not null
-            assertNotNull("Tenant Id is null", response.getResults().getId());
-            //Check for equal value
-            Assert.assertEquals("Tenant Name does not match input value", tenant.getName(), tenantCreated.getName());
-
-        }
-
-        // let's search for the tenant by name
-        ResponseEntity<List<Tenant>> tenantResponseEntity = tenantService.search(tenantCreated.getName(), 0, 1);
-
-        //check response in not null
-        assertNotNull(tenantResponseEntity);
-        //check response error is not null
-        assertNotNull(tenantResponseEntity.isErrors());
-        //check response has no errors
-    //    assertFalse(tenantResponseEntity.isErrors());
-
-        //check result is not null
-        assertNotNull(tenantResponseEntity.getResults());
-        //check search result size
-        assertEquals(1, tenantResponseEntity.getResults().size());
-
-        //Fetch result
-        Tenant searchedEntity = tenantResponseEntity.getResults().get(0);
-
-        //check created tenant ID and search tenant ID are equal
-        assertEquals(tenantCreated.getId(), searchedEntity.getId());
-        //check created tenant name and search tenant name are equal
-        assertEquals(tenantCreated.getName(), searchedEntity.getName());
-    }
-    //Clean-Up script will Delete the above created tenant
-    @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (tenantCreated != null) {
-            ResponseEntity<Tenant> deleteResponse  =  tenantService.delete(tenantCreated.getId());
-
-            for (Message m : deleteResponse.getMessages()){
-                logger.warn("[{}]", m.getMessageText());
-                messageText = m.getMessageText();}
-            //Check there is no error while deleting
-            Assert.assertFalse(messageText ,deleteResponse.isErrors());
-        }
-    }
+			for (Message m : deleteResponse.getMessages()) {
+				logger.warn("[{}]", m.getMessageText());
+			}
+		}
+	}
 }
-

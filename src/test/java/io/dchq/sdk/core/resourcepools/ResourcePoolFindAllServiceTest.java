@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.dchq.sdk.core.providers;
+package io.dchq.sdk.core.resourcepools;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -33,12 +34,12 @@ import org.junit.runners.Parameterized;
 
 import com.dchq.schema.beans.base.Message;
 import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.blueprint.AccountType;
-import com.dchq.schema.beans.one.blueprint.RegistryAccount;
+import com.dchq.schema.beans.one.base.UsernameEntityBase;
+import com.dchq.schema.beans.one.provider.ResourcePool;
 import com.dchq.schema.beans.one.security.EntitlementType;
 
 import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.RegistryAccountService;
+import io.dchq.sdk.core.ResourcePoolService;
 import io.dchq.sdk.core.ServiceFactory;
 
 /**
@@ -50,56 +51,53 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
+public class ResourcePoolFindAllServiceTest extends AbstractServiceTest {
 
-	private RegistryAccountService registryAccountService;
-	private RegistryAccount registryAccount;
-	private RegistryAccount registryAccountCreated;
+	private ResourcePoolService resourcePoolService;
+	private ResourcePool resourcePool;
+	private ResourcePool resourcePoolCreated;
+	
 	private int countBeforeCreate;
 	private int countAfterCreate;
 
-	public CloudProviderFindAllServiceTest(String name, AccountType accountType, String url, String userName,
-			String password) {
+	public ResourcePoolFindAllServiceTest(String name, String rpType, int cpu, int memory, int disk, String userId) {
 
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		name = name + " " + prefix;
 
-		this.registryAccount = new RegistryAccount();
-		this.registryAccount.setName(name);
-		this.registryAccount.setAccountType(accountType);
-		this.registryAccount.setUrl(url);
-		this.registryAccount.setUsername(userName);
-		this.registryAccount.setPassword(password);
-		this.registryAccount.setInactive(false);
-		this.registryAccount.setBlueprintEntitlementType(EntitlementType.ALL_BLUEPRINTS);
-		this.registryAccount.setEntitlementType(EntitlementType.OWNER);
-		this.registryAccount.setVmQuota(100);
-		this.registryAccount.setFreeFormEntitlement("true");
+		this.resourcePool = new ResourcePool();
+		this.resourcePool.setName(name);
+		this.resourcePool.setRpType(rpType);
+		this.resourcePool.setCpu(cpu);
+		this.resourcePool.setMem(memory);
+		this.resourcePool.setDisk(disk);
+		this.resourcePool.setAzName(quotaName);
+		this.resourcePool.setAzId(quotaId);
+		this.resourcePool.setEntitlementType(EntitlementType.CUSTOM);
+
+		UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId);
+		List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+		entiledUsers.add(entitledUser);
+		this.resourcePool.setEntitledUsers(entiledUsers);
+
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 
-				{ "Cloud Provider ", AccountType.HYPER_GRID, null, null, null },
-				{ "Cloud Provider ", AccountType.HCS_VSPHERE, "127.0.0.1", "dchqinc", "password" },
-				{ "Cloud Provider ", AccountType.VLAN_PROVIDER, "http://10.100.15.13:80/api/v1/switches/vlansummary",
-						"dchqinc", "password" },
-				{ "Cloud Provider ", AccountType.CREDENTIALS, null, "dchqinc", "password" } });
+				{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, userId1 } });
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername,
-				cloudadminpassword);
+		resourcePoolService = ServiceFactory.buildResourcePoolService(rootUrl1, tenant_username, tenant_password);
 	}
-
-	public int testRegistryAccountPosition(String id) {
-		// TODO report a bug findAll if nothing found do not throw an exception
-		// instead it should return zero
-		ResponseEntity<List<RegistryAccount>> response = null;
+	
+	public int testResourcePoolPosition(String id) {
+		ResponseEntity<List<ResourcePool>> response = null;
 		try {
-			response = registryAccountService.findAll(0, 5000);
+			response = resourcePoolService.findAllTenantResourcePool(0, 5000);
 			for (Message message : response.getMessages()) {
 				logger.warn("Error [{}]  " + message.getMessageText());
 			}
@@ -108,7 +106,7 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 			assertEquals(false, response.isErrors());
 			int position = 0;
 			if (id != null) {
-				for (RegistryAccount obj : response.getResults()) {
+				for (ResourcePool obj : response.getResults()) {
 					position++;
 					if (obj.getId().equals(id)) {
 						logger.info("  Object Matched in FindAll {}  at Position : {}", id, position);
@@ -131,38 +129,45 @@ public class CloudProviderFindAllServiceTest extends AbstractServiceTest {
 
 	@Test
 	public void testFindAll() throws Exception {
-
-		logger.info("Count of Cloud Provider before Create Cloudprovider with  Account with Name [{}]",
-				registryAccount.getName());
-		countBeforeCreate = testRegistryAccountPosition(null);
-
-		logger.info("Cloud Provide by name [{}] and type [{}]", registryAccount.getName(),registryAccount.getAccountType());
-		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
 		
+		this.countBeforeCreate = testResourcePoolPosition(null);
+
+		logger.info("Resource Pool by name [{}] and type [{}]", resourcePool.getName(), resourcePool.getRpType());
+
+		ResponseEntity<ResourcePool> response = resourcePoolService.create(resourcePool);
+
 		for (Message message : response.getMessages()) {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
 		}
-		
+
 		assertNotNull(response);
 		assertNotNull(response.isErrors());
-		this.registryAccountCreated = response.getResults();
+		this.resourcePoolCreated = response.getResults();
+		assertNotNull(response.getResults().getId());
 
-		this.countAfterCreate = testRegistryAccountPosition(registryAccountCreated.getId());
+		assertEquals(resourcePool.getRpType(), resourcePoolCreated.getRpType());
+		assertEquals(resourcePool.getName(), resourcePoolCreated.getName());
+		assertEquals(resourcePool.getCpu(), resourcePoolCreated.getCpu());
+		assertEquals(resourcePool.getMem(), resourcePoolCreated.getMem());
+		assertEquals(resourcePool.getDisk(), resourcePoolCreated.getDisk());
+
+		this.countAfterCreate = testResourcePoolPosition(resourcePoolCreated.getId());
 		assertEquals(
-				"Count of Find all RegistryAccount between before and after create does not have diffrence of 1 for UserId :"
-						+ registryAccountCreated.getId(),
+				"Count of Find all Resource Pool between before and after create does not have diffrence of 1 for ResourcePoolID :"
+						+ resourcePoolCreated.getId(),
 				countBeforeCreate + 1, countAfterCreate);
-
 	}
 
 	@After
 	public void cleanUp() {
-		if (registryAccountCreated != null) {
-			logger.info("cleaning up...");
-			ResponseEntity<?> response = registryAccountService.delete(registryAccountCreated.getId());
+
+		if (resourcePoolCreated != null) {
+			logger.info("cleaning up Resource Pool...");
+			ResponseEntity<?> response = resourcePoolService.delete(resourcePoolCreated.getId());
 			for (Message message : response.getMessages()) {
-				logger.warn("Error user deletion: [{}] ", message.getMessageText());
+				logger.warn("Error quota deletion: [{}] ", message.getMessageText());
 			}
 		}
+
 	}
 }

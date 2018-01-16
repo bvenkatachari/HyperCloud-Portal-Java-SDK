@@ -25,6 +25,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -49,40 +50,37 @@ import io.dchq.sdk.core.ServiceFactory;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
-public class CloudProviderCreateServiceTest extends AbstractServiceTest {
+public class CloudProviderTestConnection extends AbstractServiceTest {
 
 	private RegistryAccountService registryAccountService;
 	private RegistryAccount registryAccount;
 	private RegistryAccount registryAccountCreated;
+	private RegistryAccount availabilityZone;
 
-	public CloudProviderCreateServiceTest(String name, AccountType accountType, String url, String userName,
-			String password) {
+	public CloudProviderTestConnection(String name, AccountType accountType, String url, String userName,
+			String password, String imageId, String hardwareId) {
 
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		name = name +" "+prefix ;
 
-		this.registryAccount = new RegistryAccount();
-		this.registryAccount.setName(name);
-		this.registryAccount.setAccountType(accountType);
-		this.registryAccount.setUrl(url);
-		this.registryAccount.setUsername(userName);
-		this.registryAccount.setPassword(password);
-		this.registryAccount.setInactive(false);
-		this.registryAccount.setBlueprintEntitlementType(EntitlementType.ALL_BLUEPRINTS);
-		this.registryAccount.setEntitlementType(EntitlementType.OWNER);
-		this.registryAccount.setVmQuota(100);
-		this.registryAccount.setFreeFormEntitlement("true");
+		this.availabilityZone = new RegistryAccount();
+		this.availabilityZone.setName(name);
+		this.availabilityZone.setAccountType(accountType);
+		this.availabilityZone.setUrl(url);
+		this.availabilityZone.setUsername(userName);
+		this.availabilityZone.setPassword(password);
+		this.availabilityZone.setInactive(false);
+		this.availabilityZone.setBlueprintEntitlementType(EntitlementType.ALL_BLUEPRINTS);
+		this.availabilityZone.setEntitlementType(EntitlementType.OWNER);
+		this.availabilityZone.setVmQuota(100);
+		this.availabilityZone.setFreeFormEntitlement("true");
 	}
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 
-				{ "Cloud Provider ", AccountType.HYPER_GRID, null, null, null },
-				{ "Cloud Provider ", AccountType.HCS_VSPHERE, "127.0.0.1", "dchqinc", "password" },
-				{ "Cloud Provider ", AccountType.VLAN_PROVIDER, "http://10.100.15.13:80/api/v1/switches/vlansummary",
-						"dchqinc", "password" },
-				{ "Cloud Provider ", AccountType.CREDENTIALS, null, "dchqinc", "password" } });
+				{ "Availability Zone", AccountType.AVAILABILITY_ZONE, "https://127.0.0.1:443", "Hyper-V", "password", "\\Shared-Volume", "\\Shared-Volume" } });
 	}
 
 	@Before
@@ -90,12 +88,17 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 		registryAccountService = ServiceFactory.buildRegistryAccountService(rootUrl, cloudadminusername, cloudadminpassword);
 	}
 
+	@Ignore
 	@Test
-	public void testCreate() throws Exception {
+	public void testConnection() throws Exception {
+		
+		createCloudProvider();
+		
+		this.availabilityZone.setReferenceId(this.registryAccountCreated.getId());
 
-		logger.info("Cloud Provide by name [{}] and type [{}]", registryAccount.getName(),
-				registryAccount.getAccountType());
-		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
+		logger.info("Availability Zone by name [{}] and type [{}]", availabilityZone.getName(),
+				availabilityZone.getAccountType());
+		ResponseEntity<RegistryAccount> response = registryAccountService.create(availabilityZone);
 		
 		for (Message message : response.getMessages()) {
 			logger.warn("Error while Create request  [{}] ", message.getMessageText());
@@ -103,14 +106,45 @@ public class CloudProviderCreateServiceTest extends AbstractServiceTest {
 		
 		assertNotNull(response);
 		assertNotNull(response.isErrors());
-		this.registryAccountCreated = response.getResults();
-		assertNotNull(response.getResults());
 		assertNotNull(response.getResults().getId());
-		assertEquals(registryAccount.getAccountType(), registryAccountCreated.getAccountType());
-		assertEquals(registryAccount.getName(), registryAccountCreated.getName());
+		
+		ResponseEntity<String> testresponse = registryAccountService.testConnection(this.registryAccount);
+		
+		assertNotNull(testresponse);
+		assertEquals(false, testresponse.isErrors());
+		
+		if (testresponse.getResults() != null && !testresponse.isErrors()) {
+			
+			String result = testresponse.getResults();
+			assertEquals("Connection Successful!", result);
+		}
 
 	}
 
+	private RegistryAccount createCloudProvider(){
+		
+		this.registryAccount = new RegistryAccount();
+		this.registryAccount.setName("Cloud Provider Automation");
+		this.registryAccount.setAccountType(AccountType.HYPER_GRID);
+		this.registryAccount.setUrl("127.0.0.1");
+		this.registryAccount.setUsername("dchqinc");
+		this.registryAccount.setPassword("password");
+		this.registryAccount.setInactive(false);
+		this.registryAccount.setBlueprintEntitlementType(EntitlementType.ALL_BLUEPRINTS);
+		this.registryAccount.setEntitlementType(EntitlementType.OWNER);
+		this.registryAccount.setVmQuota(100);
+		this.registryAccount.setFreeFormEntitlement("true");	
+		
+		ResponseEntity<RegistryAccount> response = registryAccountService.create(registryAccount);
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
+		this.registryAccountCreated = response.getResults();
+		
+		return this.registryAccountCreated;
+		
+	}
+	
+	
 	@After
 	public void cleanUp() {
 		if (registryAccountCreated != null) {
