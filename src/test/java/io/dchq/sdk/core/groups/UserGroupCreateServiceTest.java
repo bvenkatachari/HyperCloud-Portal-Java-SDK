@@ -15,12 +15,11 @@
  */
 package io.dchq.sdk.core.groups;
 
-import com.dchq.schema.beans.base.Message;
-import com.dchq.schema.beans.base.ResponseEntity;
-import com.dchq.schema.beans.one.security.UserGroup;
-import io.dchq.sdk.core.AbstractServiceTest;
-import io.dchq.sdk.core.ServiceFactory;
-import io.dchq.sdk.core.UserGroupService;
+import static junit.framework.TestCase.assertNotNull;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -29,148 +28,82 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
+import com.dchq.schema.beans.base.Message;
+import com.dchq.schema.beans.base.ResponseEntity;
+import com.dchq.schema.beans.one.security.UserGroup;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
-
+import io.dchq.sdk.core.AbstractServiceTest;
+import io.dchq.sdk.core.ServiceFactory;
+import io.dchq.sdk.core.UserGroupService;
 
 /**
- * Abstracts class for holding test credentials.
- * Make Sure User has rights to create groups
+ * 
  *
- * @author Abedeen.
+ * @author Santosh Kumar
  * @since 1.0
- * @updater SaurabhB.
+ *
  */
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Parameterized.class)
 public class UserGroupCreateServiceTest extends AbstractServiceTest {
 
+	private UserGroupService userGroupService;
+	private UserGroup userGroup;
+	private UserGroup userGroupCreated;
 
-    private UserGroupService userGroupService;
+	@org.junit.Before
+	public void setUp() throws Exception {
+		userGroupService = ServiceFactory.builduserGroupService(rootUrl, tenant_username, tenant_password);
+	}
 
+	@Parameterized.Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] { 
+			{ "GroupName", true },
+			{ "GroupName", false }
+		});
+	}
 
-    @org.junit.Before
-    public void setUp() throws Exception {
-        // TODO - use TENANT_ADMIN USERS
-        userGroupService = ServiceFactory.builduserGroupService(rootUrl, username, password);
-    }
+	public UserGroupCreateServiceTest(String groupName, boolean active) {
 
-    /*
-    * Name: Not-Empty, Max_Length:Short-Text, Unique per System.
-    * user Ids: Empty,Valid User id
-    * */
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-        		//TODO Group name should not be blank spaces. 
-                //{"    ", false, true},
-        		
-                {"TEST@123 Group", false, false},
-                {"TestGr1112", false, false},
-                //TODO wrong group name
-                //{"1\"My Group21\"", true, true},
-                {" TestGroup   9", false, false},
-                //TODO Group name contains alphanumeric value
-                //{"444", false, true},
-                // TODO wrong group name
-                //{"â€“â€”Â¡Â¿\\\"â€œâ€�'â€˜â€™\\\"", false, true},
-                // Group Names with  Max Short Text :255 Charcters Passed
-               /* {"FwqkRRVOH2tuh8iigqZWTngTgLYzpcaqVahyLQqAXvzUhPpbN4qFz2TeeZASJUtC4x1nsFzP9cOkNAcFuHEGysRR6VafWArGW1jkWiWXD6CUfpkhwPoGNhIkcWLOqRrO7aqDifoZ8EGWKNHY49vTCKZ1jOI2JbZVToQeQGAERFJSlby4o2vc131o2wTFqMnp4KIwhjVQ97PBFjOxJhfnd9a5PAxNHLYBvnzTcCK45uGBiZhu3ubWOr6yM1s28pY", false, false},*/
-                {"  TestGroup   1", false, false},
-                {"_TestGroup   1", false, false},
-                // TODO Group name length should be more then 3
-                //{"1", false, true},
-                //TODO Group name contains alphanumeric value
-                //{"2.00005", false, true},
-                {" TestGroup    1", false, false},
-                // Group Name Length 256.
-                {"tQ9ukuIEBiYsSGkM1cRfES7DctIaE1W3GJ3K4WCQQxwYcNPy6NArpf2RFCEUXfmmmRkMVsvkh3TDQwWdxcyuWbbzX8xgxcfX6XwvCqVkbLE7rQ348EInhBNkIupRSvsMKaR51KFrVS7cNMi1WmJsNxWA3vEaKczJ2EHSauHx7Rs3Ln8UiEcjazU2qluzdaoQCTNBayw4VFJAAPVFHLG3wNV9OPjRUj39mNjCZBsZQJI1g2NYw6gQ1qkhqNOcWeFw", false, true},
-                // checking Empty group names
-                {"", false, true}
-        });
-    }
+		String prefix = RandomStringUtils.randomAlphabetic(3);
+		groupName = groupName + prefix;
+		this.userGroup = new UserGroup().withName(groupName).withInactive(active);
+	}
 
-    private UserGroup userGroup;
-    private boolean error;
-    private UserGroup userGroupCreated;
-    private UserGroup userGroupDeleted;
-    private String messageText;
+	@org.junit.Test
+	public void testCreate() throws Exception {
 
-    public UserGroupCreateServiceTest(String gname, boolean isInActive, boolean success) {
+		logger.info("Create Group with Group Name [{}]", userGroup.getName());
+		ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
 
+		assertNotNull(response);
+		assertNotNull(response.isErrors());
 
-        // random group Name
-        if (gname == null){
-            throw new IllegalArgumentException("Group Name==null");
-        }
+		for (Message m : response.getMessages()) {
+			logger.warn("[{}]", m.getMessageText());
+		}
 
-        if (!gname.isEmpty()) {
-            String prefix = RandomStringUtils.randomAlphabetic(3);
-            gname = prefix + gname;
-            gname = org.apache.commons.lang3.StringUtils.lowerCase(gname);
-        }
+		if (response.getResults() != null)
+			userGroupCreated = response.getResults();
 
-        this.userGroup = new UserGroup().withName(gname).withInactive(isInActive);
-        this.error = success;
-    }
+		assertNotNull(response.getResults().getId());
+		Assert.assertEquals("Group Name does not match input value", userGroup.getName(), userGroupCreated.getName());
+		Assert.assertEquals("User group Active/Inactive status does not match input Value", userGroup.getInactive(),
+				userGroupCreated.getInactive());
 
-    @org.junit.Test
-    public void testCreate() throws Exception {
+	}
 
-        logger.info("Create Group with Group Name [{}]", userGroup.getName());
-        ResponseEntity<UserGroup> response = userGroupService.create(userGroup);
+	@After
+	public void cleanUp() {
+		logger.info("cleaning up user group...");
 
-        if(!this.error)
-		{
-			if (response.getResults() != null)
-				userGroupCreated = response.getResults();
-
-			assertNotNull(response);
-			assertNotNull(response.isErrors());
-			for (Message m : response.getMessages()) {
+		if (userGroupCreated != null) {
+			ResponseEntity<UserGroup> deleteResponse = userGroupService.delete(userGroupCreated.getId());
+			for (Message m : deleteResponse.getMessages()) {
 				logger.warn("[{}]", m.getMessageText());
-				messageText = m.getMessageText();
-			}
-
-			Assert.assertEquals(messageText, error, response.isErrors());
-
-			if (!response.isErrors()) {
-				assertNotNull("Response is null ", response.getResults());
-				assertNotNull("Group Id is null", response.getResults().getId());
-				Assert.assertEquals("Group Name does not match input value", userGroup.getName(),
-						userGroupCreated.getName());
-				Assert.assertEquals("User group Active/Inactive status does not match input Value",
-						userGroup.getInactive(), userGroupCreated.getInactive());
-
 			}
 		}
-        else
-        {
-        	assertEquals(null, response.getResults());
-			assertEquals(true, response.isErrors());
-        }
-    }
-
-   @After
-    public void cleanUp() {
-        logger.info("cleaning up...");
-
-        if (userGroupCreated != null) {
-            ResponseEntity<UserGroup> deleteResponse  =  userGroupService.delete(userGroupCreated.getId());
-            if (deleteResponse.getResults() != null)
-                userGroupDeleted = deleteResponse.getResults();
-            for (Message m : deleteResponse.getMessages()){
-                logger.warn("[{}]", m.getMessageText());
-                 messageText = m.getMessageText();}
-                 Assert.assertFalse(messageText ,deleteResponse.isErrors());
-    //        Assert.assertEquals(messageText ,error, deleteResponse.isErrors());
-        }
-    }
+	}
 }
-
-
-
-

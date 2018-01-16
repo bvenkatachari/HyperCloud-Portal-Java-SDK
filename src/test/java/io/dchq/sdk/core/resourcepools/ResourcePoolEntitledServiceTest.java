@@ -70,7 +70,7 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 			EntitlementType entitlementType, boolean isEntitlementTypeUser, String entitledUserId) {
 
 		String prefix = RandomStringUtils.randomAlphabetic(3);
-		name = name + " " + prefix;
+		name = name + prefix;
 
 		this.resourcePool = new ResourcePool();
 		this.resourcePool.setName(name);
@@ -98,11 +98,13 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 
 	@Parameterized.Parameters
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] {
-
-				{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.CUSTOM, true, userId1 },
-				{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.CUSTOM, false, USER_GROUP } 
-				});
+		return Arrays.asList(
+				new Object[][] { 
+					    { "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.OWNER, false, null },
+						{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.PUBLIC, false, null },
+						{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.CUSTOM, true, userId1 },
+						{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.CUSTOM, false, USER_GROUP } 
+			});
 	}
 
 
@@ -122,20 +124,47 @@ public class ResourcePoolEntitledServiceTest extends AbstractServiceTest {
 		this.resourcePoolCreated = response.getResults();
 		assertNotNull(response.getResults().getId());
 		
-		ResponseEntity<ResourcePool> rpResponseEntity = resourcePoolService2.findById(resourcePoolCreated.getId());
-
-		for (Message message : rpResponseEntity.getMessages()) {
-			logger.warn("Error [{}] ", message.getMessageText());
+		if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.PUBLIC)) {
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+	
+			for (Message message : rpResponseEntity.getMessages()) {
+				logger.warn("Error [{}] ", message.getMessageText());
+			}
+			assertNotNull(rpResponseEntity);
+			assertNotNull(rpResponseEntity.getResults().get(0));
+			ResourcePool searchedEntity = rpResponseEntity.getResults().get(0);
+	
+			assertEquals(resourcePoolCreated.getRpType(), searchedEntity.getRpType());
+			assertEquals(resourcePoolCreated.getName(), searchedEntity.getName());
+			assertEquals(resourcePoolCreated.getCpu(), searchedEntity.getCpu());
+			assertEquals(resourcePoolCreated.getMem(), searchedEntity.getMem());
+			assertEquals(resourcePoolCreated.getDisk(), searchedEntity.getDisk());
+		} else if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.CUSTOM)) {
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+	
+			for (Message message : rpResponseEntity.getMessages()) {
+				logger.warn("Error [{}] ", message.getMessageText());
+			}
+			assertNotNull(rpResponseEntity);
+			assertNotNull(rpResponseEntity.getResults().get(0));
+			ResourcePool searchedEntity = rpResponseEntity.getResults().get(0);
+	
+			assertEquals(resourcePoolCreated.getRpType(), searchedEntity.getRpType());
+			assertEquals(resourcePoolCreated.getName(), searchedEntity.getName());
+			assertEquals(resourcePoolCreated.getCpu(), searchedEntity.getCpu());
+			assertEquals(resourcePoolCreated.getMem(), searchedEntity.getMem());
+			assertEquals(resourcePoolCreated.getDisk(), searchedEntity.getDisk());
+		} else if (resourcePoolCreated.getEntitlementType().equals(EntitlementType.OWNER)) {
+			ResponseEntity<List<ResourcePool>> rpResponseEntity = resourcePoolService2.search(resourcePoolCreated.getName(), 0, 10);
+	
+			for (Message message : rpResponseEntity.getMessages()) {
+				logger.warn("Error [{}] ", message.getMessageText());
+			}
+			assertNotNull(rpResponseEntity);
+			assertNotNull(rpResponseEntity.isErrors());
+			assertEquals(0, rpResponseEntity.getResults().size());
+			
 		}
-		assertNotNull(rpResponseEntity);
-		assertNotNull(rpResponseEntity.getResults());
-		ResourcePool searchedEntity = rpResponseEntity.getResults();
-
-		assertEquals(resourcePoolCreated.getRpType(), searchedEntity.getRpType());
-		assertEquals(resourcePoolCreated.getName(), searchedEntity.getName());
-		assertEquals(resourcePoolCreated.getCpu(), searchedEntity.getCpu());
-		assertEquals(resourcePoolCreated.getMem(), searchedEntity.getMem());
-		assertEquals(resourcePoolCreated.getDisk(), searchedEntity.getDisk());
 
 	}
 

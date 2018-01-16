@@ -43,7 +43,7 @@ import io.dchq.sdk.core.UserService;
 /**
  * 
  *
- * @author Santosh Kumar.
+ * @author Santosh Kumar
  * @since 1.0
  *
  */

@@ -60,7 +60,7 @@ public class ResourcePoolFindAllServiceTest extends AbstractServiceTest {
 	private int countBeforeCreate;
 	private int countAfterCreate;
 
-	public ResourcePoolFindAllServiceTest(String name, String rpType, int cpu, int memory, int disk, String userId) {
+	public ResourcePoolFindAllServiceTest(String name, String rpType, int cpu, int memory, int disk, EntitlementType entitleType) {
 
 		String prefix = RandomStringUtils.randomAlphabetic(3);
 		name = name + " " + prefix;
@@ -73,12 +73,14 @@ public class ResourcePoolFindAllServiceTest extends AbstractServiceTest {
 		this.resourcePool.setDisk(disk);
 		this.resourcePool.setAzName(quotaName);
 		this.resourcePool.setAzId(quotaId);
-		this.resourcePool.setEntitlementType(EntitlementType.CUSTOM);
+		this.resourcePool.setEntitlementType(entitleType);
 
-		UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId);
-		List<UsernameEntityBase> entiledUsers = new ArrayList<>();
-		entiledUsers.add(entitledUser);
-		this.resourcePool.setEntitledUsers(entiledUsers);
+		if(entitleType.equals(EntitlementType.CUSTOM)){
+			UsernameEntityBase entitledUser = new UsernameEntityBase().withId(userId1);
+			List<UsernameEntityBase> entiledUsers = new ArrayList<>();
+			entiledUsers.add(entitledUser);
+			this.resourcePool.setEntitledUsers(entiledUsers);
+		}
 
 	}
 
@@ -86,7 +88,11 @@ public class ResourcePoolFindAllServiceTest extends AbstractServiceTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 
-				{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, userId1 } });
+			{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.PUBLIC }, 
+			{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.OWNER }, 
+			{ "Resource Pool", "RESOURCE_POOL", 2, 2, 10, EntitlementType.CUSTOM} 
+			
+		});
 	}
 
 	@Before

@@ -38,7 +38,7 @@ public abstract class AbstractServiceTest {
    protected String rootUrl = "https://172.16.1.30:443/api/1.0/";
     protected String rootUrl1 = "https://172.16.1.30:443/api/";
   // protected String rootUrl = "https://hcdevtest.skygrid.cloud:443/api/1.0/";
-  protected String userId = "2c9180865d312fc4015d314702ce005b";
+     protected String userId = "2c9180865d312fc4015d314702ce005b";
     protected String username = "YOBRfhNQzhsY4jBMO4ox";   // access-key for user1 <QEAutomation1@dchq.io>
     protected String password = "I61rFLyQe1DQzdUeBSNn3e57iMxYl1DSKUowL20i";  // secret-key for user1
 
@@ -51,7 +51,7 @@ public abstract class AbstractServiceTest {
     
     //Quota associated with Tenant QAAutomation
     protected static String quotaName = "Quota_QA_Automation";
-    protected static String quotaId = "2c91808760d4843b0160df48adea52d0";
+    protected static String quotaId = "2c91808760fd8fc00160fe3f7fe10566";
     
     // Create user  for entitlement check inside Tenant QAAutomation
     protected static String userId1 = "2c91808760d4843b0160df510a305310";
