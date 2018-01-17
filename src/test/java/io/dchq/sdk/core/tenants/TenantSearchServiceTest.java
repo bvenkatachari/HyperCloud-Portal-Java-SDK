@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
@@ -64,6 +65,7 @@ public class TenantSearchServiceTest extends AbstractServiceTest {
 		return Arrays.asList(new Object[][] { { "Tenant", "TenantName", "tenant@hypergrid.com", "9898989898" } });
 	}
 
+	@Ignore
 	@org.junit.Test
 	public void testSearch() throws Exception {
 
